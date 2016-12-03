@@ -89,10 +89,10 @@
 		try
 		{
 			$polaczenie = new mysqli($host, $db_user, $db_password, $db_name);
-			mysqli_set_charset($polaczenie, 'utf8');
+			$polaczenie->set_charset('utf8');
 			
 			if($polaczenie->connect_errno != 0)
-				throw new Exception(mysqli_connect_errno());
+				throw new Exception($polaczenie->connect_error);
 			else
 			{
 				$rezultat = $polaczenie->query("select id_pacjent from pacjent where email='$email'");
@@ -122,12 +122,12 @@
 					try
 					{
 						$polaczenie->query("START TRANSACTION");
-							
-						$a1 = $polaczenie->query("insert into pacjent values (null, '$imie', '$nazwisko', '$email')");
-						$a2 = $polaczenie->query("insert into uzytkownik values (null, '$login', '$haslo_hash')");
 						
-						if($a1 && $a2)	$polaczenie->query("COMMIT");
-						else	throw new Exception($polaczenie->error);
+						if($polaczenie->query("insert into pacjent values (null, '$imie', '$nazwisko', '$email')") &&
+						   $polaczenie->query("insert into uzytkownik values (null, '$login', '$haslo_hash')"))
+							$polaczenie->query("COMMIT");
+						else
+							throw new Exception($polaczenie->error);
 							
 						$_SESSION['udana_rejestracja']=true;
 						header('Location: witamy.php');
