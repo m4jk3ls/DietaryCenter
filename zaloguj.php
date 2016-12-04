@@ -37,8 +37,10 @@
 						$IP = $_SERVER['REMOTE_ADDR'];
 						$wszystko_o_przegladarce = get_browser(null, true);
 						$nazwa_i_wersja_przegladarki = $wszystko_o_przegladarce['parent'];
+						$ID_help = $wiersz['id_uzytkownik'];
+						$login_help = $wiersz['login'];
 						
-						if(!($polaczenie->query("insert into logowanie_archiwum values ('$IP', '$nazwa_i_wersja_przegladarki', now())")))
+						if(!($polaczenie->query("insert into logowanie_archiwum values ('$ID_help', '$login_help', '$IP', '$nazwa_i_wersja_przegladarki', now())")))
 							throw new Exception($polaczenie->error);
 						
 						$_SESSION['zalogowany'] = true;
