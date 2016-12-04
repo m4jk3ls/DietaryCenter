@@ -161,6 +161,29 @@ LOCK TABLES `godziny_przyjec` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `logowanie_archiwum`
+--
+
+DROP TABLE IF EXISTS `logowanie_archiwum`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `logowanie_archiwum` (
+  `Adres IP` varchar(30) DEFAULT NULL,
+  `Przeglądarka` varchar(100) DEFAULT NULL,
+  `Data i czas` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `logowanie_archiwum`
+--
+
+LOCK TABLES `logowanie_archiwum` WRITE;
+/*!40000 ALTER TABLE `logowanie_archiwum` DISABLE KEYS */;
+/*!40000 ALTER TABLE `logowanie_archiwum` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `pacjent`
 --
 
@@ -173,7 +196,7 @@ CREATE TABLE `pacjent` (
   `nazwisko` varchar(30) CHARACTER SET utf8 COLLATE utf8_polish_ci NOT NULL,
   `email` varchar(30) NOT NULL,
   PRIMARY KEY (`id_pacjent`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -251,7 +274,7 @@ CREATE TABLE `uzytkownik` (
   `haslo` text NOT NULL,
   PRIMARY KEY (`id_uzytkownik`),
   UNIQUE KEY `login` (`login`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -411,4 +434,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-12-03  2:19:01
+-- Dump completed on 2016-12-04  0:58:58
