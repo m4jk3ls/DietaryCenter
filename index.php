@@ -1,6 +1,6 @@
 <?php
 	session_start();
-	if((isset($_SESSION['zalogowany']))&&($_SESSION['zalogowany'] == true))
+	if(isset($_COOKIE["zalogowany"]))
 	{
 		header('Location: twoja_karta.php');
 		exit();

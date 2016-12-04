@@ -43,7 +43,7 @@
 						if(!($polaczenie->query("insert into logowanie_archiwum values ('$ID_help', '$login_help', '$IP', '$nazwa_i_wersja_przegladarki', now())")))
 							throw new Exception($polaczenie->error);
 						
-						$_SESSION['zalogowany'] = true;
+						setcookie("zalogowany", true, time() + 86400);
 						$_SESSION['id_uzytkownik'] = $wiersz['id_uzytkownik'];
 						$_SESSION['login'] = $wiersz['login'];
 						

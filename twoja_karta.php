@@ -1,6 +1,5 @@
 <?php
-	session_start();
-	if(!isset($_SESSION['zalogowany']))
+	if(!isset($_COOKIE["zalogowany"]))
 	{
 		header('Location: index.php');
 		exit();
@@ -17,6 +16,7 @@
 
 <body>
 <?php
+	session_start();
 	echo "<p>Witaj ".$_SESSION['login']." - jesteś zalogowany do swojego NH-konta".'! [<a href="logout.php">Wyloguj się</a>]</p>';
 	
 	$dataCzas = new DateTime();
