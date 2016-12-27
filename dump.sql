@@ -1,8 +1,8 @@
--- MySQL dump 10.16  Distrib 10.1.16-MariaDB, for Win32 (AMD64)
+-- MySQL dump 10.16  Distrib 10.1.19-MariaDB, for Win32 (AMD64)
 --
--- Host: localhost    Database: centrum_dietetyczne
+-- Host: localhost    Database: localhost
 -- ------------------------------------------------------
--- Server version	10.1.16-MariaDB
+-- Server version	10.1.19-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -115,16 +115,36 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER sprawdzanieDatyUrodzenia_dietetyk
-	BEFORE INSERT
-	ON dietetyk
-	FOR EACH ROW
-begin
-	if NEW.dataUrodzenia > curdate()	
-	then
-		signal sqlstate '45000'
-		set message_text = 'Data urodzenia jest nieprawidlowa';
-	end if;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER sprawdzanieDatyUrodzenia_dietetyk
+
+
+	BEFORE INSERT
+
+
+	ON dietetyk
+
+
+	FOR EACH ROW
+
+
+begin
+
+
+	if NEW.dataUrodzenia > curdate()	
+
+
+	then
+
+
+		signal sqlstate '45000'
+
+
+		set message_text = 'Data urodzenia jest nieprawidlowa';
+
+
+	end if;
+
+
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -168,6 +188,8 @@ DROP TABLE IF EXISTS `logowanie_archiwum`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `logowanie_archiwum` (
+  `Numer ID` int(10) unsigned NOT NULL,
+  `Login` varchar(30) NOT NULL,
   `Adres IP` varchar(30) DEFAULT NULL,
   `Przeglądarka` varchar(100) DEFAULT NULL,
   `Data i czas` datetime DEFAULT NULL
@@ -196,7 +218,7 @@ CREATE TABLE `pacjent` (
   `nazwisko` varchar(30) CHARACTER SET utf8 COLLATE utf8_polish_ci NOT NULL,
   `email` varchar(30) NOT NULL,
   PRIMARY KEY (`id_pacjent`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -274,7 +296,7 @@ CREATE TABLE `uzytkownik` (
   `haslo` text NOT NULL,
   PRIMARY KEY (`id_uzytkownik`),
   UNIQUE KEY `login` (`login`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -377,17 +399,39 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 trigger dostepnoscDietetyka before insert on wizyta
-for each row
-begin
-    if(((select dayofweek(new.dataWizyty)) !=
-        (select gp.dzienTygodnia from godziny_przyjec gp where gp.id_dietetyk = new.id_dietetyk)) or
-            (select new.godzinaWizyty < (select godz_od from godziny_przyjec)) or
-                (select new.godzinaWizyty > (select godz_do from godziny_przyjec)))
-    then
-        signal sqlstate '45000'
-        set message_text = 'Dietetyk nie dyzuruje w podany dzien i o podanej godzinie';
-    end if;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 trigger dostepnoscDietetyka before insert on wizyta
+
+
+for each row
+
+
+begin
+
+
+    if(((select dayofweek(new.dataWizyty)) !=
+
+
+        (select gp.dzienTygodnia from godziny_przyjec gp where gp.id_dietetyk = new.id_dietetyk)) or
+
+
+            (select new.godzinaWizyty < (select godz_od from godziny_przyjec)) or
+
+
+                (select new.godzinaWizyty > (select godz_do from godziny_przyjec)))
+
+
+    then
+
+
+        signal sqlstate '45000'
+
+
+        set message_text = 'Dietetyk nie dyzuruje w podany dzien i o podanej godzinie';
+
+
+    end if;
+
+
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -434,4 +478,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-12-04  0:58:58
+-- Dump completed on 2016-12-28  0:28:54
