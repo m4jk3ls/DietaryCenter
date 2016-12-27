@@ -35,7 +35,7 @@
 					if(password_verify($haslo, $wiersz['haslo']))
 					{
 						$IP = $_SERVER['REMOTE_ADDR'];
-						$wszystko_o_przegladarce = get_browser(null, true);
+						$wszystko_o_przegladarce = get_browser(null, true);	//http://php.net/manual/en/function.get-browser.php PAMIETAC O PLIKU browscap.ini !!!
 						$nazwa_i_wersja_przegladarki = $wszystko_o_przegladarce['parent'];
 						$ID_help = $wiersz['id_uzytkownik'];
 						$login_help = $wiersz['login'];
