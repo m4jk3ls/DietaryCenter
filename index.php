@@ -20,7 +20,7 @@
 <body>
 	<a href="rejestracja.php">Zarejestruj się i dołącz do nas!</a>
 	<br/><br/>
-	
+
 	<form action="zaloguj.php" method="post">
 		Login: <br/> <input type="text" name="login"/> <br/>
 		Hasło: <br/> <input type="password" name="haslo"/> <br/> <br/>
@@ -28,6 +28,6 @@
 	</form>
 <?php
 	if(isset($_SESSION['blad']))	echo $_SESSION['blad'];
-?>	
+?>
 </body>
 </html>

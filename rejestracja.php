@@ -1,4 +1,14 @@
 <?php
+	function generateRandomString()
+	{
+		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		$charactersLength = strlen($characters);
+		$randomString = '';
+		for ($i = 0; $i < 10; $i++)
+			$randomString .= $characters[rand(0, $charactersLength - 1)];
+		return $randomString;
+	}
+
 	session_start();
 	
 	if(isset($_POST['email']))
@@ -55,7 +65,10 @@
 			$wszystko_OK = false;
 			$_SESSION['e_haslo']="Podane hasła nie są identyczne!";
 		}
-		$haslo_hash = password_hash($haslo1, PASSWORD_DEFAULT);
+
+		$salt = generateRandomString();
+		//$haslo_hash = password_hash($haslo1, PASSWORD_DEFAULT);
+		$haslo_hash = sha1($haslo1.$salt);
 		
 		
 		if(!isset($_POST['regulamin']))
@@ -122,9 +135,9 @@
 					try
 					{
 						$polaczenie->query("START TRANSACTION");
-						
+
 						if($polaczenie->query("insert into pacjent values (null, '$imie', '$nazwisko', '$email')") &&
-						   $polaczenie->query("insert into uzytkownik values (null, '$login', '$haslo_hash')"))
+						   $polaczenie->query("insert into uzytkownik values (null, '$login', '$haslo_hash', '$salt')"))
 							$polaczenie->query("COMMIT");
 						else
 							throw new Exception($polaczenie->error);
