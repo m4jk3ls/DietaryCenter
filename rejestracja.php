@@ -66,8 +66,9 @@
 			$_SESSION['e_haslo']="Podane hasła nie są identyczne!";
 		}
 
+
 		$salt = generateRandomString();
-		//$haslo_hash = password_hash($haslo1, PASSWORD_DEFAULT);
+		//$haslo_hash = password_hash($haslo1, PASSWORD_DEFAULT);	//Po Zelentowemu
 		$haslo_hash = sha1($haslo1.$salt);
 		
 		
