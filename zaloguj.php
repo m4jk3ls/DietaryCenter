@@ -32,7 +32,8 @@
 				{
 					$wiersz = $rezultat->fetch_assoc();
 					
-					if(password_verify($haslo, $wiersz['haslo']))
+					if(!strcmp(sha1($haslo.$wiersz['salt']), $wiersz['haslo']))
+					//if(password_verify($haslo, $wiersz['haslo']))	//Po Zelentowemu
 					{
 						$IP = $_SERVER['REMOTE_ADDR'];
 						$wszystko_o_przegladarce = get_browser(null, true);	//http://php.net/manual/en/function.get-browser.php PAMIETAC O PLIKU browscap.ini !!!
