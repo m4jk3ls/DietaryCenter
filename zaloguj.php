@@ -1,6 +1,16 @@
 <?php
+	function generateRandomString()
+	{
+		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		$charactersLength = strlen($characters);
+		$randomString = '';
+		for ($i = 0; $i < 100; $i++)
+			$randomString .= $characters[rand(0, $charactersLength - 1)];
+		return $randomString;
+	}
+
 	session_start();
-	
+
 	if((!isset($_POST['login'])) || (!isset($_POST['haslo'])))
 	{
 		header('Location: index.php');
@@ -40,14 +50,27 @@
 						$nazwa_i_wersja_przegladarki = $wszystko_o_przegladarce['parent'];
 						$ID_help = $wiersz['id_uzytkownik'];
 						$login_help = $wiersz['login'];
-						
-						if(!($polaczenie->query("insert into logowanie_archiwum values ('$ID_help', '$login_help', '$IP', '$nazwa_i_wersja_przegladarki', now())")))
+
+						$token = generateRandomString();
+
+
+						$polaczenie->query("START TRANSACTION");
+
+						if($polaczenie->query("insert into logowanie_archiwum values ('$ID_help', '$login_help', '$IP', '$nazwa_i_wersja_przegladarki', now())") &&
+							$polaczenie->query("update uzytkownik set token='$token' WHERE login='$login_help'"))
+							$polaczenie->query("COMMIT");
+						else
 							throw new Exception($polaczenie->error);
-						
+
+
 						setcookie("zalogowany", true, time() + 86400);
+						setcookie("token", $token);
+
+
 						$_SESSION['id_uzytkownik'] = $wiersz['id_uzytkownik'];
 						$_SESSION['login'] = $wiersz['login'];
 						
+
 						unset($_SESSION['blad']);
 						$rezultat->free_result();
 						header('Location: twoja_karta.php');
@@ -71,6 +94,7 @@
 	}
 	catch(Exception $e)
 	{
+		$polaczenie->query("ROLLBACK");
 		echo '<span style="color:red;">Błąd serwera! Przepraszamy za niedogodności i prosimy o rejestrację w innym terminie!</span>';
 		//echo '<br/>Informacja developerska: '.$e;
 	}

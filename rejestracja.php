@@ -138,7 +138,7 @@
 						$polaczenie->query("START TRANSACTION");
 
 						if($polaczenie->query("insert into pacjent values (null, '$imie', '$nazwisko', '$email')") &&
-						   $polaczenie->query("insert into uzytkownik values (null, '$login', '$haslo_hash', '$salt')"))
+							$polaczenie->query("insert into uzytkownik values (null, '$login', '$haslo_hash', '$salt', null)"))
 							$polaczenie->query("COMMIT");
 						else
 							throw new Exception($polaczenie->error);
