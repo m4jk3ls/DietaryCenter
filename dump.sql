@@ -16,6 +16,32 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `aktywne_sesje`
+--
+
+DROP TABLE IF EXISTS `aktywne_sesje`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `aktywne_sesje` (
+  `Numer ID` int(10) unsigned NOT NULL,
+  `Login` varchar(30) NOT NULL,
+  `Adres IP` varchar(30) DEFAULT NULL,
+  `Przeglądarka` varchar(100) DEFAULT NULL,
+  `Data i czas` datetime DEFAULT NULL,
+  `Token` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `aktywne_sesje`
+--
+
+LOCK TABLES `aktywne_sesje` WRITE;
+/*!40000 ALTER TABLE `aktywne_sesje` DISABLE KEYS */;
+/*!40000 ALTER TABLE `aktywne_sesje` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `badania_docelowe`
 --
 
@@ -248,7 +274,7 @@ CREATE TABLE `pacjent` (
   `nazwisko` varchar(30) CHARACTER SET utf8 COLLATE utf8_polish_ci NOT NULL,
   `email` varchar(30) NOT NULL,
   PRIMARY KEY (`id_pacjent`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -325,10 +351,9 @@ CREATE TABLE `uzytkownik` (
   `login` varchar(30) NOT NULL,
   `haslo` text NOT NULL,
   `salt` varchar(10) NOT NULL,
-  `token` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id_uzytkownik`),
   UNIQUE KEY `login` (`login`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -543,4 +568,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-12-29  0:21:50
+-- Dump completed on 2016-12-31  0:52:31
