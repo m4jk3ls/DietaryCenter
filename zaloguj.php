@@ -50,29 +50,44 @@
 						$nazwa_i_wersja_przegladarki = $wszystko_o_przegladarce['parent'];
 						$ID_help = $wiersz['id_uzytkownik'];
 						$login_help = $wiersz['login'];
-
 						$token = generateRandomString();
 
 
-						$polaczenie->query("START TRANSACTION");
 
-						if($polaczenie->query("insert into logowanie_archiwum values ('$ID_help', '$login_help', '$IP', '$nazwa_i_wersja_przegladarki', now())") &&
-							$polaczenie->query("update uzytkownik set token='$token' WHERE login='$login_help'"))
-							$polaczenie->query("COMMIT");
-						else
+						if(!($rezultat2 = $polaczenie->query("select * from aktywne_sesje where Login='$login_help'")))
 							throw new Exception($polaczenie->error);
+						if(!$rezultat2->num_rows)	//Jesli nie ma aktywnej sesji uzytkownika, na konto ktorego chce sie zalogowac
+						{
+							$polaczenie->query("START TRANSACTION");
+
+							if ($polaczenie->query("insert into aktywne_sesje values ('$ID_help', '$login_help', '$IP', '$nazwa_i_wersja_przegladarki', now(), '$token')") &&
+								$polaczenie->query("insert into logowanie_archiwum values ('$ID_help', '$login_help', '$IP', '$nazwa_i_wersja_przegladarki', now())"))
+								$polaczenie->query("COMMIT");
+							else
+								throw new Exception($polaczenie->error);
+						}
+						else	//Jesli jest juz aktywna sesja uzytkownika, na konto ktorego chce sie zalogowac
+						{
+							$polaczenie->query("START TRANSACTION");
+
+							if ($polaczenie->query("update aktywne_sesje set Token='$token' where Login like '$login_help'") &&
+								$polaczenie->query("insert into logowanie_archiwum values ('$ID_help', '$login_help', '$IP', '$nazwa_i_wersja_przegladarki', now())"))
+								$polaczenie->query("COMMIT");
+							else
+								throw new Exception($polaczenie->error);
+						}
+
 
 
 						setcookie("zalogowany", true, time() + 86400);
 						setcookie("token", $token);
 
-
 						$_SESSION['id_uzytkownik'] = $wiersz['id_uzytkownik'];
 						$_SESSION['login'] = $wiersz['login'];
 						
-
 						unset($_SESSION['blad']);
 						$rezultat->free_result();
+						$rezultat2->free_result();
 						header('Location: twoja_karta.php');
 					}
 					else
