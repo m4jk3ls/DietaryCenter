@@ -2,7 +2,7 @@
 	session_start();
 	if(isset($_COOKIE["zalogowany"]))
 	{
-		header('Location: twoja_karta_first.php');
+		header('Location: twoja_karta.php');
 		exit();
 	}
 ?>
