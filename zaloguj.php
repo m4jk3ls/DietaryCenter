@@ -88,7 +88,7 @@
 						unset($_SESSION['blad']);
 						$rezultat->free_result();
 						$rezultat2->free_result();
-						header('Location: twoja_karta.php');
+						header('Location: twoja_karta_first.php');
 					}
 					else
 					{
