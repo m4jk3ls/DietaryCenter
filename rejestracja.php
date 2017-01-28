@@ -109,7 +109,10 @@
 				throw new Exception($polaczenie->connect_error);
 			else
 			{
-				$rezultat = $polaczenie->query("select id_pacjent from pacjent where email='$email'");
+				//$rezultat = $polaczenie->query("select id_pacjent from pacjent where email='$email'");
+				$rezultat = $polaczenie->query("select p.id_pacjent from pacjent p
+												join uzytkownik u on (p.id_uzytkownik=u.id_uzytkownik)
+												where u.email='$email'");
 				
 				if(!$rezultat) throw new Exception($polaczenie->error);
 				
@@ -137,8 +140,12 @@
 					{
 						$polaczenie->query("START TRANSACTION");
 
-						if($polaczenie->query("insert into pacjent values (null, '$imie', '$nazwisko', '$email')") &&
+						/*if($polaczenie->query("insert into pacjent values (null, '$imie', '$nazwisko', '$email')") &&
 							$polaczenie->query("insert into uzytkownik values (null, '$login', '$haslo_hash', '$salt')"))
+							$polaczenie->query("COMMIT");*/
+
+						if($polaczenie->query("insert into uzytkownik values (null, '$imie', '$nazwisko', '$email', '$login', '$haslo_hash', '$salt')") &&
+							$polaczenie->query("insert into pacjent values (null, LAST_INSERT_ID())"))
 							$polaczenie->query("COMMIT");
 						else
 							throw new Exception($polaczenie->error);
