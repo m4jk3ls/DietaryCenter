@@ -12,7 +12,7 @@ body
 	font-size: 70px;
 	font-family: 'Great Vibes', cursive;
 	position: absolute;
-	top: calc((50% - 185px)/2 - 50px);
+	top: calc((50% - 174px)/2 - 50px);
 }
 
 #log_form
@@ -23,7 +23,7 @@ body
 	position: absolute;
 	left: 50%;
 	top: 50%;
-	margin: -185px 0 0 -200px;
+	margin: -174px 0 0 -200px;
 	-webkit-box-shadow: 3px 3px 30px 5px rgba(204,204,204,0.9);
 	-moz-box-shadow: 3px 3px 30px 5px rgba(204,204,204,0.9);
 	box-shadow: 3px 3px 30px 5px rgba(204,204,204,0.9);
@@ -124,7 +124,7 @@ input:focus:-ms-input-placeholder
 #tekst_lub
 {
 	text-align: center;
-	font-size: 15px;
+	font-size: 16px;
 	margin: 10px 0 10px 0;
 }
 

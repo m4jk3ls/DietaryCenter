@@ -26,8 +26,8 @@
 		<div id="log_form">
 
 			<form action="zaloguj.php" method="post">
-				<input type="text" name="login" placeholder="login"/> <br/>
-				<input type="password" name="haslo" placeholder="hasło"/> <br/> <br/>
+				<input type="text" name="login" placeholder="login"/>
+				<input type="password" name="haslo" placeholder="hasło"/>
 				<input type="submit" value="Zaloguj się"/>
 			</form>
 
