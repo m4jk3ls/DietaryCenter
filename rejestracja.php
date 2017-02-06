@@ -1,4 +1,11 @@
 <?php
+	session_start();
+	if(isset($_COOKIE["zalogowany"]))
+	{
+		header('Location: twoja_karta.php');
+		exit();
+	}
+
 	function generateRandomString()
 	{
 		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -8,8 +15,6 @@
 			$randomString .= $characters[rand(0, $charactersLength - 1)];
 		return $randomString;
 	}
-
-	session_start();
 	
 	if(isset($_POST['email']))
 	{
@@ -101,7 +106,6 @@
 				throw new Exception($polaczenie->connect_error);
 			else
 			{
-				//$rezultat = $polaczenie->query("select id_pacjent from pacjent where email='$email'");
 				$rezultat = $polaczenie->query("select p.id_pacjent from pacjent p
 												join uzytkownik u on (p.id_uzytkownik=u.id_uzytkownik)
 												where u.email='$email'");
@@ -131,10 +135,6 @@
 					try
 					{
 						$polaczenie->query("START TRANSACTION");
-
-						/*if($polaczenie->query("insert into pacjent values (null, '$imie', '$nazwisko', '$email')") &&
-							$polaczenie->query("insert into uzytkownik values (null, '$login', '$haslo_hash', '$salt')"))
-							$polaczenie->query("COMMIT");*/
 
 						if($polaczenie->query("insert into uzytkownik values (null, '$imie', '$nazwisko', '$email', '$login', '$haslo_hash', '$salt')") &&
 							$polaczenie->query("insert into pacjent values (null, LAST_INSERT_ID())"))
