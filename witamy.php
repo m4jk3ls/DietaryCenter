@@ -16,14 +16,12 @@
 	if(isset($_SESSION['fr_email'])) unset($_SESSION['fr_email']);
 	if(isset($_SESSION['fr_haslo1'])) unset($_SESSION['fr_haslo1']);
 	if(isset($_SESSION['fr_haslo2'])) unset($_SESSION['fr_haslo2']);
-	if(isset($_SESSION['fr_regulamin'])) unset($_SESSION['fr_regulamin']);
 	
 	if(isset($_SESSION['e_imie'])) unset($_SESSION['e_imie']);
 	if(isset($_SESSION['e_nazwisko'])) unset($_SESSION['e_nazwisko']);
 	if(isset($_SESSION['e_login'])) unset($_SESSION['e_login']);
 	if(isset($_SESSION['e_email'])) unset($_SESSION['e_email']);
 	if(isset($_SESSION['e_haslo'])) unset($_SESSION['e_haslo']);
-	if(isset($_SESSION['e_regulamin'])) unset($_SESSION['e_regulamin']);
 	if(isset($_SESSION['e_bot'])) unset($_SESSION['e_bot']);
 ?>
 
