@@ -20,7 +20,6 @@
 </head>
 
 <body>
-	<div id="container">
 		<div id="header">Witaj w świecie NaturHouse!</div>
 
 		<div id="log_form">
@@ -35,7 +34,6 @@
 			<div id="link_rejestracji"><a href="rejestracja.php">Zarejestruj się i dołącz do nas!</a></div>
 
 		</div>
-	</div>
 <?php
 	if(isset($_SESSION['blad']))	echo $_SESSION['blad'];
 ?>
