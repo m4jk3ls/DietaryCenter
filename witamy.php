@@ -31,11 +31,12 @@
 	<meta charset="utf-8"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<title>NaturHouse - dietetyk na wyciągnięcie ręki</title>
+	<link rel="stylesheet" href="witamy_style.css" type="text/css" />
+	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext" rel="stylesheet">
+	<meta http-equiv="Refresh" content="5; url=index.php" />
 </head>
 
 <body>
-	Dziękujemy za rejestrację w serwisie! Możesz już zalogować się na swoje konto! <br/><br/>
-	<a href="index.php">Zaloguj się na swoje konto!</a>
-	<br/><br/>
+	<div id="komunikat">Dziękujemy za rejestrację w serwisie! Za chwilę zostaniesz przekierowany do formularza logowania!</div>
 </body>
 </html>

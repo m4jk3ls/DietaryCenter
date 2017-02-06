@@ -1,0 +1,13 @@
+body
+{
+	/* Background pattern from subtlepatterns.com */
+	background-image: url("img/restaurant_icons.png");
+	font-family: 'Great Vibes', cursive;
+	font-size: 50px;
+}
+
+#komunikat
+{
+	margin: 150px 70px 0 70px;
+	text-align: center;
+}
