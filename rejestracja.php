@@ -72,13 +72,6 @@
 		$haslo_hash = sha1($haslo1.$salt);
 		
 		
-		if(!isset($_POST['regulamin']))
-		{
-			$wszystko_OK=false;
-			$_SESSION['e_regulamin']="Potwierdź akceptację regulaminu!";
-		}
-		
-		
 		$sekret = "6LdueQwUAAAAAP3YdoBKWrUuynRkVouPmL0D_hPo";
 		$sprawdz = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$sekret.'&response='.$_POST['g-recaptcha-response']);
 		$odpowiedz = json_decode($sprawdz);
@@ -95,7 +88,6 @@
 		$_SESSION['fr_email']=$email;
 		$_SESSION['fr_haslo1']=$haslo1;
 		$_SESSION['fr_haslo2']=$haslo2;
-		if(isset($_POST['regulamin'])) $_SESSION['fr_regulamin'] = true;
 	
 	
 		require_once "connect.php";
@@ -178,6 +170,8 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<title>Załóż darmowe NH-konto!</title>
 	<script src='https://www.google.com/recaptcha/api.js'></script>
+	<link rel="stylesheet" href="rejestracja_style.css" type="text/css" />
+	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext" rel="stylesheet">
 	
 	<style>
 		.error
@@ -190,117 +184,107 @@
 </head>
 
 <body>
-	<form method="post">
-		Imię: <br/> <input type="text" value="<?php
-			if(isset($_SESSION['fr_imie']))
-			{
-				echo $_SESSION['fr_imie'];
-				unset($_SESSION['fr_imie']);
-			}
-		?>" name="imie"/><br/>
-		<?php
-			if(isset($_SESSION['e_imie']))
-			{
-				echo '<div class="error">'.$_SESSION['e_imie'].'</div>';
-				unset($_SESSION['e_imie']);
-			}
-		?>
-		
-		Nazwisko: <br/> <input type="text" value="<?php
-			if(isset($_SESSION['fr_nazwisko']))
-			{
-				echo $_SESSION['fr_nazwisko'];
-				unset($_SESSION['fr_nazwisko']);
-			}
-		?>" name="nazwisko"/><br/>
-		<?php
-			if(isset($_SESSION['e_nazwisko']))
-			{
-				echo '<div class="error">'.$_SESSION['e_nazwisko'].'</div>';
-				unset($_SESSION['e_nazwisko']);
-			}
-		?>
-		
-		Login: <br/> <input type="text" value="<?php
-			if(isset($_SESSION['fr_login']))
-			{
-				echo $_SESSION['fr_login'];
-				unset($_SESSION['fr_login']);
-			}
-		?>" name="login"/><br/>
-		<?php
-			if(isset($_SESSION['e_login']))
-			{
-				echo '<div class="error">'.$_SESSION['e_login'].'</div>';
-				unset($_SESSION['e_login']);
-			}
-		?>
-		
-		E-mail: <br/> <input type="text" value="<?php
-			if(isset($_SESSION['fr_email']))
-			{
-				echo $_SESSION['fr_email'];
-				unset($_SESSION['fr_email']);
-			}
-		?>" name="email"/><br/>
-		<?php
-			if(isset($_SESSION['e_email']))
-			{
-				echo '<div class="error">'.$_SESSION['e_email'].'</div>';
-				unset($_SESSION['e_email']);
-			}
-		?>
-		
-		Twoje hasło: <br/> <input type="password" value="<?php
-			if(isset($_SESSION['fr_haslo1']))
-			{
-				echo $_SESSION['fr_haslo1'];
-				unset($_SESSION['fr_haslo1']);
-			}
-		?>" name="haslo1"/><br/>
-		<?php
-			if(isset($_SESSION['e_haslo']))
-			{
-				echo '<div class="error">'.$_SESSION['e_haslo'].'</div>';
-				unset($_SESSION['e_haslo']);
-			}
-		?>
-		
-		Powtórz hasło: <br/> <input type="password" value="<?php
-			if(isset($_SESSION['fr_haslo2']))
-			{
-				echo $_SESSION['fr_haslo2'];
-				unset($_SESSION['fr_haslo2']);
-			}
-		?>" name="haslo2"/><br/>
-		
-		<input type="checkbox" name="regulamin" id="id_regulamin"<?php
-			if(isset($_SESSION['fr_regulamin']))
-			{
-				echo "checked";
-				unset($_SESSION['fr_regulamin']);
-			}
-		?>/> <label for="id_regulamin">Akceptuję regulamin</label>
-		<?php
-			if(isset($_SESSION['e_regulamin']))
-			{
-				echo '<div class="error">'.$_SESSION['e_regulamin'].'</div>';
-				unset($_SESSION['e_regulamin']);
-			}
-		?>
-		
-		<div class="g-recaptcha" data-sitekey="6LdueQwUAAAAABd8TPKqvaYg3EA3A38NPabROrOZ"></div>
-		<?php
-			if(isset($_SESSION['e_bot']))
-			{
-				echo '<div class="error">'.$_SESSION['e_bot'].'</div>';
-				unset($_SESSION['e_bot']);
-			}
-		?>
-		
-		<br/>
-		
-		<input type="submit" value="Zarejestruj się"/>
-	</form>
+	<div id="header">Rejestrujemy się!</div>
+
+	<div id="sign_form">
+		<form method="post">
+			<input type="text" placeholder="imię" value="<?php						//Imie
+				if(isset($_SESSION['fr_imie']))
+				{
+					echo $_SESSION['fr_imie'];
+					unset($_SESSION['fr_imie']);
+				}
+			?>" name="imie"/><br/>
+			<?php
+				if(isset($_SESSION['e_imie']))
+				{
+					echo '<div class="error">'.$_SESSION['e_imie'].'</div>';
+					unset($_SESSION['e_imie']);
+				}
+			?>
+
+			<input type="text" placeholder="nazwisko" value="<?php					//Nazwisko
+				if(isset($_SESSION['fr_nazwisko']))
+				{
+					echo $_SESSION['fr_nazwisko'];
+					unset($_SESSION['fr_nazwisko']);
+				}
+			?>" name="nazwisko"/><br/>
+			<?php
+				if(isset($_SESSION['e_nazwisko']))
+				{
+					echo '<div class="error">'.$_SESSION['e_nazwisko'].'</div>';
+					unset($_SESSION['e_nazwisko']);
+				}
+			?>
+
+			<input type="text" placeholder="login" value="<?php						//Login
+				if(isset($_SESSION['fr_login']))
+				{
+					echo $_SESSION['fr_login'];
+					unset($_SESSION['fr_login']);
+				}
+			?>" name="login"/><br/>
+			<?php
+				if(isset($_SESSION['e_login']))
+				{
+					echo '<div class="error">'.$_SESSION['e_login'].'</div>';
+					unset($_SESSION['e_login']);
+				}
+			?>
+
+			<input type="text" placeholder="e-mail" value="<?php					//E-mail
+				if(isset($_SESSION['fr_email']))
+				{
+					echo $_SESSION['fr_email'];
+					unset($_SESSION['fr_email']);
+				}
+			?>" name="email"/><br/>
+			<?php
+				if(isset($_SESSION['e_email']))
+				{
+					echo '<div class="error">'.$_SESSION['e_email'].'</div>';
+					unset($_SESSION['e_email']);
+				}
+			?>
+
+			<input type="password" placeholder="hasło" value="<?php					//Haslo
+				if(isset($_SESSION['fr_haslo1']))
+				{
+					echo $_SESSION['fr_haslo1'];
+					unset($_SESSION['fr_haslo1']);
+				}
+			?>" name="haslo1"/><br/>
+			<?php
+				if(isset($_SESSION['e_haslo']))
+				{
+					echo '<div class="error">'.$_SESSION['e_haslo'].'</div>';
+					unset($_SESSION['e_haslo']);
+				}
+			?>
+
+			<input type="password" placeholder="powtórz hasło" value="<?php			//Powtorz haslo
+				if(isset($_SESSION['fr_haslo2']))
+				{
+					echo $_SESSION['fr_haslo2'];
+					unset($_SESSION['fr_haslo2']);
+				}
+			?>" name="haslo2"/><br/>
+
+			<div class="g-recaptcha" data-sitekey="6LdueQwUAAAAABd8TPKqvaYg3EA3A38NPabROrOZ"></div>
+			<?php
+				if(isset($_SESSION['e_bot']))
+				{
+					echo '<div class="error">'.$_SESSION['e_bot'].'</div>';
+					unset($_SESSION['e_bot']);
+				}
+			?>
+
+			<input type="submit" value="Zarejestruj się"/>
+
+			<div id="txt_lub">-------- lub --------</div>
+			<div id="link_logowania"><a href="index.php">Wróć do strony logowania!</a></div>
+		</form>
+	</div>
 </body>
 </html>

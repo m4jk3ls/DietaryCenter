@@ -1,0 +1,163 @@
+body
+{
+	/* Background pattern from subtlepatterns.com */
+	background-image: url("img/restaurant_icons.png");
+}
+
+#header
+{
+	width: 100%;
+	text-align: center;
+	font-size: 70px;
+	font-family: 'Great Vibes', cursive;
+	position: absolute;
+	top: calc((50% - 240px)/2 - 44px);
+}
+
+#sign_form
+{
+	background-color: white;
+	width: 320px;
+	padding: 30px 50px;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin: -240px 0 0 -210px;
+	-webkit-box-shadow: 3px 3px 30px 5px rgba(204,204,204,0.9);
+	-moz-box-shadow: 3px 3px 30px 5px rgba(204,204,204,0.9);
+	box-shadow: 3px 3px 30px 5px rgba(204,204,204,0.9);
+}
+
+input[type=text],
+input[type=password]
+{
+	width: 320px;
+	background-color: #efefef;
+	color: #666;
+	border: 2px solid #ddd;
+	border-radius: 5px;
+	font-size: 14px;
+	padding: 5px;
+	box-sizing: border-box;
+	outline: none;
+	margin-top: 5px;
+}
+
+input[type=text]:focus,
+input[type=password]:focus
+{
+	-webkit-box-shadow: 0 0 10px 2px rgba(204,204,204,0.9);
+	-moz-box-shadow: 0 0 10px 2px rgba(204,204,204,0.9);
+	box-shadow: 0 0 10px 2px rgba(204,204,204,0.9);
+	border: 2px solid #a5cda5;
+	background-color: #e9f3e9;
+	color: #428c42;
+}
+
+.g-recaptcha
+{
+	margin-top: 10px;
+}
+
+input[type=submit]
+{
+	width: 320px;
+	background-color: #36b03c;
+	font-size: 20px;
+	color: white;
+	padding: 15px 10px;
+	margin-top: 20px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	letter-spacing: 2px;
+	outline: none;
+}
+
+input[type=submit]:focus
+{
+	-webkit-box-shadow: 0 0 15px 5px rgba(204,204,204,0.9);
+	-moz-box-shadow: 0 0 15px 5px rgba(204,204,204,0.9);
+	box-shadow: 0 0 15px 5px rgba(204,204,204,0.9);
+}
+
+input[type=submit]:hover
+{
+	background-color: #37b93d;
+}
+
+input::-webkit-input-placeholder
+{
+	color: #999;
+}
+input:focus::-webkit-input-placeholder
+{
+	color: #428C42;
+}
+
+/* Firefox < 19 */
+input:-moz-placeholder
+{
+	color: #999;
+}
+input:focus:-moz-placeholder
+{
+	color: #428C42;
+}
+
+/* Firefox > 19 */
+input::-moz-placeholder
+{
+	color: #999;
+}
+input:focus::-moz-placeholder
+{
+	color: #428C42;
+}
+
+/* Internet Explorer 10 */
+input:-ms-input-placeholder
+{
+	color: #999;
+}
+input:focus:-ms-input-placeholder
+{
+	color: #428C42;
+}
+
+#txt_lub
+{
+	text-align: center;
+	margin: 5px 0 5px 0;
+	font-size: 16px;
+}
+
+#link_logowania
+{
+	text-align: center;
+}
+
+#link_logowania > a
+{
+	text-decoration:none;
+	font-size: 18px;
+}
+
+/*Nieodwiedzony link*/
+#link_logowania > a:link
+{
+	color: #2C05F0;
+}
+
+/*Odwiedzony link*/
+#link_logowania > a:visited
+{
+	color: #7DC3F5;
+}
+
+/*Link po najechaniu kursorem*/
+#link_logowania > a:hover
+{
+	color: #36b03c;
+	cursor: pointer;
+}
