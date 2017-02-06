@@ -12,7 +12,7 @@ body
 	font-size: 70px;
 	font-family: 'Great Vibes', cursive;
 	position: absolute;
-	top: calc((50% - 174px)/2 - 50px);
+	top: calc((50% - 174px)/2 - 44px);
 }
 
 #log_form
