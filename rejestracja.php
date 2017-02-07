@@ -170,7 +170,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<title>Załóż darmowe NH-konto!</title>
 	<script src='https://www.google.com/recaptcha/api.js'></script>
-	<link rel="stylesheet" href="rejestracja_style.css" type="text/css" />
+	<link rel="stylesheet" href="css_files/rejestracja_style.css" type="text/css" />
 	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext" rel="stylesheet">
 	
 	<style>
