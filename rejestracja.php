@@ -136,7 +136,7 @@
 					$ile_takich_maili = $rezultat->num_rows;
 					if ($ile_takich_maili > 0)
 					{
-						$wszystko_OK = false;
+						$GLOBALS['wszystko_OK'] = false;
 						$_SESSION['e_email'] = "Istnieje już użytkownik o takim adresie email!";
 					}
 
@@ -147,7 +147,7 @@
 					$ile_takich_loginow = $rezultat->num_rows;
 					if ($ile_takich_loginow > 0)
 					{
-						$wszystko_OK = false;
+						$GLOBALS['wszystko_OK'] = false;
 						$_SESSION['e_login'] = "Istnieje już użytkownik o takim loginie! Wybierz inny.";
 					}
 
@@ -205,157 +205,6 @@
 		$GLOBALS['wszystko_OK'] = true;
 		walidacja();
 	}
-
-
-	/*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	if(isset($_POST['email']))
-	{
-		$wszystko_OK=true;
-
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		$imie = $_POST['imie'];
-		if(strlen($imie)<1)
-		{
-			$wszystko_OK=false;
-			$_SESSION['e_imie']="Nie podałeś swojego imienia!";
-		}
-
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		$nazwisko = $_POST['nazwisko'];
-		if(strlen($nazwisko)<1)
-		{
-			$wszystko_OK=false;
-			$_SESSION['e_nazwisko']="Nie podałeś swojego nazwiska!";
-		}
-
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		$login = $_POST['login'];
-		if((strlen($login)<3) || (strlen($login)>20))
-		{
-			$wszystko_OK=false;
-			$_SESSION['e_login']="Login musi posiadać od 3 do 20 znaków!";
-		}
-		if(ctype_alnum($login)==false)
-		{
-			$wszystko_OK=false;
-			$_SESSION['e_login']="Login może składać się tylko z liter i cyfr (bez polskich znaków)";
-		}
-
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		$email = $_POST['email'];
-		$emailB = filter_var($email, FILTER_SANITIZE_EMAIL);
-		if((filter_var($emailB, FILTER_VALIDATE_EMAIL) == false) || ($emailB != $email))
-		{
-			$wszystko_OK = false;
-			$_SESSION['e_email'] = "Podaj poprawny adres email!";
-		}
-
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		$haslo1 = $_POST['haslo1'];
-		$haslo2 = $_POST['haslo2'];
-		if(strlen($haslo1)<8 || strlen($haslo1)>20)
-		{
-			$wszystko_OK = false;
-			$_SESSION['e_haslo']="Hasło musi posiadać od 8 do 20 znaków!";
-		}
-		if($haslo1 != $haslo2)
-		{
-			$wszystko_OK = false;
-			$_SESSION['e_haslo']="Podane hasła nie są identyczne!";
-		}
-
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		$sekret = "6LdueQwUAAAAAP3YdoBKWrUuynRkVouPmL0D_hPo";
-		$sprawdz = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$sekret.'&response='.$_POST['g-recaptcha-response']);
-		$odpowiedz = json_decode($sprawdz);
-		if(!($odpowiedz->success))
-		{
-			$wszystko_OK=false;
-			$_SESSION['e_bot']="Potwierdź, że nie jesteś botem!";
-		}
-
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		$_SESSION['fr_imie']=$imie;
-		$_SESSION['fr_nazwisko']=$nazwisko;
-		$_SESSION['fr_login']=$login;
-		$_SESSION['fr_email']=$email;
-		$_SESSION['fr_haslo1']=$haslo1;
-		$_SESSION['fr_haslo2']=$haslo2;
-
-		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		if($wszystko_OK)
-		{
-			require_once "connect.php";
-			mysqli_report(MYSQLI_REPORT_STRICT);
-			try
-			{
-				$polaczenie = new mysqli($host, $db_user, $db_password, $db_name);
-				$polaczenie->set_charset('utf8');
-
-				if ($polaczenie->connect_errno != 0)
-					throw new Exception($polaczenie->connect_error);
-				else
-				{
-					$rezultat = $polaczenie->query("select p.id_pacjent from pacjent p
-												join uzytkownik u on (p.id_uzytkownik=u.id_uzytkownik)
-												where u.email='$email'");
-
-					if (!$rezultat) throw new Exception($polaczenie->error);
-
-					$ile_takich_maili = $rezultat->num_rows;
-					if ($ile_takich_maili > 0)
-					{
-						$wszystko_OK = false;
-						$_SESSION['e_email'] = "Istnieje już użytkownik o takim adresie email!";
-					}
-
-					$rezultat = $polaczenie->query("select id_uzytkownik from uzytkownik where login='$login'");
-
-					if (!$rezultat) throw new Exception($polaczenie->error);
-
-					$ile_takich_loginow = $rezultat->num_rows;
-					if ($ile_takich_loginow > 0)
-					{
-						$wszystko_OK = false;
-						$_SESSION['e_login'] = "Istnieje już użytkownik o takim loginie! Wybierz inny.";
-					}
-
-					if ($wszystko_OK == true)
-					{
-						try
-						{
-							$salt = generateRandomString();
-							$haslo_hash = sha1($haslo1.$salt);
-
-							$polaczenie->query("START TRANSACTION");
-
-							if ($polaczenie->query("insert into uzytkownik values (null, '$imie', '$nazwisko', '$email', '$login', '$haslo_hash', '$salt')") &&
-								$polaczenie->query("INSERT INTO pacjent VALUES (NULL, LAST_INSERT_ID())")
-							)
-								$polaczenie->query("COMMIT");
-							else
-								throw new Exception($polaczenie->error);
-
-							$_SESSION['udana_rejestracja'] = true;
-							header('Location: witamy.php');
-						}
-						catch (Exception $e)
-						{
-							$polaczenie->query("ROLLBACK");
-							echo '<span style="color:red;">Błąd serwera! Przepraszamy za niedogodności i prosimy o rejestrację w innym terminie!</span>';
-							//echo '<br/>Informacja developerska: '.$e;
-						}
-					}
-					$polaczenie->close();
-				}
-			}
-			catch (Exception $e)
-			{
-				echo '<span style="color:red;">Błąd serwera! Przepraszamy za niedogodności i prosimy o rejestrację w innym terminie!</span>';
-				//echo '<br/>Informacja developerska: '.$e;
-			}
-		}
-	}*/
 ?>
 
 <!DOCTYPE HTML>
