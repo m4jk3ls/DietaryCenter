@@ -30,6 +30,7 @@
 		$token = generateRandomString();
 	}
 
+	// Transakcja wykonujaca sie w momencie, w ktorym nie ma aktywnej sesji usera, na konto ktorego chce sie zalogowac
 	function transakcja1($ID_help, $login_help, $IP, $nazwa_i_wersja_przegladarki, $token)
 	{
 		$GLOBALS['polaczenie']->query("START TRANSACTION");
@@ -41,6 +42,7 @@
 			return false;
 	}
 
+	// Transakcja wykonujaca sie w momencie, w ktorym jest juz aktywna sesja usera, na konto ktorego chce sie zalogowac ('zepsucie' ciasteczka)
 	function transakcja2($ID_help, $login_help, $IP, $nazwa_i_wersja_przegladarki, $token)
 	{
 		$GLOBALS['polaczenie']->query("START TRANSACTION");
@@ -52,6 +54,7 @@
 			return false;
 	}
 
+	// Ustawienie ciasteczek oraz wpisanie ciut potrzebnych danych do sesji
 	function cookies($token, $wiersz)
 	{
 		setcookie("zalogowany", true, time() + 86400);
