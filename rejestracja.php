@@ -95,70 +95,74 @@
 		$_SESSION['fr_haslo2']=$haslo2;
 	
 	
-		require_once "connect.php";
-		mysqli_report(MYSQLI_REPORT_STRICT);
-		try
+		if($wszystko_OK)
 		{
-			$polaczenie = new mysqli($host, $db_user, $db_password, $db_name);
-			$polaczenie->set_charset('utf8');
-			
-			if($polaczenie->connect_errno != 0)
-				throw new Exception($polaczenie->connect_error);
-			else
+			require_once "connect.php";
+			mysqli_report(MYSQLI_REPORT_STRICT);
+			try
 			{
-				$rezultat = $polaczenie->query("select p.id_pacjent from pacjent p
+				$polaczenie = new mysqli($host, $db_user, $db_password, $db_name);
+				$polaczenie->set_charset('utf8');
+
+				if ($polaczenie->connect_errno != 0)
+					throw new Exception($polaczenie->connect_error);
+				else
+				{
+					$rezultat = $polaczenie->query("select p.id_pacjent from pacjent p
 												join uzytkownik u on (p.id_uzytkownik=u.id_uzytkownik)
 												where u.email='$email'");
-				
-				if(!$rezultat) throw new Exception($polaczenie->error);
-				
-				$ile_takich_maili = $rezultat->num_rows;
-				if($ile_takich_maili > 0)
-				{
-					$wszystko_OK = false;
-					$_SESSION['e_email']="Istnieje już użytkownik o takim adresie email!";
-				}
-				
-				$rezultat = $polaczenie->query("select id_uzytkownik from uzytkownik where login='$login'");
-				
-				if(!$rezultat) throw new Exception($polaczenie->error);
-				
-				$ile_takich_loginow = $rezultat->num_rows;
-				if($ile_takich_loginow > 0)
-				{
-					$wszystko_OK = false;
-					$_SESSION['e_login']="Istnieje już użytkownik o takim loginie! Wybierz inny.";
-				}
-				
-				if($wszystko_OK==true)
-				{
-					try
-					{
-						$polaczenie->query("START TRANSACTION");
 
-						if($polaczenie->query("insert into uzytkownik values (null, '$imie', '$nazwisko', '$email', '$login', '$haslo_hash', '$salt')") &&
-							$polaczenie->query("insert into pacjent values (null, LAST_INSERT_ID())"))
-							$polaczenie->query("COMMIT");
-						else
-							throw new Exception($polaczenie->error);
-							
-						$_SESSION['udana_rejestracja']=true;
-						header('Location: witamy.php');
-					}
-					catch(Exception $e)
+					if (!$rezultat) throw new Exception($polaczenie->error);
+
+					$ile_takich_maili = $rezultat->num_rows;
+					if ($ile_takich_maili > 0)
 					{
-						$polaczenie->query("ROLLBACK");
-						echo '<span style="color:red;">Błąd serwera! Przepraszamy za niedogodności i prosimy o rejestrację w innym terminie!</span>';
-						//echo '<br/>Informacja developerska: '.$e;
+						$wszystko_OK = false;
+						$_SESSION['e_email'] = "Istnieje już użytkownik o takim adresie email!";
 					}
+
+					$rezultat = $polaczenie->query("select id_uzytkownik from uzytkownik where login='$login'");
+
+					if (!$rezultat) throw new Exception($polaczenie->error);
+
+					$ile_takich_loginow = $rezultat->num_rows;
+					if ($ile_takich_loginow > 0)
+					{
+						$wszystko_OK = false;
+						$_SESSION['e_login'] = "Istnieje już użytkownik o takim loginie! Wybierz inny.";
+					}
+
+					if ($wszystko_OK == true)
+					{
+						try
+						{
+							$polaczenie->query("START TRANSACTION");
+
+							if ($polaczenie->query("insert into uzytkownik values (null, '$imie', '$nazwisko', '$email', '$login', '$haslo_hash', '$salt')") &&
+								$polaczenie->query("INSERT INTO pacjent VALUES (NULL, LAST_INSERT_ID())")
+							)
+								$polaczenie->query("COMMIT");
+							else
+								throw new Exception($polaczenie->error);
+
+							$_SESSION['udana_rejestracja'] = true;
+							header('Location: witamy.php');
+						}
+						catch (Exception $e)
+						{
+							$polaczenie->query("ROLLBACK");
+							echo '<span style="color:red;">Błąd serwera! Przepraszamy za niedogodności i prosimy o rejestrację w innym terminie!</span>';
+							//echo '<br/>Informacja developerska: '.$e;
+						}
+					}
+					$polaczenie->close();
 				}
-				$polaczenie->close();
 			}
-		}
-		catch(Exception $e)
-		{
-			echo '<span style="color:red;">Błąd serwera! Przepraszamy za niedogodności i prosimy o rejestrację w innym terminie!</span>';
-			//echo '<br/>Informacja developerska: '.$e;
+			catch (Exception $e)
+			{
+				echo '<span style="color:red;">Błąd serwera! Przepraszamy za niedogodności i prosimy o rejestrację w innym terminie!</span>';
+				//echo '<br/>Informacja developerska: '.$e;
+			}
 		}
 	}
 ?>
@@ -172,15 +176,8 @@
 	<script src='https://www.google.com/recaptcha/api.js'></script>
 	<link rel="stylesheet" href="css_files/rejestracja_style.css" type="text/css" />
 	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext" rel="stylesheet">
-	
-	<style>
-		.error
-		{
-			color:red;
-			margin-top: 10px;
-			margin-bottom: 10px;
-		}
-	</style>
+	<script src="javascript_files/jquery-3.1.1.min.js"></script>
+	<script src="javascript_files/getDivsSizes.js"></script>
 </head>
 
 <body>
@@ -281,10 +278,10 @@
 			?>
 
 			<input type="submit" value="Zarejestruj się"/>
-
-			<div id="txt_lub">-------- lub --------</div>
-			<div id="link_logowania"><a href="index.php">Wróć do strony logowania!</a></div>
 		</form>
+
+		<div id="txt_lub">-------- lub --------</div>
+		<div id="link_logowania"><a href="index.php">Wróć do strony logowania!</a></div>
 	</div>
 </body>
 </html>
