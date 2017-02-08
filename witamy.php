@@ -33,10 +33,12 @@
 	<title>NaturHouse - dietetyk na wyciągnięcie ręki</title>
 	<link rel="stylesheet" href="css_files/witamy_style.css" type="text/css" />
 	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext" rel="stylesheet">
+	<script src="javascript_files/jquery-3.1.1.min.js"></script>
+	<script src="javascript_files/getDivsSizes.js"></script>
 	<meta http-equiv="Refresh" content="5; url=index.php" />
 </head>
 
 <body>
-	<div id="komunikat">Dziękujemy za rejestrację w serwisie! Za chwilę zostaniesz przekierowany do formularza logowania!</div>
+	<div id="header">Dziękujemy za rejestrację w serwisie! Za chwilę zostaniesz przekierowany do formularza logowania!</div>
 </body>
 </html>
