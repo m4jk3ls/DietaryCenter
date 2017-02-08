@@ -110,10 +110,41 @@
 		}
 	}
 
+	function ile_takich_maili(&$rezultat)
+	{
+		$ile = $rezultat->num_rows;
+		if ($ile > 0)
+		{
+			$GLOBALS['wszystko_OK'] = false;
+			$_SESSION['e_email'] = "Istnieje już użytkownik o takim adresie email!";
+		}
+	}
+
+	function ile_takich_loginow(&$rezultat)
+	{
+		$ile = $rezultat->num_rows;
+		if ($ile > 0)
+		{
+			$GLOBALS['wszystko_OK'] = false;
+			$_SESSION['e_login'] = "Istnieje już użytkownik o takim loginie! Wybierz inny.";
+		}
+	}
+
+	function wykonaj_transakcje($haslo_hash, $salt)
+	{
+		global $imie, $nazwisko, $login, $email;
+
+		$GLOBALS['polaczenie']->query("START TRANSACTION");
+		if ($GLOBALS['polaczenie']->query("insert into uzytkownik values (null, '$imie', '$nazwisko', '$email', '$login', '$haslo_hash', '$salt')") &&
+			$GLOBALS['polaczenie']->query("insert into pacjent VALUES (null, LAST_INSERT_ID())"))
+			return true;
+		else
+			return false;
+	}
+
 	function polaczenie_z_baza()
 	{
-		global $imie, $nazwisko, $login, $email, $haslo1;
-		global $host, $db_user, $db_password, $db_name;
+		global $login, $email, $haslo1, $host, $db_user, $db_password, $db_name;
 
 		if($GLOBALS['wszystko_OK'])
 		{
@@ -121,35 +152,22 @@
 			mysqli_report(MYSQLI_REPORT_STRICT);
 			try
 			{
-				$polaczenie = new mysqli($host, $db_user, $db_password, $db_name);
-				$polaczenie->set_charset('utf8');
+				$GLOBALS['polaczenie'] = new mysqli($host, $db_user, $db_password, $db_name);
+				$GLOBALS['polaczenie']->set_charset('utf8');
 
-				if ($polaczenie->connect_errno != 0)
-					throw new Exception($polaczenie->connect_error);
+				if ($GLOBALS['polaczenie']->connect_errno != 0)
+					throw new Exception($GLOBALS['polaczenie']->connect_error);
 				else
 				{
-					$rezultat = $polaczenie->query("select p.id_pacjent from pacjent p
-													join uzytkownik u on (p.id_uzytkownik = u.id_uzytkownik)
-													where u.email = '$email'");
-					if (!$rezultat) throw new Exception($polaczenie->error);
+					$rezultat = $GLOBALS['polaczenie']->query("select p.id_pacjent from pacjent p join uzytkownik u on (p.id_uzytkownik = u.id_uzytkownik) where u.email = '$email'");
+					if (!$rezultat) throw new Exception($GLOBALS['polaczenie']->error);
 
-					$ile_takich_maili = $rezultat->num_rows;
-					if ($ile_takich_maili > 0)
-					{
-						$GLOBALS['wszystko_OK'] = false;
-						$_SESSION['e_email'] = "Istnieje już użytkownik o takim adresie email!";
-					}
+					ile_takich_maili($rezultat);
 
-					$rezultat = $polaczenie->query("select id_uzytkownik from uzytkownik
-													where login = '$login'");
-					if (!$rezultat) throw new Exception($polaczenie->error);
+					$rezultat = $GLOBALS['polaczenie']->query("select id_uzytkownik from uzytkownik where login = '$login'");
+					if (!$rezultat) throw new Exception($GLOBALS['polaczenie']->error);
 
-					$ile_takich_loginow = $rezultat->num_rows;
-					if ($ile_takich_loginow > 0)
-					{
-						$GLOBALS['wszystko_OK'] = false;
-						$_SESSION['e_login'] = "Istnieje już użytkownik o takim loginie! Wybierz inny.";
-					}
+					ile_takich_loginow($rezultat);
 
 					if ($GLOBALS['wszystko_OK'])
 					{
@@ -158,31 +176,28 @@
 							$salt = generateRandomString();
 							$haslo_hash = sha1($haslo1.$salt);
 
-							$polaczenie->query("START TRANSACTION");
-
-							if ($polaczenie->query("insert into uzytkownik values (null, '$imie', '$nazwisko', '$email', '$login', '$haslo_hash', '$salt')") &&
-								$polaczenie->query("INSERT INTO pacjent VALUES (null, LAST_INSERT_ID())"))
-								$polaczenie->query("COMMIT");
+							if(wykonaj_transakcje($haslo_hash, $salt))
+								$GLOBALS['polaczenie']->query("COMMIT");
 							else
-								throw new Exception($polaczenie->error);
+								throw new Exception($GLOBALS['polaczenie']->error);
 
 							$_SESSION['udana_rejestracja'] = true;
 							header('Location: witamy.php');
 						}
 						catch (Exception $e)
 						{
-							$polaczenie->query("ROLLBACK");
+							$GLOBALS['polaczenie']->query("ROLLBACK");
 							echo '<span style="color:red;">Błąd serwera! Przepraszamy za niedogodności i prosimy o rejestrację w innym terminie!</span>';
-							//echo '<br/>Informacja developerska: '.$e;
+							echo '<br/>Informacja developerska: '.$e;
 						}
 					}
-					$polaczenie->close();
+					$GLOBALS['polaczenie']->close();
 				}
 			}
 			catch (Exception $e)
 			{
 				echo '<span style="color:red;">Błąd serwera! Przepraszamy za niedogodności i prosimy o rejestrację w innym terminie!</span>';
-				//echo '<br/>Informacja developerska: '.$e;
+				echo '<br/>Informacja developerska: '.$e;
 			}
 		}
 	}
