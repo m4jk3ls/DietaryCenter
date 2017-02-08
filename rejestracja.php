@@ -110,6 +110,7 @@
 		}
 	}
 
+	// Sprawdzanie liczby tozsamych adresow email z podanym w formularzu
 	function ile_takich_maili(&$rezultat)
 	{
 		$ile = $rezultat->num_rows;
@@ -120,6 +121,7 @@
 		}
 	}
 
+	// Sprawdzanie liczby tozsamych loginow z podanym w formularzu
 	function ile_takich_loginow(&$rezultat)
 	{
 		$ile = $rezultat->num_rows;
@@ -130,6 +132,7 @@
 		}
 	}
 
+	// Transakcja, ktora ostatecznie wprowadza dane nowego uzytkownika-pacjenta do bazy
 	function wykonaj_transakcje($haslo_hash, $salt)
 	{
 		global $imie, $nazwisko, $login, $email;
@@ -142,6 +145,7 @@
 			return false;
 	}
 
+	// Glowna funkcja, obslugujaca polaczenie z baza danych
 	function polaczenie_z_baza()
 	{
 		global $login, $email, $haslo1, $host, $db_user, $db_password, $db_name;
@@ -152,35 +156,39 @@
 			mysqli_report(MYSQLI_REPORT_STRICT);
 			try
 			{
+				// Proba polaczenia sie z baza
 				$GLOBALS['polaczenie'] = new mysqli($host, $db_user, $db_password, $db_name);
 				$GLOBALS['polaczenie']->set_charset('utf8');
 
+				// Jesli powyzsza proba zawiedzie, to rzuc wyjatkiem
 				if ($GLOBALS['polaczenie']->connect_errno != 0)
 					throw new Exception($GLOBALS['polaczenie']->connect_error);
 				else
 				{
+					// Poszukaj, czy w bazie istnieje juz podany adres email
 					$rezultat = $GLOBALS['polaczenie']->query("select p.id_pacjent from pacjent p join uzytkownik u on (p.id_uzytkownik = u.id_uzytkownik) where u.email = '$email'");
 					if (!$rezultat) throw new Exception($GLOBALS['polaczenie']->error);
-
 					ile_takich_maili($rezultat);
 
+					// Poszukaj, czy w bazie istnieje juz podany login
 					$rezultat = $GLOBALS['polaczenie']->query("select id_uzytkownik from uzytkownik where login = '$login'");
 					if (!$rezultat) throw new Exception($GLOBALS['polaczenie']->error);
-
 					ile_takich_loginow($rezultat);
 
+					//Jesli do tej pory wszystko przebieglo pomyslnie...
 					if ($GLOBALS['wszystko_OK'])
 					{
 						try
 						{
+							// ...to wygeneruj sol, hash'uj haslo i wprowadz dane do bazy za pomoca transakcji
 							$salt = generateRandomString();
 							$haslo_hash = sha1($haslo1.$salt);
-
 							if(wykonaj_transakcje($haslo_hash, $salt))
 								$GLOBALS['polaczenie']->query("COMMIT");
 							else
 								throw new Exception($GLOBALS['polaczenie']->error);
 
+							// Ustaw prawdziwosc zmiennej 'udana_rejestracja' i prowadz do strony powitalnej
 							$_SESSION['udana_rejestracja'] = true;
 							header('Location: witamy.php');
 						}
