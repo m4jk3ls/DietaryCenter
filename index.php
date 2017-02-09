@@ -19,6 +19,7 @@
 	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext" rel="stylesheet">
 	<script src="javascript_files/jquery-3.1.1.min.js"></script>
 	<script src="javascript_files/getDivsSizes.js"></script>
+	<script src="javascript_files/ajaxForLog.js"></script>
 </head>
 
 <body>
@@ -27,7 +28,8 @@
 		<div id="log_form">
 
 			<form action="zaloguj.php" method="post">
-				<input type="text" name="login" placeholder="login"/>
+				<input type="text" name="login" id="log" placeholder="login"/>
+				<div class="komunikat"></div>
 				<input type="password" name="haslo" placeholder="hasło"/>
 				<input type="submit" value="Zaloguj się"/>
 			</form>
