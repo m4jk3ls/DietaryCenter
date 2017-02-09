@@ -44,8 +44,8 @@ else
 				}
 				else
 					throw new Exception($polaczenie->error);
+				$polaczenie->close();
 			}
-			$polaczenie->close();
 		}
 		catch(Exception $e)
 		{

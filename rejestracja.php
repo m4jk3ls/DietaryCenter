@@ -244,6 +244,7 @@
 	<script src="javascript_files/ajaxForName.js"></script>
 	<script src="javascript_files/ajaxForSurname.js"></script>
 	<script src="javascript_files/ajaxForLogin_rej.js"></script>
+	<script src="javascript_files/ajaxForEmail.js"></script>
 </head>
 
 <body>
@@ -299,17 +300,18 @@
 				}
 			?>
 
-			<input type="text" placeholder="e-mail" value="<?php					//E-mail
+			<input type="text" id="email_id" name="email" placeholder="e-mail" value="<?php								//E-mail
 				if(isset($_SESSION['fr_email']))
 				{
 					echo $_SESSION['fr_email'];
 					unset($_SESSION['fr_email']);
 				}
-			?>" name="email"/><br/>
+			?>"/>
+			<div class="komunikat" id="komunikat4"></div>
 			<?php
 				if(isset($_SESSION['e_email']))
 				{
-					echo '<div class="error">'.$_SESSION['e_email'].'</div>';
+					echo '<div class="glowny_komunikat">'.$_SESSION['e_email'].'</div>';
 					unset($_SESSION['e_email']);
 				}
 			?>
