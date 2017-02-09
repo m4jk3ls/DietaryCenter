@@ -17,23 +17,27 @@ else
 		else
 		{
 			$login = $_POST['login'];
-
-			//Walidacja i sanityzacja loginu
-			$login = htmlentities($login, ENT_QUOTES, "UTF-8");
-			if($rezultat = $polaczenie->query(sprintf("select * from uzytkownik where login='%s'", mysqli_real_escape_string($polaczenie, $login))))
-			{
-				// Sprawdzenie, czy sa w bazie uzytkownicy o podanym loginie
-				$ilu_userow = $rezultat->num_rows;
-				if($ilu_userow > 0)
-					$rezultat->free_result();
-				else
-				{
-					$rezultat->free_result();
-					echo 'Niepoprawny login!';
-				}
-			}
+			if(strlen($login) < 1)
+				echo 'Nie podałeś loginu!';
 			else
-				throw new Exception($polaczenie->error);
+			{
+				//Walidacja i sanityzacja loginu
+				$login = htmlentities($login, ENT_QUOTES, "UTF-8");
+				if($rezultat = $polaczenie->query(sprintf("select * from uzytkownik where login='%s'", mysqli_real_escape_string($polaczenie, $login))))
+				{
+					// Sprawdzenie, czy sa w bazie uzytkownicy o podanym loginie
+					$ilu_userow = $rezultat->num_rows;
+					if($ilu_userow > 0)
+					{
+						echo 'Login zajęty!';
+						$rezultat->free_result();
+					}
+					else
+						$rezultat->free_result();
+				}
+				else
+					throw new Exception($polaczenie->error);
+			}
 			$polaczenie->close();
 		}
 	}

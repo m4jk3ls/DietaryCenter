@@ -111,7 +111,7 @@
 	}
 
 	// Sprawdzanie liczby tozsamych adresow email z podanym w formularzu
-	function ile_takich_maili(&$rezultat)
+	function ile_takich_maili($rezultat)
 	{
 		$ile = $rezultat->num_rows;
 		if ($ile > 0)
@@ -122,7 +122,7 @@
 	}
 
 	// Sprawdzanie liczby tozsamych loginow z podanym w formularzu
-	function ile_takich_loginow(&$rezultat)
+	function ile_takich_loginow($rezultat)
 	{
 		$ile = $rezultat->num_rows;
 		if ($ile > 0)
@@ -241,6 +241,9 @@
 	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext" rel="stylesheet">
 	<script src="javascript_files/jquery-3.1.1.min.js"></script>
 	<script src="javascript_files/getDivsSizes.js"></script>
+	<script src="javascript_files/ajaxForName.js"></script>
+	<script src="javascript_files/ajaxForSurname.js"></script>
+	<script src="javascript_files/ajaxForLogin_rej.js"></script>
 </head>
 
 <body>
@@ -248,47 +251,50 @@
 
 	<div id="sign_form">
 		<form method="post">
-			<input type="text" placeholder="imię" value="<?php						//Imie
+			<input type="text" id="imie_id" name="imie" placeholder="imię" value="<?php									//Imie
 				if(isset($_SESSION['fr_imie']))
 				{
 					echo $_SESSION['fr_imie'];
 					unset($_SESSION['fr_imie']);
 				}
-			?>" name="imie"/><br/>
+			?>"/>
+			<div class="komunikat" id="komunikat1"></div>
 			<?php
 				if(isset($_SESSION['e_imie']))
 				{
-					echo '<div class="error">'.$_SESSION['e_imie'].'</div>';
+					echo '<div class="glowny_komunikat">'.$_SESSION['e_imie'].'</div>';
 					unset($_SESSION['e_imie']);
 				}
 			?>
 
-			<input type="text" placeholder="nazwisko" value="<?php					//Nazwisko
+			<input type="text" id="nazwisko_id" name="nazwisko" placeholder="nazwisko" value="<?php						//Nazwisko
 				if(isset($_SESSION['fr_nazwisko']))
 				{
 					echo $_SESSION['fr_nazwisko'];
 					unset($_SESSION['fr_nazwisko']);
 				}
-			?>" name="nazwisko"/><br/>
+			?>"/>
+			<div class="komunikat" id="komunikat2"></div>
 			<?php
 				if(isset($_SESSION['e_nazwisko']))
 				{
-					echo '<div class="error">'.$_SESSION['e_nazwisko'].'</div>';
+					echo '<div class="glowny_komunikat">'.$_SESSION['e_nazwisko'].'</div>';
 					unset($_SESSION['e_nazwisko']);
 				}
 			?>
 
-			<input type="text" placeholder="login" value="<?php						//Login
+			<input type="text" id="login_id" name="login" placeholder="login" value="<?php								//Login
 				if(isset($_SESSION['fr_login']))
 				{
 					echo $_SESSION['fr_login'];
 					unset($_SESSION['fr_login']);
 				}
-			?>" name="login"/><br/>
+			?>"/>
+			<div class="komunikat" id="komunikat3"></div>
 			<?php
 				if(isset($_SESSION['e_login']))
 				{
-					echo '<div class="error">'.$_SESSION['e_login'].'</div>';
+					echo '<div class="glowny_komunikat">'.$_SESSION['e_login'].'</div>';
 					unset($_SESSION['e_login']);
 				}
 			?>

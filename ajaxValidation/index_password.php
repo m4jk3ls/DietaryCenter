@@ -1,6 +1,6 @@
 <?php
 if(!isset($_POST['haslo']))
-	echo 'Nie przeslano zmiennej "haslo"';
+	echo 'Nie przesłano zmiennej "haslo"';
 else
 {
 	require_once "../connect.php";
