@@ -3,7 +3,7 @@ if(!isset($_POST['login']))
 	echo 'Nie przeslano zmiennej "login"';
 else
 {
-	require_once "connect.php";
+	require_once "../connect.php";
 	mysqli_report(MYSQLI_REPORT_STRICT);
 	try
 	{
@@ -29,7 +29,7 @@ else
 				else
 				{
 					$rezultat->free_result();
-					echo 'Niepoprawny login';
+					echo 'Niepoprawny login!';
 				}
 			}
 			else
@@ -39,7 +39,7 @@ else
 	}
 	catch(Exception $e)
 	{
-		echo 'Blad serwera! Przepraszamy za niedogodnosci i prosimy zalogowac sie ponownie pozniej!';
+		echo 'Błąd serwera! Przepraszamy za niedogodności i prosimy zalogować się ponownie później!';
 		//echo '<br/>Informacja developerska: '.$e;
 	}
 }
