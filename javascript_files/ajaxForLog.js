@@ -6,15 +6,15 @@ jQuery(document).ready(function()
 
 		$.ajax(
 			{
-				url: "index_login_ajax.php",
+				url: "ajaxValidation/index_login.php",
 				type: "POST",
 				data: "login="+login_value,
 				success: function(msg)
 				{
 					if(msg != "")
-						$(".komunikat").text(msg).css("margin-top", "10px");
+						$("#komunikat1").text(msg).css("margin-top", "10px");
 					else
-						$(".komunikat").text(msg).css("margin-top", "0");
+						$("#komunikat1").text(msg).css("margin-top", "0");
 				}
 			});
 	});
