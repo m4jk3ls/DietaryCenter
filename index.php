@@ -20,6 +20,7 @@
 	<script src="javascript_files/jquery-3.1.1.min.js"></script>
 	<script src="javascript_files/getDivsSizes.js"></script>
 	<script src="javascript_files/ajaxForLog.js"></script>
+	<script src="javascript_files/ajaxForPass.js"></script>
 </head>
 
 <body>
@@ -29,8 +30,18 @@
 
 			<form action="zaloguj.php" method="post">
 				<input type="text" name="login" id="log" placeholder="login"/>
-				<div class="komunikat"></div>
-				<input type="password" name="haslo" placeholder="hasło"/>
+				<div class="komunikat" id="komunikat1"></div>
+
+				<input type="password" name="haslo" id="pass" placeholder="hasło"/>
+				<div class="komunikat" id="komunikat2"></div>
+				<?php
+					if(isset($_SESSION['blad']))
+					{
+						echo '<div id="glowny_komunikat">'.$_SESSION['blad'].'</div>';
+						unset($_SESSION['blad']);
+					}
+				?>
+
 				<input type="submit" value="Zaloguj się"/>
 			</form>
 
@@ -38,8 +49,5 @@
 			<div id="link_rejestracji"><a href="rejestracja.php">Zarejestruj się i dołącz do nas!</a></div>
 
 		</div>
-<?php
-	if(isset($_SESSION['blad']))	echo $_SESSION['blad'];
-?>
 </body>
 </html>
