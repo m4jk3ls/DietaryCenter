@@ -17,8 +17,15 @@ else
 		else
 		{
 			$login = $_POST['login'];
+
 			if(strlen($login) < 1)
 				echo 'Nie podałeś loginu!';
+			else if(strlen($login) < 3)
+				echo 'Login jest zbyt krótki (min. 3 znaki)!';
+			else if(strlen($login) > 20)
+				echo 'Login jest zbyt długi (max. 20 znaków)!';
+			else if(!ctype_alnum($login))
+				echo 'Login może składać się tylko z liter i cyfr (bez polskich znaków)!';
 			else
 			{
 				//Walidacja i sanityzacja loginu
