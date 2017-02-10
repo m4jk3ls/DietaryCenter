@@ -24,6 +24,8 @@ body
 {
 	background-color: white;
 	width: 320px;
+	max-height: 420px;
+	overflow: auto;
 	padding: 30px 50px;
 	position: absolute;
 	left: 50%;
@@ -77,6 +79,11 @@ input[type=password]:focus
 .g-recaptcha
 {
 	margin-top: 10px;
+}
+
+#captchaPackage
+{
+	height: 78px;
 }
 
 input[type=submit]

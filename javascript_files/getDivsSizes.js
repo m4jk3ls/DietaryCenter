@@ -1,14 +1,14 @@
 $(document).ready(function()
 {
 	var header = $("#header");
-	var header_half_height = header.outerHeight()/2;
+	var header_half_height = header.innerHeight()/2;
 
 	if ($("#" + "log_form").length > 0)
 	{
 		// Get #log_form (lf) size and set "margin" property in CSS
 		var lf = $("#log_form");
-		var lf_half_width = lf.outerWidth()/2;
-		var lf_half_height = lf.outerHeight()/2;
+		var lf_half_width = lf.innerWidth()/2;
+		var lf_half_height = lf.innerHeight()/2;
 		var lf_value = (-lf_half_height) + "px" + " 0 0 " + (-lf_half_width) + "px";
 		lf.css("margin", lf_value);
 
@@ -20,8 +20,8 @@ $(document).ready(function()
 	{
 		// Get #sign_form (sf) size and set "margin" property in CSS
 		var sf = $("#sign_form");
-		var sf_half_width = sf.outerWidth()/2;
-		var sf_half_height = (sf.outerHeight()+78)/2;	//+78 in view of problem with img's (in this case: re-captcha)
+		var sf_half_width = sf.innerWidth()/2;
+		var sf_half_height = (sf.innerHeight())/2;
 		var sf_value = (-sf_half_height) + "px" + " 0 0 " + (-sf_half_width) + "px";
 		sf.css("margin", sf_value);
 
@@ -31,7 +31,7 @@ $(document).ready(function()
 	}
 	else
 	{
-		var header_half_width = header.outerWidth()/2;
+		var header_half_width = header.innerWidth()/2;
 		header.css({"margin-top": "-" + header_half_height + "px", "margin-left": "-" + header_half_width + "px"});
 	}
 });

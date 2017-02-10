@@ -341,7 +341,7 @@
 				}
 			?>
 
-			<div class="g-recaptcha" data-sitekey="6LdueQwUAAAAABd8TPKqvaYg3EA3A38NPabROrOZ"></div>
+			<div id="captchaPackage"><div class="g-recaptcha" data-sitekey="6LdueQwUAAAAABd8TPKqvaYg3EA3A38NPabROrOZ"></div></div>
 			<?php
 				if(isset($_SESSION['e_bot']))
 				{

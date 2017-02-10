@@ -18,6 +18,8 @@ body
 {
 	background-color: white;
 	width: 300px;
+	max-height: 340px;
+	overflow: auto;
 	padding: 50px;
 	position: absolute;
 	left: 50%;
