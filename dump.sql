@@ -24,11 +24,12 @@ DROP TABLE IF EXISTS `aktywne_sesje`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `aktywne_sesje` (
   `Numer ID` int(10) unsigned NOT NULL,
-  `Login` varchar(30) NOT NULL,
   `Adres IP` varchar(30) DEFAULT NULL,
   `Przeglądarka` varchar(100) DEFAULT NULL,
   `Data i czas` datetime DEFAULT NULL,
-  `Token` varchar(100) DEFAULT NULL
+  `Token` varchar(100) DEFAULT NULL,
+  KEY `id_uzytkownik_fk` (`Numer ID`),
+  CONSTRAINT `id_uzytkownik_fk` FOREIGN KEY (`Numer ID`) REFERENCES `uzytkownik` (`id_uzytkownik`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -58,7 +59,7 @@ CREATE TABLE `badania_posrednie` (
   `wskaznikBMI` int(3) unsigned NOT NULL,
   PRIMARY KEY (`id_badPosrednie`),
   KEY `badania_posrednie_ibfk_1` (`id_pacjent`),
-  CONSTRAINT `badania_posrednie_ibfk_1` FOREIGN KEY (`id_pacjent`) REFERENCES `pacjent` (`id_pacjent`) ON UPDATE CASCADE
+  CONSTRAINT `id_pacjent_fk` FOREIGN KEY (`id_pacjent`) REFERENCES `pacjent` (`id_pacjent`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -81,13 +82,12 @@ DROP TABLE IF EXISTS `dietetyk`;
 CREATE TABLE `dietetyk` (
   `id_dietetyk` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `id_uzytkownik` int(10) unsigned NOT NULL,
-  `id_wiecej_info` int(10) unsigned NOT NULL,
+  `pesel` varchar(20) NOT NULL,
+  `dataUrodzenia` date NOT NULL,
   PRIMARY KEY (`id_dietetyk`),
   UNIQUE KEY `id_uzytkownik` (`id_uzytkownik`),
-  UNIQUE KEY `id_wiecej_info` (`id_wiecej_info`),
-  CONSTRAINT `dietetyk_ibfk_1` FOREIGN KEY (`id_uzytkownik`) REFERENCES `uzytkownik` (`id_uzytkownik`) ON UPDATE CASCADE,
-  CONSTRAINT `dietetyk_ibfk_2` FOREIGN KEY (`id_wiecej_info`) REFERENCES `wiecej_info_dietetyk` (`id_wiecej_info`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+  CONSTRAINT `id_uzytk_fk` FOREIGN KEY (`id_uzytkownik`) REFERENCES `uzytkownik` (`id_uzytkownik`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -98,6 +98,65 @@ LOCK TABLES `dietetyk` WRITE;
 /*!40000 ALTER TABLE `dietetyk` DISABLE KEYS */;
 /*!40000 ALTER TABLE `dietetyk` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER centrum_dietetyczne.sprawdzanieDatyUrodzenia_dietetyk
+
+	BEFORE INSERT
+
+	ON centrum_dietetyczne.dietetyk
+
+	FOR EACH ROW
+
+begin
+
+
+
+
+
+	if NEW.dataUrodzenia > curdate()	
+
+
+
+
+
+	then
+
+
+
+
+
+		signal sqlstate '45000'
+
+
+
+
+
+		set message_text = 'Data urodzenia jest nieprawidlowa';
+
+
+
+
+
+	end if;
+
+
+
+
+
+end */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `godziny_przyjec`
@@ -165,7 +224,7 @@ CREATE TABLE `pacjent` (
   PRIMARY KEY (`id_pacjent`),
   UNIQUE KEY `id_uzytkownik` (`id_uzytkownik`),
   CONSTRAINT `pacjent_ibfk_1` FOREIGN KEY (`id_uzytkownik`) REFERENCES `uzytkownik` (`id_uzytkownik`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -175,32 +234,6 @@ CREATE TABLE `pacjent` (
 LOCK TABLES `pacjent` WRITE;
 /*!40000 ALTER TABLE `pacjent` DISABLE KEYS */;
 /*!40000 ALTER TABLE `pacjent` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `profesja`
---
-
-DROP TABLE IF EXISTS `profesja`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `profesja` (
-  `id_profesja` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `id_dietetyk` int(10) unsigned DEFAULT NULL,
-  `nazwa` varchar(100) NOT NULL,
-  PRIMARY KEY (`id_profesja`),
-  KEY `id_dietetyk` (`id_dietetyk`),
-  CONSTRAINT `profesja_ibfk_1` FOREIGN KEY (`id_dietetyk`) REFERENCES `dietetyk` (`id_dietetyk`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `profesja`
---
-
-LOCK TABLES `profesja` WRITE;
-/*!40000 ALTER TABLE `profesja` DISABLE KEYS */;
-/*!40000 ALTER TABLE `profesja` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -245,7 +278,7 @@ CREATE TABLE `uzytkownik` (
   PRIMARY KEY (`id_uzytkownik`),
   UNIQUE KEY `login` (`login`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -256,96 +289,6 @@ LOCK TABLES `uzytkownik` WRITE;
 /*!40000 ALTER TABLE `uzytkownik` DISABLE KEYS */;
 /*!40000 ALTER TABLE `uzytkownik` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `wiecej_info_dietetyk`
---
-
-DROP TABLE IF EXISTS `wiecej_info_dietetyk`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `wiecej_info_dietetyk` (
-  `id_wiecej_info` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `pesel` varchar(20) NOT NULL,
-  `dataUrodzenia` date NOT NULL,
-  `telefon` varchar(20) NOT NULL,
-  `ulica` varchar(30) DEFAULT NULL,
-  `nrBudynku` varchar(10) NOT NULL,
-  `nrLokalu` varchar(10) DEFAULT NULL,
-  `miejscowosc` varchar(30) NOT NULL,
-  `kodPocztowy` varchar(10) NOT NULL,
-  `poczta` varchar(30) NOT NULL,
-  PRIMARY KEY (`id_wiecej_info`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `wiecej_info_dietetyk`
---
-
-LOCK TABLES `wiecej_info_dietetyk` WRITE;
-/*!40000 ALTER TABLE `wiecej_info_dietetyk` DISABLE KEYS */;
-/*!40000 ALTER TABLE `wiecej_info_dietetyk` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER centrum_dietetyczne.sprawdzanieDatyUrodzenia_dietetyk
-
-	BEFORE INSERT
-
-	ON centrum_dietetyczne.wiecej_info_dietetyk
-
-	FOR EACH ROW
-
-begin
-
-
-
-
-
-	if NEW.dataUrodzenia > curdate()	
-
-
-
-
-
-	then
-
-
-
-
-
-		signal sqlstate '45000'
-
-
-
-
-
-		set message_text = 'Data urodzenia jest nieprawidlowa';
-
-
-
-
-
-	end if;
-
-
-
-
-
-end */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `wizyta`
@@ -503,4 +446,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-01-28 21:00:00
+-- Dump completed on 2017-02-10 23:50:15
