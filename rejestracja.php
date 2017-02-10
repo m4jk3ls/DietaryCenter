@@ -246,6 +246,9 @@
 	<script src="javascript_files/ajaxForLogin_rej.js"></script>
 	<script src="javascript_files/ajaxForEmail.js"></script>
 	<script src="javascript_files/ajaxForPass_rej.js"></script>
+	<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css" />
+	<script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
+	<script src="javascript_files/cookiesBanner.js"></script>
 </head>
 
 <body>

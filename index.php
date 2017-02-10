@@ -21,6 +21,9 @@
 	<script src="javascript_files/getDivsSizes.js"></script>
 	<script src="javascript_files/ajaxForLog.js"></script>
 	<script src="javascript_files/ajaxForPass.js"></script>
+	<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css" />
+	<script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
+	<script src="javascript_files/cookiesBanner.js"></script>
 </head>
 
 <body>

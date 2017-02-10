@@ -36,6 +36,9 @@
 	<script src="javascript_files/jquery-3.1.1.min.js"></script>
 	<script src="javascript_files/getDivsSizes.js"></script>
 	<meta http-equiv="Refresh" content="5; url=index.php" />
+	<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css" />
+	<script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
+	<script src="javascript_files/cookiesBanner.js"></script>
 </head>
 
 <body>
