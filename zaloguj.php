@@ -35,7 +35,7 @@
 	{
 		$GLOBALS['polaczenie']->query("START TRANSACTION");
 
-		if ($GLOBALS['polaczenie']->query("insert into aktywne_sesje values ('$ID_help', '$login_help', '$IP', '$nazwa_i_wersja_przegladarki', now(), '$token')") &&
+		if ($GLOBALS['polaczenie']->query("insert into aktywne_sesje values ('$ID_help', '$IP', '$nazwa_i_wersja_przegladarki', now(), '$token')") &&
 			$GLOBALS['polaczenie']->query("insert into logowanie_archiwum values ('$ID_help', '$login_help', '$IP', '$nazwa_i_wersja_przegladarki', now())"))
 			return true;
 		else
@@ -47,7 +47,7 @@
 	{
 		$GLOBALS['polaczenie']->query("START TRANSACTION");
 
-		if ($GLOBALS['polaczenie']->query("update aktywne_sesje set Token='$token' where Login like '$login_help'") &&
+		if ($GLOBALS['polaczenie']->query("update aktywne_sesje set Token='$token' where `Numer ID` like '$ID_help'") &&
 			$GLOBALS['polaczenie']->query("insert into logowanie_archiwum values ('$ID_help', '$login_help', '$IP', '$nazwa_i_wersja_przegladarki', now())"))
 			return true;
 		else
@@ -95,7 +95,7 @@
 					{
 						// Zebranie potrzebnych danych oraz wykonanie zapytania do bazy o aktywne_sesje
 						potrzebneDane($IP, $wszystko_o_przegladarce, $nazwa_i_wersja_przegladarki, $ID_help, $login_help, $token, $wiersz);
-						if(!($rezultat2 = $GLOBALS['polaczenie']->query("select * from aktywne_sesje where Login='$login_help'")))
+						if(!($rezultat2 = $GLOBALS['polaczenie']->query("select * from aktywne_sesje where `Numer ID` like '$ID_help'")))
 							throw new Exception($GLOBALS['polaczenie']->error);
 
 

@@ -19,14 +19,14 @@
 				throw new Exception($polaczenie->connect_error);
 			else
 			{
-				$login_help = $_SESSION['login'];
+				$ID_help = $_SESSION['id_uzytkownik'];
 				$token_help = $_COOKIE['token'];
 
-				if (!($rezultat = $polaczenie->query("select count(Token) from aktywne_sesje where Login like '$login_help' and Token like '$token_help'")))
+				if (!($rezultat = $polaczenie->query("select count(Token) from aktywne_sesje where `Numer ID` like '$ID_help' and Token like '$token_help'")))
 					throw new Exception($polaczenie->error);
 				if(!$rezultat->fetch_assoc()['count(Token)'])	//Jesli w bazie nie ma pasujacego do ciastka token'a (zostal zwrocony wiersz z wartoscia count(Token)=0)
 				{
-					if(!$polaczenie->query("delete from aktywne_sesje where Login like '$login_help'"))
+					if(!$polaczenie->query("delete from aktywne_sesje where `Numer ID` like '$ID_help'"))
 						throw new Exception($polaczenie->error);
 
 					$polaczenie->close();

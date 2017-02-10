@@ -12,8 +12,8 @@
 			throw new Exception($polaczenie->connect_error);
 		else
 		{
-			$login_help = $_SESSION['login'];
-			if(!$polaczenie->query("delete from aktywne_sesje where Login like '$login_help'"))
+			$ID_help = $_SESSION['id_uzytkownik'];
+			if(!$polaczenie->query("delete from aktywne_sesje where `Numer ID` like '$ID_help'"))
 				throw new Exception($polaczenie->error);
 		}
 	}
