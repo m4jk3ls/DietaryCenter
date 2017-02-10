@@ -97,19 +97,6 @@
 		$_SESSION['fr_haslo2'] = $haslo2;
 	}
 
-	//Walidacja recaptchy
-	function recaptcha()
-	{
-		$sekret = "6LdueQwUAAAAAP3YdoBKWrUuynRkVouPmL0D_hPo";
-		$sprawdz = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$sekret.'&response='.$_POST['g-recaptcha-response']);
-		$odpowiedz = json_decode($sprawdz);
-		if(!($odpowiedz->success))
-		{
-			$GLOBALS['wszystko_OK'] = false;
-			$_SESSION['e_bot'] = "Potwierdź, że nie jesteś botem!";
-		}
-	}
-
 	// Sprawdzanie liczby tozsamych adresow email z podanym w formularzu
 	function ile_takich_maili($rezultat)
 	{
@@ -218,7 +205,6 @@
 		login();
 		email();
 		hasla();
-		recaptcha();
 		polaczenie_z_baza();
 	}
 
@@ -236,7 +222,6 @@
 	<meta charset="utf-8"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<title>Załóż darmowe NH-konto!</title>
-	<script src='https://www.google.com/recaptcha/api.js'></script>
 	<link rel="stylesheet" href="css_files/rejestracja_style.css" type="text/css" />
 	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext" rel="stylesheet">
 	<script src="javascript_files/jquery-3.1.1.min.js"></script>
@@ -341,15 +326,6 @@
 				{
 					echo '<div class="glowny_komunikat">'.$_SESSION['e_haslo'].'</div>';
 					unset($_SESSION['e_haslo']);
-				}
-			?>
-
-			<div id="captchaPackage"><div class="g-recaptcha" data-sitekey="6LdueQwUAAAAABd8TPKqvaYg3EA3A38NPabROrOZ"></div></div>
-			<?php
-				if(isset($_SESSION['e_bot']))
-				{
-					echo '<div class="glowny_komunikat">'.$_SESSION['e_bot'].'</div>';
-					unset($_SESSION['e_bot']);
 				}
 			?>
 
