@@ -245,6 +245,7 @@
 	<script src="javascript_files/ajaxForSurname.js"></script>
 	<script src="javascript_files/ajaxForLogin_rej.js"></script>
 	<script src="javascript_files/ajaxForEmail.js"></script>
+	<script src="javascript_files/ajaxForPass_rej.js"></script>
 </head>
 
 <body>
@@ -316,34 +317,35 @@
 				}
 			?>
 
-			<input type="password" placeholder="hasło" value="<?php					//Haslo
+			<input type="password" id="passwd1" name="haslo1" placeholder="hasło" value="<?php							//Haslo
 				if(isset($_SESSION['fr_haslo1']))
 				{
 					echo $_SESSION['fr_haslo1'];
 					unset($_SESSION['fr_haslo1']);
 				}
-			?>" name="haslo1"/><br/>
-			<?php
-				if(isset($_SESSION['e_haslo']))
-				{
-					echo '<div class="error">'.$_SESSION['e_haslo'].'</div>';
-					unset($_SESSION['e_haslo']);
-				}
-			?>
+			?>"/>
 
-			<input type="password" placeholder="powtórz hasło" value="<?php			//Powtorz haslo
+			<input type="password" id="passwd2" name="haslo2" placeholder="powtórz hasło" value="<?php					//Powtorz haslo
 				if(isset($_SESSION['fr_haslo2']))
 				{
 					echo $_SESSION['fr_haslo2'];
 					unset($_SESSION['fr_haslo2']);
 				}
-			?>" name="haslo2"/><br/>
+			?>"/>
+			<div class="komunikat" id="komunikat5"></div>
+			<?php
+				if(isset($_SESSION['e_haslo']))
+				{
+					echo '<div class="glowny_komunikat">'.$_SESSION['e_haslo'].'</div>';
+					unset($_SESSION['e_haslo']);
+				}
+			?>
 
 			<div class="g-recaptcha" data-sitekey="6LdueQwUAAAAABd8TPKqvaYg3EA3A38NPabROrOZ"></div>
 			<?php
 				if(isset($_SESSION['e_bot']))
 				{
-					echo '<div class="error">'.$_SESSION['e_bot'].'</div>';
+					echo '<div class="glowny_komunikat">'.$_SESSION['e_bot'].'</div>';
 					unset($_SESSION['e_bot']);
 				}
 			?>

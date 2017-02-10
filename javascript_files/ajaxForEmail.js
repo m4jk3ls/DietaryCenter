@@ -2,13 +2,13 @@ jQuery(document).ready(function()
 {
 	$("#email_id").on("blur", function()
 	{
-		var login_value = $('input[name = email]').val();
+		var email_value = $('input[name = email]').val();
 
 		$.ajax(
 			{
 				url: "ajaxValidation/rejestracja_email.php",
 				type: "POST",
-				data: "email="+login_value,
+				data: "email="+email_value,
 				success: function(msg)
 				{
 					if(msg != "")

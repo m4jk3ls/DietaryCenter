@@ -2,13 +2,13 @@ jQuery(document).ready(function()
 {
 	$("#imie_id").on("blur", function()
 	{
-		var login_value = $('input[name = imie]').val();
+		var name_value = $('input[name = imie]').val();
 
 		$.ajax(
 			{
 				url: "ajaxValidation/rejestracja_imie.php",
 				type: "POST",
-				data: "imie="+login_value,
+				data: "imie="+name_value,
 				success: function(msg)
 				{
 					if(msg != "")
