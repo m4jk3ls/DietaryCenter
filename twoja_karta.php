@@ -41,7 +41,7 @@
 		}
 		catch(Exception $e)
 		{
-			echo '<span style="color:red;">Błąd serwera! Przepraszamy za niedogodności i prosimy o ponowne zalogowanie się!</span>';
+			echo '<span style="color:red;">Błąd serwera! Prosimy o ponowne zalogowanie się później!</span>';
 			//echo '<br/>Informacja developerska: '.$e;
 			header('Location: logout.php');
 			exit();
@@ -65,6 +65,7 @@
 	<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css" />
 	<script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
 	<script src="javascript_files/cookiesBanner.js"></script>
+	<noscript><div id="noscript_info">Twoja przeglądarka nie obsługuje skryptów JavaScript!</div></noscript>
 
 </head>
 

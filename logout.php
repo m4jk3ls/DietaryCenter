@@ -19,7 +19,7 @@
 	}
 	catch (Exception $e)
 	{
-		echo '<span style="color:red;">Błąd serwera! Przepraszamy za niedogodności i prosimy o ponowną próbę wylogowania się!</span>';
+		echo '<span style="color:red;">Błąd serwera! Prosimy o ponowną próbę wylogowania się!</span>';
 		//echo '<br/>Informacja developerska: '.$e;
 	}
 

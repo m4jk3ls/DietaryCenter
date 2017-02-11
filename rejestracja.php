@@ -187,7 +187,7 @@
 						catch (Exception $e)
 						{
 							$GLOBALS['polaczenie']->query("ROLLBACK");
-							echo '<span style="color:red;">Błąd serwera! Przepraszamy za niedogodności i prosimy o rejestrację w innym terminie!</span>';
+							echo '<span style="color:red;">Błąd serwera! Prosimy o rejestrację w innym terminie!</span>';
 							//echo '<br/>Informacja developerska: '.$e;
 						}
 					}
