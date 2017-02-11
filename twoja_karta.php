@@ -43,7 +43,6 @@
 		{
 			echo '<span style="color:red;">Błąd serwera! Przepraszamy za niedogodności i prosimy o ponowne zalogowanie się!</span>';
 			//echo '<br/>Informacja developerska: '.$e;
-			sleep(5);
 			header('Location: logout.php');
 			exit();
 		}
