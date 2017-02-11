@@ -1,0 +1,12 @@
+insert into centrum_dietetyczne.uzytkownik values (null, "Anna", "Juraszczyk", "anka@wp.pl", "anka", "131282524a4384d62d2d7eeea7d7b8e57b3feeb2", "umqQ06eko9");
+insert into centrum_dietetyczne.dietetyk values (null, LAST_INSERT_ID(), "90052441235", "1990-05-24");
+
+insert into centrum_dietetyczne.uzytkownik values (null, "Justyna", "Krupczyk", "justyna@o2.pl", "justyna", "320380d1a5f928392d89ef772b1191acd6460cf2", "TqYYulCyDO");
+insert into centrum_dietetyczne.dietetyk values (null, LAST_INSERT_ID(), "88123084512", "1988-12-30");
+
+insert into centrum_dietetyczne.uzytkownik values (null, "Małgorzata", "Łachman", "gosia@gmail.com", "gosia", "34a76b055064be5d1be9a9e1d8d87538cc6981f3", "Elo2VjoLNW");
+insert into centrum_dietetyczne.dietetyk values (null, LAST_INSERT_ID(), "75020545876", "1975-02-05");
+
+$passwd1="password1";
+$passwd2="password2";
+$passwd3="password3";

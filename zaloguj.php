@@ -55,9 +55,12 @@
 	}
 
 	// Ustawienie ciasteczek oraz wpisanie ciut potrzebnych danych do sesji
-	function cookies($token, $wiersz)
+	function cookies($token, $wiersz, $kto)
 	{
-		setcookie("zalogowany", true, time() + 86400);
+		if($kto == "pacjent")
+			setcookie("zalogowany_pacjent", true, time() + 86400);
+		else
+			setcookie("zalogowany_dietetyk", true, time() + 86400);
 		setcookie("token", $token);
 
 		$_SESSION['id_uzytkownik'] = $wiersz['id_uzytkownik'];
@@ -117,11 +120,36 @@
 
 
 
-						// Ustawienie ciasteczek, uwolnienie pamieci oraz przekierowanie
-						cookies($token, $wiersz);
+						//Loguje sie pacjent, czy dietetyk?
+						if(!$rezultat3 = $GLOBALS['polaczenie']->query("select * from uzytkownik u join pacjent p on(p.id_uzytkownik = u.id_uzytkownik) where (p.id_uzytkownik = '$ID_help')"))
+							throw new Exception($GLOBALS['polaczenie']->error);
+						else if($rezultat3->num_rows)	//Logujacym sie uzytkownikem jest pacjent
+						{
+							$kto = "pacjent";
+							header('Location: twoja_karta.php');
+						}
+						else if(!$rezultat4 = $GLOBALS['polaczenie']->query("select * from uzytkownik u join dietetyk d on(d.id_uzytkownik = u.id_uzytkownik) where (d.id_uzytkownik = '$ID_help')"))
+							throw new Exception($GLOBALS['polaczenie']->error);
+						else if($rezultat4->num_rows)	//Logujacym sie uzytkownikem jest dietetyk
+						{
+							$kto = "dietetyk";
+							header('Location: panel_dietetyka.php');
+						}
+						else
+						{
+							echo '<span style="color:red;">Twoje konto zostało przed chwilą usunięte :(</span>';
+							exit();
+						}
+
+
+
+						//Ustawiamy ciasteczko i zwalniamy dotychczasowo uzywana pamiec
+						cookies($token, $wiersz, $kto);
 						$rezultat->free_result();
 						$rezultat2->free_result();
-						header('Location: twoja_karta.php');
+						$rezultat3->free_result();
+						if(isset($rezultat4))
+							$rezultat4->free_result();
 					}
 					else
 					{

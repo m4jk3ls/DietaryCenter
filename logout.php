@@ -24,7 +24,8 @@
 	}
 
 	session_unset();
-	setcookie("zalogowany", false, time() - 1);
+	setcookie("zalogowany_pacjent", false, time() - 1);
+	setcookie("zalogowany_dietetyk", false, time() - 1);
 	setcookie("token", null, time() - 1);
 	header('Location: index.php');
 ?>

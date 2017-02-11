@@ -1,8 +1,13 @@
 <?php
 	session_start();
-	if(isset($_COOKIE["zalogowany"]))
+	if(isset($_COOKIE["zalogowany_pacjent"]))
 	{
 		header('Location: twoja_karta.php');
+		exit();
+	}
+	if(isset($_COOKIE["zalogowany_dietetyk"]))
+	{
+		header('Location: panel_dietetyka.php');
 		exit();
 	}
 ?>

@@ -2,9 +2,14 @@
 	session_start();
 
 	// Przekierowanie jesli zalogowany
-	if(isset($_COOKIE["zalogowany"]))
+	if(isset($_COOKIE["zalogowany_pacjent"]))
 	{
 		header('Location: twoja_karta.php');
+		exit();
+	}
+	else if(isset($_COOKIE["zalogowany_dietetyk"]))
+	{
+		header('Location: panel_dietetyka.php');
 		exit();
 	}
 

@@ -1,7 +1,7 @@
 <?php
 	session_start();
 
-	if(!isset($_COOKIE["zalogowany"]))
+	if(!isset($_COOKIE["zalogowany_pacjent"]))
 	{
 		header('Location: index.php');
 		exit();
