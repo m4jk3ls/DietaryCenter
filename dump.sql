@@ -87,7 +87,7 @@ CREATE TABLE `dietetyk` (
   PRIMARY KEY (`id_dietetyk`),
   UNIQUE KEY `id_uzytkownik` (`id_uzytkownik`),
   CONSTRAINT `id_uzytk_fk` FOREIGN KEY (`id_uzytkownik`) REFERENCES `uzytkownik` (`id_uzytkownik`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -224,7 +224,7 @@ CREATE TABLE `pacjent` (
   PRIMARY KEY (`id_pacjent`),
   UNIQUE KEY `id_uzytkownik` (`id_uzytkownik`),
   CONSTRAINT `pacjent_ibfk_1` FOREIGN KEY (`id_uzytkownik`) REFERENCES `uzytkownik` (`id_uzytkownik`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -278,7 +278,7 @@ CREATE TABLE `uzytkownik` (
   PRIMARY KEY (`id_uzytkownik`),
   UNIQUE KEY `login` (`login`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -302,9 +302,9 @@ CREATE TABLE `wizyta` (
   `id_pacjent` int(10) unsigned NOT NULL,
   `id_dietetyk` int(10) unsigned NOT NULL,
   `id_suplement` int(10) unsigned DEFAULT NULL,
-  `dataWizyty` date NOT NULL,
-  `cenaWizyty_zl` float unsigned NOT NULL,
-  `godzinaWizyty` time NOT NULL,
+  `dataWizyty` date DEFAULT NULL,
+  `cenaWizyty_zl` float unsigned DEFAULT NULL,
+  `godzinaWizyty` time DEFAULT NULL,
   PRIMARY KEY (`id_wizyta`),
   KEY `id_pacjent` (`id_pacjent`),
   KEY `id_dietetyk` (`id_dietetyk`),
@@ -446,4 +446,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-02-10 23:50:15
+-- Dump completed on 2017-02-12  1:31:06
