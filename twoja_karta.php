@@ -58,7 +58,7 @@
 
 	<title>Twoja karta pacjenta</title>
 
-	<link href="css_files/twoja_karta_style.css" rel="stylesheet" type="text/css" />
+	<link href="css_files/strona_glowna_style.css" rel="stylesheet" type="text/css" />
 	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext" rel="stylesheet">
 	<script src="javascript_files/jquery-3.1.1.min.js"></script>
 	<script type="text/javascript" src="javascript_files/stickyMenu.js"></script>
