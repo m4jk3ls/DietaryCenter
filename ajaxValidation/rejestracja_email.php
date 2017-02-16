@@ -26,7 +26,7 @@ else
 			else
 			{
 				// Poszukaj, czy w bazie istnieje juz podany adres email
-				$rezultat = $polaczenie->query("select p.id_pacjent from pacjent p join uzytkownik u on (p.id_uzytkownik = u.id_uzytkownik) where u.email = '$email'");
+				$rezultat = $polaczenie->query("select p.patientID from patient p join user u on (p.userID = u.userID) where u.email = '$email'");
 				if (!$rezultat) throw new Exception($polaczenie->error);
 
 				$ile = $rezultat->num_rows;

@@ -13,7 +13,7 @@
 		else
 		{
 			$ID_help = $_SESSION['id_uzytkownik'];
-			if(!$polaczenie->query("delete from aktywne_sesje where `Numer ID` like '$ID_help'"))
+			if(!$polaczenie->query("delete from active_sessions where userID like '$ID_help'"))
 				throw new Exception($polaczenie->error);
 		}
 	}

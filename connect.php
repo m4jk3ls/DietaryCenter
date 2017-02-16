@@ -2,5 +2,4 @@
 	$host = "localhost";
 	$db_user = "root";
 	$db_password = "";
-	$db_name = "centrum_dietetyczne";
-?>
+	$db_name = "dietary_center";

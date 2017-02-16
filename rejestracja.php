@@ -130,8 +130,8 @@
 		global $imie, $nazwisko, $login, $email;
 
 		$GLOBALS['polaczenie']->query("START TRANSACTION");
-		if ($GLOBALS['polaczenie']->query("insert into uzytkownik values (null, '$imie', '$nazwisko', '$email', '$login', '$haslo_hash', '$salt')") &&
-			$GLOBALS['polaczenie']->query("insert into pacjent VALUES (null, LAST_INSERT_ID())"))
+		if ($GLOBALS['polaczenie']->query("insert into user values (null, '$imie', '$nazwisko', '$email', '$login', '$haslo_hash', '$salt')") &&
+			$GLOBALS['polaczenie']->query("insert into patient VALUES (null, LAST_INSERT_ID())"))
 			return true;
 		else
 			return false;
@@ -158,12 +158,12 @@
 				else
 				{
 					// Poszukaj, czy w bazie istnieje juz podany adres email
-					$rezultat = $GLOBALS['polaczenie']->query("select p.id_pacjent from pacjent p join uzytkownik u on (p.id_uzytkownik = u.id_uzytkownik) where u.email = '$email'");
+					$rezultat = $GLOBALS['polaczenie']->query("select p.patientID from patient p join user u on (p.userID = u.userID) where u.email = '$email'");
 					if (!$rezultat) throw new Exception($GLOBALS['polaczenie']->error);
 					ile_takich_maili($rezultat);
 
 					// Poszukaj, czy w bazie istnieje juz podany login
-					$rezultat = $GLOBALS['polaczenie']->query("select id_uzytkownik from uzytkownik where login = '$login'");
+					$rezultat = $GLOBALS['polaczenie']->query("select userID from user where login = '$login'");
 					if (!$rezultat) throw new Exception($GLOBALS['polaczenie']->error);
 					ile_takich_loginow($rezultat);
 

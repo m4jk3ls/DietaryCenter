@@ -22,11 +22,11 @@
 				$ID_help = $_SESSION['id_uzytkownik'];
 				$token_help = $_COOKIE['token'];
 
-				if (!($rezultat = $polaczenie->query("select count(Token) from aktywne_sesje where `Numer ID` like '$ID_help' and Token like '$token_help'")))
+				if (!($rezultat = $polaczenie->query("select count(token) from active_sessions where userID like '$ID_help' and token like '$token_help'")))
 					throw new Exception($polaczenie->error);
-				if(!$rezultat->fetch_assoc()['count(Token)'])	//Jesli w bazie nie ma pasujacego do ciastka token'a (zostal zwrocony wiersz z wartoscia count(Token)=0)
+				if(!$rezultat->fetch_assoc()['count(token)'])	//Jesli w bazie nie ma pasujacego do ciastka token'a (zostal zwrocony wiersz z wartoscia count(token)=0)
 				{
-					if(!$polaczenie->query("delete from aktywne_sesje where `Numer ID` like '$ID_help'"))
+					if(!$polaczenie->query("delete from active_sessions where userID like '$ID_help'"))
 						throw new Exception($polaczenie->error);
 
 					$polaczenie->close();

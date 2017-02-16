@@ -20,35 +20,35 @@
 	}
 
 	// Funkcja zdobywajaca kilka potrzebnych informacji, ktore trzeba wrzucic do bazy danych
-	function potrzebneDane(&$IP, &$wszystko_o_przegladarce, &$nazwa_i_wersja_przegladarki, &$ID_help, &$login_help, &$token, $wiersz)
+	function potrzebneDane(&$IP, &$wszystko_o_przegladarce, &$nazwa_przegladarki, &$ID_help, &$login_help, &$token, $wiersz)
 	{
 		$IP = $_SERVER['REMOTE_ADDR'];
 		$wszystko_o_przegladarce = get_browser(null, true);	//http://php.net/manual/en/function.get-browser.php PAMIETAC O PLIKU browscap.ini !!!
-		$nazwa_i_wersja_przegladarki = $wszystko_o_przegladarce['parent'];
-		$ID_help = $wiersz['id_uzytkownik'];
+		$nazwa_przegladarki = $wszystko_o_przegladarce['browser'];
+		$ID_help = $wiersz['userID'];
 		$login_help = $wiersz['login'];
 		$token = generateRandomString();
 	}
 
 	// Transakcja wykonujaca sie w momencie, w ktorym nie ma aktywnej sesji usera, na konto ktorego chce sie zalogowac
-	function transakcja1($ID_help, $login_help, $IP, $nazwa_i_wersja_przegladarki, $token)
+	function transakcja1($ID_help, $login_help, $IP, $nazwa_przegladarki, $token)
 	{
 		$GLOBALS['polaczenie']->query("START TRANSACTION");
 
-		if ($GLOBALS['polaczenie']->query("insert into aktywne_sesje values ('$ID_help', '$IP', '$nazwa_i_wersja_przegladarki', now(), '$token')") &&
-			$GLOBALS['polaczenie']->query("insert into logowanie_archiwum values ('$ID_help', '$login_help', '$IP', '$nazwa_i_wersja_przegladarki', now())"))
+		if ($GLOBALS['polaczenie']->query("insert into active_sessions values ('$ID_help', '$IP', '$nazwa_przegladarki', now(), '$token')") &&
+			$GLOBALS['polaczenie']->query("insert into archive_logs values ('$ID_help', '$login_help', '$IP', '$nazwa_przegladarki', now())"))
 			return true;
 		else
 			return false;
 	}
 
 	// Transakcja wykonujaca sie w momencie, w ktorym jest juz aktywna sesja usera, na konto ktorego chce sie zalogowac ('zepsucie' ciasteczka)
-	function transakcja2($ID_help, $login_help, $IP, $nazwa_i_wersja_przegladarki, $token)
+	function transakcja2($ID_help, $login_help, $IP, $nazwa_przegladarki, $token)
 	{
 		$GLOBALS['polaczenie']->query("START TRANSACTION");
 
-		if ($GLOBALS['polaczenie']->query("update aktywne_sesje set Token='$token' where `Numer ID` like '$ID_help'") &&
-			$GLOBALS['polaczenie']->query("insert into logowanie_archiwum values ('$ID_help', '$login_help', '$IP', '$nazwa_i_wersja_przegladarki', now())"))
+		if ($GLOBALS['polaczenie']->query("update active_sessions set token='$token' where userID like '$ID_help'") &&
+			$GLOBALS['polaczenie']->query("insert into archive_logs values ('$ID_help', '$login_help', '$IP', '$nazwa_przegladarki', now())"))
 			return true;
 		else
 			return false;
@@ -63,7 +63,7 @@
 			setcookie("zalogowany_dietetyk", true, time() + 86400);
 		setcookie("token", $token);
 
-		$_SESSION['id_uzytkownik'] = $wiersz['id_uzytkownik'];
+		$_SESSION['id_uzytkownik'] = $wiersz['userID'];
 		$_SESSION['login'] = $wiersz['login'];
 		unset($_SESSION['blad']);
 	}
@@ -83,10 +83,10 @@
 		{
 			$login = $_POST['login'];
 			$haslo = $_POST['haslo'];
-			
+
 			//Walidacja i sanityzacja loginu
 			$login = htmlentities($login, ENT_QUOTES, "UTF-8");
-			if($rezultat = $GLOBALS['polaczenie']->query(sprintf("select * from uzytkownik where login='%s'", mysqli_real_escape_string($GLOBALS['polaczenie'], $login))))
+			if($rezultat = $GLOBALS['polaczenie']->query(sprintf("select * from user where login='%s'", mysqli_real_escape_string($GLOBALS['polaczenie'], $login))))
 			{
 				// Sprawdzenie, czy sa w bazie uzytkownicy o podanym loginie
 				$ilu_userow = $rezultat->num_rows;
@@ -94,11 +94,11 @@
 				{
 					// Czy podane haslo sie zgadza
 					$wiersz = $rezultat->fetch_assoc();
-					if(!strcmp(sha1($haslo.$wiersz['salt']), $wiersz['haslo']))
+					if(!strcmp(sha1($haslo.$wiersz['salt']), $wiersz['password']))
 					{
 						// Zebranie potrzebnych danych oraz wykonanie zapytania do bazy o aktywne_sesje
-						potrzebneDane($IP, $wszystko_o_przegladarce, $nazwa_i_wersja_przegladarki, $ID_help, $login_help, $token, $wiersz);
-						if(!($rezultat2 = $GLOBALS['polaczenie']->query("select * from aktywne_sesje where `Numer ID` like '$ID_help'")))
+						potrzebneDane($IP, $wszystko_o_przegladarce, $nazwa_przegladarki, $ID_help, $login_help, $token, $wiersz);
+						if(!($rezultat2 = $GLOBALS['polaczenie']->query("select * from active_sessions where userID like '$ID_help'")))
 							throw new Exception($GLOBALS['polaczenie']->error);
 
 
@@ -107,13 +107,13 @@
 						if(!$rezultat2->num_rows)
 						{
 							// ...to wykonuje transakcje nr 1...
-							if(transakcja1($ID_help, $login_help, $IP, $nazwa_i_wersja_przegladarki, $token))
+							if(transakcja1($ID_help, $login_help, $IP, $nazwa_przegladarki, $token))
 								$GLOBALS['polaczenie']->query("COMMIT");
 							else
 								throw new Exception($GLOBALS['polaczenie']->error);
 						}
 						// ...w przeciwnym wypadku wykonuje transakcje nr 2
-						else if(transakcja2($ID_help, $login_help, $IP, $nazwa_i_wersja_przegladarki, $token))
+						else if(transakcja2($ID_help, $login_help, $IP, $nazwa_przegladarki, $token))
 							$GLOBALS['polaczenie']->query("COMMIT");
 						else
 							throw new Exception($GLOBALS['polaczenie']->error);
@@ -121,14 +121,14 @@
 
 
 						//Loguje sie pacjent, czy dietetyk?
-						if(!$rezultat3 = $GLOBALS['polaczenie']->query("select * from uzytkownik u join pacjent p on(p.id_uzytkownik = u.id_uzytkownik) where (p.id_uzytkownik = '$ID_help')"))
+						if(!$rezultat3 = $GLOBALS['polaczenie']->query("select * from user u join patient p on(p.userID = u.userID) where (p.userID = '$ID_help')"))
 							throw new Exception($GLOBALS['polaczenie']->error);
 						else if($rezultat3->num_rows)	//Logujacym sie uzytkownikem jest pacjent
 						{
 							$kto = "pacjent";
 							header('Location: twoja_karta.php');
 						}
-						else if(!$rezultat4 = $GLOBALS['polaczenie']->query("select * from uzytkownik u join dietetyk d on(d.id_uzytkownik = u.id_uzytkownik) where (d.id_uzytkownik = '$ID_help')"))
+						else if(!$rezultat4 = $GLOBALS['polaczenie']->query("select * from user u join dietician d on(d.userID = u.userID) where (d.userID = '$ID_help')"))
 							throw new Exception($GLOBALS['polaczenie']->error);
 						else if($rezultat4->num_rows)	//Logujacym sie uzytkownikem jest dietetyk
 						{

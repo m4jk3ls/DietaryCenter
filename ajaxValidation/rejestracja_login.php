@@ -30,7 +30,7 @@ else
 			{
 				//Walidacja i sanityzacja loginu
 				$login = htmlentities($login, ENT_QUOTES, "UTF-8");
-				if($rezultat = $polaczenie->query(sprintf("select * from uzytkownik where login='%s'", mysqli_real_escape_string($polaczenie, $login))))
+				if($rezultat = $polaczenie->query(sprintf("select * from user where login='%s'", mysqli_real_escape_string($polaczenie, $login))))
 				{
 					// Sprawdzenie, czy sa w bazie uzytkownicy o podanym loginie
 					$ilu_userow = $rezultat->num_rows;
