@@ -1,15 +1,15 @@
 <?php
-	session_start();
-	if(isset($_COOKIE["zalogowany_pacjent"]))
-	{
-		header('Location: twoja_karta.php');
-		exit();
-	}
-	if(isset($_COOKIE["zalogowany_dietetyk"]))
-	{
-		header('Location: panel_dietetyka.php');
-		exit();
-	}
+session_start();
+if (isset($_COOKIE["zalogowany_pacjent"]))
+{
+	header('Location: twoja_karta.php');
+	exit();
+}
+if (isset($_COOKIE["zalogowany_dietetyk"]))
+{
+	header('Location: panel_dietetyka.php');
+	exit();
+}
 ?>
 
 <!DOCTYPE HTML>
@@ -17,18 +17,21 @@
 <head>
 	<meta charset="utf-8"/>
 	<meta name="description" content="Oficjalna aplikacja centrum dietetycznego NaturHouse"/>
-	<meta name="keywords" content="naturhouse, dietetyk, najlepszy dietetyk, dieta cud, jak schudnąć do wakacji, jak być zdrowym, zdrowe odżywianie, plan dietetyczny, organizacja posiłków, metamorfoza"/>
+	<meta name="keywords"
+		  content="naturhouse, dietetyk, najlepszy dietetyk, dieta cud, jak schudnąć do wakacji, jak być zdrowym, zdrowe odżywianie, plan dietetyczny, organizacja posiłków, metamorfoza"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<title>NaturHouse - dietetyk na wyciągnięcie ręki</title>
-	<link rel="stylesheet" href="css_files/index_style.css" type="text/css" />
-	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext" rel="stylesheet">
+	<link rel="stylesheet" href="css_files/index_style.css" type="text/css"/>
+	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext"
+		  rel="stylesheet">
 	<script src="javascript_files/jquery-3.1.1.min.js"></script>
 	<script src="javascript_files/getDivsSizes.js"></script>
 	<script src="javascript_files/ajaxForLog.js"></script>
 	<script src="javascript_files/ajaxForPass.js"></script>
-	<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css" />
-	<script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
 	<script src="javascript_files/cookiesBanner.js"></script>
+	<link rel="stylesheet" type="text/css"
+		  href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css"/>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
 	<noscript><div id="noscript_info">Twoja przeglądarka nie obsługuje skryptów JavaScript!</div></noscript>
 </head>
 
@@ -44,14 +47,15 @@
 				<input type="password" name="haslo" id="pass" placeholder="hasło"/>
 				<div class="komunikat" id="komunikat2"></div>
 				<?php
-					if(isset($_SESSION['blad']))
-					{
-						echo '<div id="glowny_komunikat">'.$_SESSION['blad'].'</div>';
-						unset($_SESSION['blad']);
-					}
+				if (isset($_SESSION['blad']))
+				{
+					echo '<div id="glowny_komunikat">' . $_SESSION['blad'] . '</div>';
+					unset($_SESSION['blad']);
+				}
 				?>
 
-				<input type="submit" value="Zaloguj się"/>
+				<input id="logInButton" type="submit" value="Zaloguj się"
+					   onclick="this.disabled=true; this.value='Zatwierdzam...'; this.form.submit();"/>
 			</form>
 
 			<div id="tekst_lub">-------- lub --------</div>
