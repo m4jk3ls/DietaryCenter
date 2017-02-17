@@ -1,14 +1,14 @@
 <?php
-if(!isset($_POST['email']))
+if (!isset($_POST['email']))
 	echo 'Nie przesłano zmiennej "email"';
 else
 {
 	$email = $_POST['email'];
 	$emailB = filter_var($GLOBALS['email'], FILTER_SANITIZE_EMAIL);
 
-	if(strlen($email) < 1)
+	if (strlen($email) < 1)
 		echo 'Nie podałeś adresu email!';
-	else if(!filter_var($emailB, FILTER_VALIDATE_EMAIL) || ($emailB != $email))
+	else if (!filter_var($emailB, FILTER_VALIDATE_EMAIL) || ($emailB != $email))
 		echo 'Adres email jest niepoprawny!';
 	else
 	{
@@ -21,7 +21,7 @@ else
 			$polaczenie->set_charset('utf8');
 
 			// Jesli powyzsza proba zawiedzie, to rzuc wyjatkiem
-			if($polaczenie->connect_errno != 0)
+			if ($polaczenie->connect_errno != 0)
 				throw new Exception($polaczenie->connect_error);
 			else
 			{
@@ -36,9 +36,9 @@ else
 				$polaczenie->close();
 			}
 		}
-		catch(Exception $e)
+		catch (Exception $e)
 		{
-			echo 'Błąd serwera! Przepraszamy za niedogodności i prosimy zalogować się ponownie później!';
+			echo 'Błąd serwera! Prosimy zalogować się ponownie później!';
 			//echo '<br/>Informacja developerska: '.$e;
 		}
 	}

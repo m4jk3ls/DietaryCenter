@@ -1,17 +1,17 @@
-jQuery(document).ready(function()
+jQuery(document).ready(function ()
 {
-	$("#nazwisko_id").on("blur", function()
+	$("#nazwisko_id").on("blur", function ()
 	{
 		var surname_value = $('input[name = nazwisko]').val();
 
 		$.ajax(
 			{
-				url: "ajaxValidation/rejestracja_nazwisko.php",
+				url: "ajaxValidation/signIn_lastName.php",
 				type: "POST",
-				data: "nazwisko="+surname_value,
-				success: function(msg)
+				data: "nazwisko=" + surname_value,
+				success: function (msg)
 				{
-					if(msg != "")
+					if (msg != "")
 						$("#komunikat2").text(msg).css("margin-top", "5px");
 					else
 						$("#komunikat2").text(msg).css("margin-top", "0");

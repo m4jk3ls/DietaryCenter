@@ -2,12 +2,12 @@
 session_start();
 if (isset($_COOKIE["zalogowany_pacjent"]))
 {
-	header('Location: twoja_karta.php');
+	header('Location: yourCard.php');
 	exit();
 }
 if (isset($_COOKIE["zalogowany_dietetyk"]))
 {
-	header('Location: panel_dietetyka.php');
+	header('Location: dieticianCard.php');
 	exit();
 }
 ?>
@@ -21,13 +21,13 @@ if (isset($_COOKIE["zalogowany_dietetyk"]))
 		  content="naturhouse, dietetyk, najlepszy dietetyk, dieta cud, jak schudnąć do wakacji, jak być zdrowym, zdrowe odżywianie, plan dietetyczny, organizacja posiłków, metamorfoza"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<title>NaturHouse - dietetyk na wyciągnięcie ręki</title>
-	<link rel="stylesheet" href="css_files/index_style.css" type="text/css"/>
+	<link rel="stylesheet" href="css_files/index.css" type="text/css"/>
 	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext"
 		  rel="stylesheet">
 	<script src="javascript_files/jquery-3.1.1.min.js"></script>
 	<script src="javascript_files/getDivsSizes.js"></script>
-	<script src="javascript_files/ajaxForLog.js"></script>
-	<script src="javascript_files/ajaxForPass.js"></script>
+	<script src="javascript_files/ajax/logIn_login.js"></script>
+	<script src="javascript_files/ajax/logIn_password.js"></script>
 	<script src="javascript_files/cookiesBanner.js"></script>
 	<link rel="stylesheet" type="text/css"
 		  href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css"/>
@@ -40,7 +40,7 @@ if (isset($_COOKIE["zalogowany_dietetyk"]))
 
 		<div id="log_form">
 
-			<form action="zaloguj.php" method="post">
+			<form action="logInProcess.php" method="post">
 				<input type="text" name="login" id="log" placeholder="login"/>
 				<div class="komunikat" id="komunikat1"></div>
 
@@ -59,7 +59,7 @@ if (isset($_COOKIE["zalogowany_dietetyk"]))
 			</form>
 
 			<div id="tekst_lub">-------- lub --------</div>
-			<div id="link_rejestracji"><a href="rejestracja.php">Zarejestruj się i dołącz do nas!</a></div>
+			<div id="link_rejestracji"><a href="signIn.php">Zarejestruj się i dołącz do nas!</a></div>
 
 		</div>
 </body>

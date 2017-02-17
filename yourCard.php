@@ -1,68 +1,70 @@
 <?php
-	session_start();
+session_start();
 
-	if(!isset($_COOKIE["zalogowany_dietetyk"]))
+if (!isset($_COOKIE["zalogowany_pacjent"]))
+{
+	header('Location: index.php');
+	exit();
+}
+else
+{
+	require_once "connect.php";
+	mysqli_report(MYSQLI_REPORT_STRICT);
+	try
 	{
-		header('Location: index.php');
+		$polaczenie = new mysqli($host, $db_user, $db_password, $db_name);
+		$polaczenie->set_charset('utf8');
+
+		if ($polaczenie->connect_errno != 0)
+			throw new Exception($polaczenie->connect_error);
+		else
+		{
+			$ID_help = $_SESSION['id_uzytkownik'];
+			$token_help = $_COOKIE['token'];
+
+			if (!($rezultat = $polaczenie->query("select count(token) from active_sessions where userID like '$ID_help' and token like '$token_help'")))
+				throw new Exception($polaczenie->error);
+			if (!$rezultat->fetch_assoc()['count(token)'])    //Jesli w bazie nie ma pasujacego do ciastka token'a (zostal zwrocony wiersz z wartoscia count(token)=0)
+			{
+				if (!$polaczenie->query("delete from active_sessions where userID like '$ID_help'"))
+					throw new Exception($polaczenie->error);
+
+				$polaczenie->close();
+				$rezultat->free_result();
+				header('Location: logOut.php');
+				exit();
+			}
+
+			$rezultat->free_result();
+			$polaczenie->close();
+		}
+	}
+	catch (Exception $e)
+	{
+		echo '<span style="color:red;">Błąd serwera! Prosimy o ponowne zalogowanie się później!</span>';
+		//echo '<br/>Informacja developerska: '.$e;
+		header('Location: logOut.php');
 		exit();
 	}
-	else
-	{
-		require_once "connect.php";
-		mysqli_report(MYSQLI_REPORT_STRICT);
-		try
-		{
-			$polaczenie = new mysqli($host, $db_user, $db_password, $db_name);
-			$polaczenie->set_charset('utf8');
-
-			if ($polaczenie->connect_errno != 0)
-				throw new Exception($polaczenie->connect_error);
-			else
-			{
-				$ID_help = $_SESSION['id_uzytkownik'];
-				$token_help = $_COOKIE['token'];
-
-				if (!($rezultat = $polaczenie->query("select count(token) from active_sessions where userID like '$ID_help' and token like '$token_help'")))
-					throw new Exception($polaczenie->error);
-				if(!$rezultat->fetch_assoc()['count(token)'])	//Jesli w bazie nie ma pasujacego do ciastka token'a (zostal zwrocony wiersz z wartoscia count(token)=0)
-				{
-					if(!$polaczenie->query("delete from active_sessions where userID like '$ID_help'"))
-						throw new Exception($polaczenie->error);
-
-					$polaczenie->close();
-					$rezultat->free_result();
-					header('Location: logout.php');
-					exit();
-				}
-
-				$rezultat->free_result();
-				$polaczenie->close();
-			}
-		}
-		catch(Exception $e)
-		{
-			echo '<span style="color:red;">Błąd serwera! Prosimy o ponowne zalogowanie się później!</span>';
-			//echo '<br/>Informacja developerska: '.$e;
-			header('Location: logout.php');
-			exit();
-		}
-	}
+}
 ?>
 
 <!DOCTYPE HTML>
 <html lang="pl">
 <head>
 
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta charset="utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 
-	<title>Twój panel dietetyka</title>
+	<title>Twoja karta pacjenta</title>
 
-	<link href="css_files/strona_glowna_style.css" rel="stylesheet" type="text/css" />
-	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext" rel="stylesheet">
+	<link href="css_files/card.css" rel="stylesheet" type="text/css"/>
+	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext"
+		  rel="stylesheet">
 	<script src="javascript_files/jquery-3.1.1.min.js"></script>
 	<script type="text/javascript" src="javascript_files/stickyMenu.js"></script>
-	<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css" />
+	<link rel="stylesheet" type="text/css"
+		  href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css"/>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
 	<script src="javascript_files/cookiesBanner.js"></script>
 	<noscript><div id="noscript_info">Twoja przeglądarka nie obsługuje skryptów JavaScript!</div></noscript>
@@ -76,26 +78,26 @@
 	</div>
 
 	<ol class="menu">
-		<li><a href="panel_dietetyka.php">Strona główna</a></li>
-		<li><a href="#">Ustal grafik</a></li>
-		<li><a href="#">Wizyta</a></li>
-		<li><a href="#">Badania</a></li>
-		<li><a href="logout.php">Wyloguj</a></li>
+		<li><a href="yourCard.php">Strona główna</a></li>
+		<li><a href="#">Twoja wizyta</a></li>
+		<li><a href="#">Twoje rezultaty</a></li>
+		<li><a href="#">Kontakt</a></li>
+		<li><a href="logOut.php">Wyloguj</a></li>
 	</ol>
 
 	<div id="topbarPackage">
 		<div id="topbar">
 			<div id="topbarL">
-				<img id="topbarL-img" src="img/talerz.jpg"/>
+				<img id="topbarL-img" src="img/man-vegetable.jpg"/>
 			</div>
 
 			<div id="topbarR">
 				<div id="quotation">
-					"Optymalne żywienie jest medycyną jutra".
+					"Granice? Nigdy żadnej nie widziałem, ale słyszałem, że istnieją w umysłach niektórych ludzi".
 				</div>
 
 				<div id="signature">
-					dr Linus Pauling
+					Thor Heyerdahl
 				</div>
 			</div>
 		</div>

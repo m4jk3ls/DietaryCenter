@@ -1,17 +1,17 @@
-jQuery(document).ready(function()
+jQuery(document).ready(function ()
 {
-	$("#email_id").on("blur", function()
+	$("#email_id").on("blur", function ()
 	{
 		var email_value = $('input[name = email]').val();
 
 		$.ajax(
 			{
-				url: "ajaxValidation/rejestracja_email.php",
+				url: "ajaxValidation/signIn_email.php",
 				type: "POST",
-				data: "email="+email_value,
-				success: function(msg)
+				data: "email=" + email_value,
+				success: function (msg)
 				{
-					if(msg != "")
+					if (msg != "")
 						$("#komunikat4").text(msg).css("margin-top", "5px");
 					else
 						$("#komunikat4").text(msg).css("margin-top", "0");

@@ -4,12 +4,12 @@ session_start();
 // Przekierowanie jesli zalogowany
 if (isset($_COOKIE["zalogowany_pacjent"]))
 {
-	header('Location: twoja_karta.php');
+	header('Location: yourCard.php');
 	exit();
 }
 else if (isset($_COOKIE["zalogowany_dietetyk"]))
 {
-	header('Location: panel_dietetyka.php');
+	header('Location: dieticianCard.php');
 	exit();
 }
 
@@ -183,7 +183,7 @@ function polaczenie_z_baza()
 
 						// Ustaw prawdziwosc zmiennej 'udana_rejestracja' i prowadz do strony powitalnej
 						$_SESSION['udana_rejestracja'] = true;
-						header('Location: witamy.php');
+						header('Location: welcome.php');
 					}
 					catch (Exception $e)
 					{
@@ -228,16 +228,16 @@ if (isset($_POST['email']))
 	<meta charset="utf-8"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<title>Załóż darmowe NH-konto!</title>
-	<link rel="stylesheet" href="css_files/rejestracja_style.css" type="text/css"/>
+	<link rel="stylesheet" href="css_files/signIn.css" type="text/css"/>
 	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext"
 		  rel="stylesheet">
 	<script src="javascript_files/jquery-3.1.1.min.js"></script>
 	<script src="javascript_files/getDivsSizes.js"></script>
-	<script src="javascript_files/ajaxForName.js"></script>
-	<script src="javascript_files/ajaxForSurname.js"></script>
-	<script src="javascript_files/ajaxForLogin_rej.js"></script>
-	<script src="javascript_files/ajaxForEmail.js"></script>
-	<script src="javascript_files/ajaxForPass_rej.js"></script>
+	<script src="javascript_files/ajax/firstName.js"></script>
+	<script src="javascript_files/ajax/lastName.js"></script>
+	<script src="javascript_files/ajax/signIn_login.js"></script>
+	<script src="javascript_files/ajax/email.js"></script>
+	<script src="javascript_files/ajax/signIn_passwords.js"></script>
 	<link rel="stylesheet" type="text/css"
 		  href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css"/>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
