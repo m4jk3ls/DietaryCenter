@@ -339,7 +339,7 @@ if (isset($_POST['email']))
 			?>
 
 			<input type="submit" value="Zarejestruj się"
-				   onclick="this.disabled=true; this.value='Zatwierdzam...'; this.form.submit();"/>
+				   onclick="this.disabled=true; this.value='Wczytuję...'; this.form.submit();"/>
 		</form>
 
 		<div id="txt_lub">-------- lub --------</div>

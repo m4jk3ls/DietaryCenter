@@ -55,7 +55,7 @@ if (isset($_COOKIE["zalogowany_dietetyk"]))
 				?>
 
 				<input id="logInButton" type="submit" value="Zaloguj się"
-					   onclick="this.disabled=true; this.value='Zatwierdzam...'; this.form.submit();"/>
+					   onclick="this.disabled=true; this.value='Wczytuję...'; this.form.submit();"/>
 			</form>
 
 			<div id="tekst_lub">-------- lub --------</div>

@@ -10,6 +10,6 @@ else
 		echo 'Hasła nie są identyczne!';
 	else if (strlen($passwd1) < 8)
 		echo 'Hasła są zbyt krótkie (min. 8 znaków)!';
-	else if (strlen($passwd2) > 20)
+	else if (strlen($passwd1) > 20)
 		echo 'Hasła są zbyt długie (max. 20 znaków)!';
 }
