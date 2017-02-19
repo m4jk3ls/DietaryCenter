@@ -2,12 +2,12 @@
 session_start();
 
 // Przekierowanie jesli zalogowany
-if (isset($_COOKIE["patientLogged"]))
+if(isset($_COOKIE["patientLogged"]))
 {
 	header('Location: yourCard.php');
 	exit();
 }
-else if (isset($_COOKIE["dieticianLogged"]))
+else if(isset($_COOKIE["dieticianLogged"]))
 {
 	header('Location: dieticianCard.php');
 	exit();
@@ -28,7 +28,7 @@ function generateSalt()
 function firstName()
 {
 	$GLOBALS['firstName'] = $_POST['firstName'];
-	if (strlen($GLOBALS['firstName']) < 1)
+	if(strlen($GLOBALS['firstName']) < 1)
 	{
 		$GLOBALS['everythingOK'] = false;
 		$_SESSION['firstNameError'] = "Nie podałeś swojego imienia!";
@@ -41,7 +41,7 @@ function firstName()
 function lastName()
 {
 	$GLOBALS['lastName'] = $_POST['lastName'];
-	if (strlen($GLOBALS['lastName']) < 1)
+	if(strlen($GLOBALS['lastName']) < 1)
 	{
 		$GLOBALS['everythingOK'] = false;
 		$_SESSION['lastNameError'] = "Nie podałeś swojego nazwiska!";
@@ -54,12 +54,12 @@ function lastName()
 function login()
 {
 	$GLOBALS['login'] = $_POST['login'];
-	if ((strlen($GLOBALS['login']) < 3) || (strlen($GLOBALS['login']) > 20))
+	if((strlen($GLOBALS['login']) < 3) || (strlen($GLOBALS['login']) > 20))
 	{
 		$GLOBALS['everythingOK'] = false;
 		$_SESSION['loginError'] = "Login musi posiadać od 3 do 20 znaków!";
 	}
-	if (!ctype_alnum($GLOBALS['login']))
+	if(!ctype_alnum($GLOBALS['login']))
 	{
 		$GLOBALS['everythingOK'] = false;
 		$_SESSION['loginError'] = "Login może składać się tylko z liter i cyfr (bez polskich znaków)";
@@ -73,7 +73,7 @@ function email()
 {
 	$GLOBALS['email'] = $_POST['email'];
 	$emailB = filter_var($GLOBALS['email'], FILTER_SANITIZE_EMAIL);
-	if (!filter_var($emailB, FILTER_VALIDATE_EMAIL) || ($emailB != $GLOBALS['email']))
+	if(!filter_var($emailB, FILTER_VALIDATE_EMAIL) || ($emailB != $GLOBALS['email']))
 	{
 		$GLOBALS['everythingOK'] = false;
 		$_SESSION['emailError'] = "Podaj poprawny adres email!";
@@ -87,12 +87,12 @@ function passwds()
 {
 	$GLOBALS['passwd1'] = $_POST['passwd1'];
 	$passwd2 = $_POST['passwd2'];
-	if (strlen($GLOBALS['passwd1']) < 8 || strlen($GLOBALS['passwd1']) > 20)
+	if(strlen($GLOBALS['passwd1']) < 8 || strlen($GLOBALS['passwd1']) > 20)
 	{
 		$GLOBALS['everythingOK'] = false;
 		$_SESSION['passwdError'] = "Hasło musi posiadać od 8 do 20 znaków!";
 	}
-	if ($GLOBALS['passwd1'] != $passwd2)
+	if($GLOBALS['passwd1'] != $passwd2)
 	{
 		$GLOBALS['everythingOK'] = false;
 		$_SESSION['passwdError'] = "Podane hasła nie są identyczne!";
@@ -106,7 +106,7 @@ function passwds()
 function howManyEmails($result)
 {
 	$howMany = $result->num_rows;
-	if ($howMany > 0)
+	if($howMany > 0)
 	{
 		$GLOBALS['everythingOK'] = false;
 		$_SESSION['emailError'] = "Istnieje już użytkownik o takim adresie email!";
@@ -117,7 +117,7 @@ function howManyEmails($result)
 function howManyLogins($result)
 {
 	$howMany = $result->num_rows;
-	if ($howMany > 0)
+	if($howMany > 0)
 	{
 		$GLOBALS['everythingOK'] = false;
 		$_SESSION['loginError'] = "Istnieje już użytkownik o takim loginie! Wybierz inny.";
@@ -130,8 +130,8 @@ function saveNewUser($passwdHash, $salt)
 	global $firstName, $lastName, $login, $email;
 
 	$GLOBALS['connection']->query("START TRANSACTION");
-	if ($GLOBALS['connection']->query("insert into user values (null, '$firstName', '$lastName', '$email', '$login', '$passwdHash', '$salt')") &&
-		$GLOBALS['connection']->query("INSERT INTO patient VALUES (NULL, LAST_INSERT_ID())")
+	if($GLOBALS['connection']->query("insert into user values (null, '$firstName', '$lastName', '$email', '$login', '$passwdHash', '$salt')") &&
+		$GLOBALS['connection']->query("insert into patient values (null, LAST_INSERT_ID())")
 	)
 		return true;
 	else
@@ -143,7 +143,7 @@ function dbConnection()
 {
 	global $login, $email, $passwd1, $host, $db_user, $db_password, $db_name;
 
-	if ($GLOBALS['everythingOK'])
+	if($GLOBALS['everythingOK'])
 	{
 		require_once "connect.php";
 		mysqli_report(MYSQLI_REPORT_STRICT);
@@ -154,29 +154,29 @@ function dbConnection()
 			$GLOBALS['connection']->set_charset('utf8');
 
 			// Jesli powyzsza proba zawiedzie, to rzuc wyjatkiem
-			if ($GLOBALS['connection']->connect_errno != 0)
+			if($GLOBALS['connection']->connect_errno != 0)
 				throw new Exception($GLOBALS['connection']->connect_error);
 			else
 			{
 				// Poszukaj, czy w bazie istnieje juz podany adres email
 				$result = $GLOBALS['connection']->query("select p.patientID from patient p join user u on (p.userID = u.userID) where u.email = '$email'");
-				if (!$result) throw new Exception($GLOBALS['connection']->error);
+				if(!$result) throw new Exception($GLOBALS['connection']->error);
 				howManyEmails($result);
 
 				// Poszukaj, czy w bazie istnieje juz podany login
 				$result = $GLOBALS['connection']->query("select userID from user where login = '$login'");
-				if (!$result) throw new Exception($GLOBALS['connection']->error);
+				if(!$result) throw new Exception($GLOBALS['connection']->error);
 				howManyLogins($result);
 
 				//Jesli do tej pory wszystko przebieglo pomyslnie...
-				if ($GLOBALS['everythingOK'])
+				if($GLOBALS['everythingOK'])
 				{
 					try
 					{
 						// ...to wygeneruj sol, hash'uj haslo i wprowadz dane do bazy za pomoca transakcji
 						$salt = generateSalt();
 						$passwdHash = sha1($passwd1 . $salt);
-						if (saveNewUser($passwdHash, $salt))
+						if(saveNewUser($passwdHash, $salt))
 							$GLOBALS['connection']->query("COMMIT");
 						else
 							throw new Exception($GLOBALS['connection']->error);
@@ -214,12 +214,51 @@ function validation()
 	dbConnection();
 }
 
-// Walidacja uruchomi sie, jezeli cokolwiek zostalo przeslane do formularza (nawet puste pole), np. email
-if (isset($_POST['email']))
+/**************************ZABEZPIECZENIE PRZED MULTI CLICK'IEM**************************/
+
+// Funkcja generujaca token, ktory jest uzywany w formularzu
+function getToken()
 {
-	$GLOBALS['everythingOK'] = true;
-	validation();
+	$token = sha1(mt_rand());
+	if(!isset($_SESSION['tokensPreventMulticlickInSignIn']))
+		$_SESSION['tokensPreventMulticlickInSignIn'] = array($token => 1);
+	else
+		$_SESSION['tokensPreventMulticlickInSignIn'][$token] = 1;
+	return $token;
 }
+
+// Sprawdzanie poprawnosci tokenu oraz usuwanie go z listy poprawnych token'ow
+function isTokenValid($token)
+{
+	if(!empty($_SESSION['tokensPreventMulticlickInSignIn'][$token]))
+	{
+		unset($_SESSION['tokensPreventMulticlickInSignIn'][$token]);
+		return true;
+	}
+	return false;
+}
+
+// Sprawdzenie, czy formularz zostal wyslany
+$postedToken = filter_input(INPUT_POST, 'token');
+if(!empty($postedToken))
+{
+	if(isTokenValid($postedToken))
+	{
+		// Wszystko w porzadku, mozna przystapic do walidacji
+		$GLOBALS['everythingOK'] = true;
+		validation();
+	}
+	else
+	{
+		$helper_login = $_POST['login'];
+		if(strlen($helper_login) >= 3 && strlen($helper_login) <= 20 && ctype_alnum($helper_login))
+			$_SESSION['login'] = $helper_login;
+		header("Location: multiclickError_signIn.php");
+		exit();
+	}
+}
+
+$token = getToken();
 ?>
 
 <!DOCTYPE HTML>
@@ -251,7 +290,7 @@ if (isset($_POST['email']))
 	<form method="post">
 		<!--Imie-->
 		<input type="text" id="firstNameID" name="firstName" placeholder="imię" value="<?php
-		if (isset($_SESSION['firstNameSaved']))
+		if(isset($_SESSION['firstNameSaved']))
 		{
 			echo $_SESSION['firstNameSaved'];
 			unset($_SESSION['firstNameSaved']);
@@ -259,7 +298,7 @@ if (isset($_POST['email']))
 		?>"/>
 		<div class="errorFromAjax" id="firstNameError"></div>
 		<?php
-		if (isset($_SESSION['firstNameError']))
+		if(isset($_SESSION['firstNameError']))
 		{
 			echo '<div class="errorAfterSubmit" id="firstName_errorAfterSubmit">' . $_SESSION['firstNameError'] . '</div>';
 			unset($_SESSION['firstNameError']);
@@ -269,7 +308,7 @@ if (isset($_POST['email']))
 
 		<!--Nazwisko-->
 		<input type="text" id="lastNameID" name="lastName" placeholder="nazwisko" value="<?php
-		if (isset($_SESSION['lastNameSaved']))
+		if(isset($_SESSION['lastNameSaved']))
 		{
 			echo $_SESSION['lastNameSaved'];
 			unset($_SESSION['lastNameSaved']);
@@ -277,7 +316,7 @@ if (isset($_POST['email']))
 		?>"/>
 		<div class="errorFromAjax" id="lastNameError"></div>
 		<?php
-		if (isset($_SESSION['lastNameError']))
+		if(isset($_SESSION['lastNameError']))
 		{
 			echo '<div class="errorAfterSubmit" id="lastName_errorAfterSubmit">' . $_SESSION['lastNameError'] . '</div>';
 			unset($_SESSION['lastNameError']);
@@ -287,7 +326,7 @@ if (isset($_POST['email']))
 
 		<!--Login-->
 		<input type="text" id="loginID" name="login" placeholder="login" value="<?php
-		if (isset($_SESSION['loginSaved']))
+		if(isset($_SESSION['loginSaved']))
 		{
 			echo $_SESSION['loginSaved'];
 			unset($_SESSION['loginSaved']);
@@ -295,7 +334,7 @@ if (isset($_POST['email']))
 		?>"/>
 		<div class="errorFromAjax" id="loginError"></div>
 		<?php
-		if (isset($_SESSION['loginError']))
+		if(isset($_SESSION['loginError']))
 		{
 			echo '<div class="errorAfterSubmit" id="login_errorAfterSubmit">' . $_SESSION['loginError'] . '</div>';
 			unset($_SESSION['loginError']);
@@ -305,7 +344,7 @@ if (isset($_POST['email']))
 
 		<!--Email-->
 		<input type="text" id="emailID" name="email" placeholder="e-mail" value="<?php
-		if (isset($_SESSION['emailSaved']))
+		if(isset($_SESSION['emailSaved']))
 		{
 			echo $_SESSION['emailSaved'];
 			unset($_SESSION['emailSaved']);
@@ -313,7 +352,7 @@ if (isset($_POST['email']))
 		?>"/>
 		<div class="errorFromAjax" id="emailError"></div>
 		<?php
-		if (isset($_SESSION['emailError']))
+		if(isset($_SESSION['emailError']))
 		{
 			echo '<div class="errorAfterSubmit" id="email_errorAfterSubmit">' . $_SESSION['emailError'] . '</div>';
 			unset($_SESSION['emailError']);
@@ -323,7 +362,7 @@ if (isset($_POST['email']))
 
 		<!--Haslo-->
 		<input type="password" id="passwd1ID" name="passwd1" placeholder="hasło" value="<?php
-		if (isset($_SESSION['passwd1Saved']))
+		if(isset($_SESSION['passwd1Saved']))
 		{
 			echo $_SESSION['passwd1Saved'];
 			unset($_SESSION['passwd1Saved']);
@@ -333,7 +372,7 @@ if (isset($_POST['email']))
 
 		<!--Powtorzone haslo-->
 		<input type="password" id="passwd2ID" name="passwd2" placeholder="powtórz hasło" value="<?php
-		if (isset($_SESSION['passwd2Saved']))
+		if(isset($_SESSION['passwd2Saved']))
 		{
 			echo $_SESSION['passwd2Saved'];
 			unset($_SESSION['passwd2Saved']);
@@ -341,7 +380,7 @@ if (isset($_POST['email']))
 		?>"/>
 		<div class="errorFromAjax" id="passwdError"></div>
 		<?php
-		if (isset($_SESSION['passwdError']))
+		if(isset($_SESSION['passwdError']))
 		{
 			echo '<div class="errorAfterSubmit" id="passwd_errorAfterSubmit">' . $_SESSION['passwdError'] . '</div>';
 			unset($_SESSION['passwdError']);
@@ -352,6 +391,10 @@ if (isset($_POST['email']))
 		<!--Submit zatwierdzajacy-->
 		<input type="submit" value="Zarejestruj się"
 			   onclick="this.disabled=true; this.value='Wczytuję...'; this.form.submit();"/>
+
+
+		<!--Input przechowujacy token, ktory zapobiega multiclick'owi-->
+		<input type="hidden" name="token" value="<?php echo $token;?>"/>
 	</form>
 	<div id="alternative">-------- lub --------</div>
 	<div id="linkToLogIn"><a href="index.php">Wróć do strony logowania!</a></div>
