@@ -2,14 +2,14 @@
 session_start();
 
 // Przekierowanie jesli pola formularza nie zostaly ustawione
-if ((!isset($_POST['login'])) || (!isset($_POST['haslo'])))
+if ((!isset($_POST['login'])) || (!isset($_POST['passwd'])))
 {
 	header('Location: index.php');
 	exit();
 }
 
 // Funkcja do generowania token'a
-function generateRandomString()
+function generateToken()
 {
 	$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	$charactersLength = strlen($characters);
@@ -20,23 +20,24 @@ function generateRandomString()
 }
 
 // Funkcja zdobywajaca kilka potrzebnych informacji, ktore trzeba wrzucic do bazy danych
-function potrzebneDane(&$IP, &$wszystko_o_przegladarce, &$nazwa_przegladarki, &$ID_help, &$login_help, &$token, $wiersz)
+function necessaryData(&$IPAddress, &$allAboutBrowser, &$browserName, &$helper_userID, &$helper_login, &$token, $row)
 {
-	$IP = $_SERVER['REMOTE_ADDR'];
-	$wszystko_o_przegladarce = get_browser(null, true);    //http://php.net/manual/en/function.get-browser.php PAMIETAC O PLIKU browscap.ini !!!
-	$nazwa_przegladarki = $wszystko_o_przegladarce['browser'];
-	$ID_help = $wiersz['userID'];
-	$login_help = $wiersz['login'];
-	$token = generateRandomString();
+	$IPAddress = $_SERVER['REMOTE_ADDR'];
+	// http://php.net/manual/en/function.get-browser.php PAMIETAC O PLIKU browscap.ini !!!
+	$allAboutBrowser = get_browser(null, true);
+	$browserName = $allAboutBrowser['browser'];
+	$helper_userID = $row['userID'];
+	$helper_login = $row['login'];
+	$token = generateToken();
 }
 
 // Transakcja wykonujaca sie w momencie, w ktorym nie ma aktywnej sesji usera, na konto ktorego chce sie zalogowac
-function transakcja1($ID_help, $login_help, $IP, $nazwa_przegladarki, $token)
+function activeSessionIs($helper_userID, $helper_login, $IPAddress, $browserName, $token)
 {
-	$GLOBALS['polaczenie']->query("START TRANSACTION");
+	$GLOBALS['connection']->query("START TRANSACTION");
 
-	if ($GLOBALS['polaczenie']->query("insert into active_sessions values ('$ID_help', '$IP', '$nazwa_przegladarki', now(), '$token')") &&
-		$GLOBALS['polaczenie']->query("insert into archive_logs values ('$ID_help', '$login_help', '$IP', '$nazwa_przegladarki', now())")
+	if ($GLOBALS['connection']->query("insert into active_sessions values ('$helper_userID', '$IPAddress', '$browserName', now(), '$token')") &&
+		$GLOBALS['connection']->query("insert into archive_logs values ('$helper_userID', '$helper_login', '$IPAddress', '$browserName', now())")
 	)
 		return true;
 	else
@@ -44,12 +45,12 @@ function transakcja1($ID_help, $login_help, $IP, $nazwa_przegladarki, $token)
 }
 
 // Transakcja wykonujaca sie w momencie, w ktorym jest juz aktywna sesja usera, na konto ktorego chce sie zalogowac ('zepsucie' ciasteczka)
-function transakcja2($ID_help, $login_help, $IP, $nazwa_przegladarki, $token)
+function activeSessionIsnt($helper_userID, $helper_login, $IPAddress, $browserName, $token)
 {
-	$GLOBALS['polaczenie']->query("START TRANSACTION");
+	$GLOBALS['connection']->query("START TRANSACTION");
 
-	if ($GLOBALS['polaczenie']->query("update active_sessions set token='$token' where userID like '$ID_help'") &&
-		$GLOBALS['polaczenie']->query("insert into archive_logs values ('$ID_help', '$login_help', '$IP', '$nazwa_przegladarki', now())")
+	if ($GLOBALS['connection']->query("update active_sessions set token='$token' where userID like '$helper_userID'") &&
+		$GLOBALS['connection']->query("insert into archive_logs values ('$helper_userID', '$helper_login', '$IPAddress', '$browserName', now())")
 	)
 		return true;
 	else
@@ -57,17 +58,16 @@ function transakcja2($ID_help, $login_help, $IP, $nazwa_przegladarki, $token)
 }
 
 // Ustawienie ciasteczek oraz wpisanie ciut potrzebnych danych do sesji
-function cookies($token, $wiersz, $kto)
+function cookies($token, $row, $who)
 {
-	if ($kto == "pacjent")
-		setcookie("zalogowany_pacjent", true, time() + 86400);
+	if ($who == "patient")
+		setcookie("patientLogged", true, time() + 86400);
 	else
-		setcookie("zalogowany_dietetyk", true, time() + 86400);
+		setcookie("dieticianLogged", true, time() + 86400);
 	setcookie("token", $token);
-
-	$_SESSION['id_uzytkownik'] = $wiersz['userID'];
-	$_SESSION['login'] = $wiersz['login'];
-	unset($_SESSION['blad']);
+	$_SESSION['userID'] = $row['userID'];
+	$_SESSION['login'] = $row['login'];
+	unset($_SESSION['error']);
 }
 
 require_once "connect.php";
@@ -75,64 +75,64 @@ mysqli_report(MYSQLI_REPORT_STRICT);
 try
 {
 	// Proba polaczenia sie z baza
-	$GLOBALS['polaczenie'] = new mysqli($host, $db_user, $db_password, $db_name);
-	$GLOBALS['polaczenie']->set_charset('utf8');
+	$GLOBALS['connection'] = new mysqli($host, $db_user, $db_password, $db_name);
+	$GLOBALS['connection']->set_charset('utf8');
 
 	// Jesli powyzsza proba zawiedzie, to rzuc wyjatkiem
-	if ($GLOBALS['polaczenie']->connect_errno != 0)
-		throw new Exception($GLOBALS['polaczenie']->connect_error);
+	if ($GLOBALS['connection']->connect_errno != 0)
+		throw new Exception($GLOBALS['connection']->connect_error);
 	else
 	{
 		$login = $_POST['login'];
-		$haslo = $_POST['haslo'];
+		$passwd = $_POST['passwd'];
 
 		//Walidacja i sanityzacja loginu
 		$login = htmlentities($login, ENT_QUOTES, "UTF-8");
-		if ($rezultat = $GLOBALS['polaczenie']->query(sprintf("SELECT * FROM user WHERE login='%s'", mysqli_real_escape_string($GLOBALS['polaczenie'], $login))))
+		if ($result = $GLOBALS['connection']->query(sprintf("SELECT * FROM user WHERE login='%s'", mysqli_real_escape_string($GLOBALS['connection'], $login))))
 		{
 			// Sprawdzenie, czy sa w bazie uzytkownicy o podanym loginie
-			$ilu_userow = $rezultat->num_rows;
-			if ($ilu_userow > 0)
+			$howManyUsers = $result->num_rows;
+			if ($howManyUsers > 0)
 			{
 				// Czy podane haslo sie zgadza
-				$wiersz = $rezultat->fetch_assoc();
-				if (!strcmp(sha1($haslo . $wiersz['salt']), $wiersz['password']))
+				$row = $result->fetch_assoc();
+				if (!strcmp(sha1($passwd . $row['salt']), $row['password']))
 				{
 					// Zebranie potrzebnych danych oraz wykonanie zapytania do bazy o aktywne_sesje
-					potrzebneDane($IP, $wszystko_o_przegladarce, $nazwa_przegladarki, $ID_help, $login_help, $token, $wiersz);
-					if (!($rezultat2 = $GLOBALS['polaczenie']->query("select * from active_sessions where userID like '$ID_help'")))
-						throw new Exception($GLOBALS['polaczenie']->error);
+					necessaryData($IPAddress, $allAboutBrowser, $browserName, $helper_userID, $helper_login, $token, $row);
+					if (!($result2 = $GLOBALS['connection']->query("select * from active_sessions where userID like '$helper_userID'")))
+						throw new Exception($GLOBALS['connection']->error);
 
 
 					// Jesli nie ma aktywnej sesji uzytkownika, na konto ktorego chce sie zalogowac...
-					if (!$rezultat2->num_rows)
+					if (!$result2->num_rows)
 					{
 						// ...to wykonuje transakcje nr 1...
-						if (transakcja1($ID_help, $login_help, $IP, $nazwa_przegladarki, $token))
-							$GLOBALS['polaczenie']->query("COMMIT");
+						if (activeSessionIs($helper_userID, $helper_login, $IPAddress, $browserName, $token))
+							$GLOBALS['connection']->query("COMMIT");
 						else
-							throw new Exception($GLOBALS['polaczenie']->error);
+							throw new Exception($GLOBALS['connection']->error);
 					}
 					// ...w przeciwnym wypadku wykonuje transakcje nr 2
-					else if (transakcja2($ID_help, $login_help, $IP, $nazwa_przegladarki, $token))
-						$GLOBALS['polaczenie']->query("COMMIT");
+					else if (activeSessionIsnt($helper_userID, $helper_login, $IPAddress, $browserName, $token))
+						$GLOBALS['connection']->query("COMMIT");
 					else
-						throw new Exception($GLOBALS['polaczenie']->error);
+						throw new Exception($GLOBALS['connection']->error);
 
 
 					//Loguje sie pacjent, czy dietetyk?
-					if (!$rezultat3 = $GLOBALS['polaczenie']->query("select * from user u join patient p on(p.userID = u.userID) where (p.userID = '$ID_help')"))
-						throw new Exception($GLOBALS['polaczenie']->error);
-					else if ($rezultat3->num_rows)    //Logujacym sie uzytkownikem jest pacjent
+					if (!$result3 = $GLOBALS['connection']->query("select * from user u join patient p on(p.userID = u.userID) where (p.userID = '$helper_userID')"))
+						throw new Exception($GLOBALS['connection']->error);
+					else if ($result3->num_rows)	//Logujacym sie uzytkownikem jest pacjent
 					{
-						$kto = "pacjent";
+						$who = "patient";
 						header('Location: yourCard.php');
 					}
-					else if (!$rezultat4 = $GLOBALS['polaczenie']->query("select * from user u join dietician d on(d.userID = u.userID) where (d.userID = '$ID_help')"))
-						throw new Exception($GLOBALS['polaczenie']->error);
-					else if ($rezultat4->num_rows)    //Logujacym sie uzytkownikem jest dietetyk
+					else if (!$result4 = $GLOBALS['connection']->query("select * from user u join dietician d on(d.userID = u.userID) where (d.userID = '$helper_userID')"))
+						throw new Exception($GLOBALS['connection']->error);
+					else if ($result4->num_rows)	//Logujacym sie uzytkownikem jest dietetyk
 					{
-						$kto = "dietetyk";
+						$who = "dietician";
 						header('Location: dieticianCard.php');
 					}
 					else
@@ -143,33 +143,33 @@ try
 
 
 					//Ustawiamy ciasteczko i zwalniamy dotychczasowo uzywana pamiec
-					cookies($token, $wiersz, $kto);
-					$rezultat->free_result();
-					$rezultat2->free_result();
-					$rezultat3->free_result();
-					if (isset($rezultat4))
-						$rezultat4->free_result();
+					cookies($token, $row, $who);
+					$result->free_result();
+					$result2->free_result();
+					$result3->free_result();
+					if (isset($result4))
+						$result4->free_result();
 				}
 				else
 				{
-					$_SESSION['blad'] = "Nieprawidłowy login lub hasło!";
+					$_SESSION['error'] = "Nieprawidłowy login lub hasło!";
 					header('Location: index.php');
 				}
 			}
 			else
 			{
-				$_SESSION['blad'] = "Nieprawidłowy login lub hasło!";
+				$_SESSION['error'] = "Nieprawidłowy login lub hasło!";
 				header('Location: index.php');
 			}
 		}
 		else
-			throw new Exception($GLOBALS['polaczenie']->error);
-		$GLOBALS['polaczenie']->close();
+			throw new Exception($GLOBALS['connection']->error);
+		$GLOBALS['connection']->close();
 	}
 }
 catch (Exception $e)
 {
-	$GLOBALS['polaczenie']->query("ROLLBACK");
+	$GLOBALS['connection']->query("ROLLBACK");
 	echo '<span style="color:red;">Błąd serwera! Prosimy zalogować się ponownie później!</span>';
 	//echo '<br/>Informacja developerska: '.$e;
 }

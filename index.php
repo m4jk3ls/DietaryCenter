@@ -1,11 +1,11 @@
 <?php
 session_start();
-if (isset($_COOKIE["zalogowany_pacjent"]))
+if (isset($_COOKIE["patientLogged"]))
 {
 	header('Location: yourCard.php');
 	exit();
 }
-if (isset($_COOKIE["zalogowany_dietetyk"]))
+if (isset($_COOKIE["dieticianLogged"]))
 {
 	header('Location: dieticianCard.php');
 	exit();
@@ -32,35 +32,28 @@ if (isset($_COOKIE["zalogowany_dietetyk"]))
 	<link rel="stylesheet" type="text/css"
 		  href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css"/>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
-	<noscript><div id="noscript_info">Twoja przeglądarka nie obsługuje skryptów JavaScript!</div></noscript>
+	<noscript><div id="infoAboutNoScript">Twoja przeglądarka nie obsługuje skryptów JavaScript!</div></noscript>
 </head>
 
 <body>
-		<div id="header">Witaj w świecie NaturHouse!</div>
-
-		<div id="log_form">
-
-			<form action="logInProcess.php" method="post">
-				<input type="text" name="login" id="log" placeholder="login"/>
-				<div class="komunikat" id="komunikat1"></div>
-
-				<input type="password" name="haslo" id="pass" placeholder="hasło"/>
-				<div class="komunikat" id="komunikat2"></div>
-				<?php
-				if (isset($_SESSION['blad']))
-				{
-					echo '<div id="glowny_komunikat">' . $_SESSION['blad'] . '</div>';
-					unset($_SESSION['blad']);
-				}
-				?>
-
-				<input id="logInButton" type="submit" value="Zaloguj się"
-					   onclick="this.disabled=true; this.value='Wczytuję...'; this.form.submit();"/>
-			</form>
-
-			<div id="tekst_lub">-------- lub --------</div>
-			<div id="link_rejestracji"><a href="signIn.php">Zarejestruj się i dołącz do nas!</a></div>
-
-		</div>
+<div id="headline">Witaj w świecie NaturHouse!</div>
+<div id="logInForm">
+	<form action="logInProcess.php" method="post">
+		<input type="text" name="login" id="loginID" placeholder="login"/>
+		<div class="errorFromAjax" id="loginError"></div>
+		<input type="password" name="passwd" id="passwdID" placeholder="hasło"/>
+		<div class="errorFromAjax" id="passwdError"></div>
+		<?php
+		if (isset($_SESSION['error']))
+		{
+		echo '<div id="errorAfterSubmit">' . $_SESSION['error'] . '</div>';
+		unset($_SESSION['error']);
+		}
+		?>
+		<input type="submit" id="logInButton" value="Zaloguj się" onclick="this.disabled=true; this.value='Wczytuję...'; this.form.submit();"/>
+	</form>
+	<div id="alternative">-------- lub --------</div>
+	<div id="linkToSignIn"><a href="signIn.php">Zarejestruj się i dołącz do nas!</a></div>
+</div>
 </body>
 </html>

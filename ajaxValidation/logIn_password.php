@@ -1,5 +1,5 @@
 <?php
-if (!isset($_POST['haslo']))
+if (!isset($_POST['passwd']))
 	echo 'Nie przesłano zmiennej "haslo"';
 else
 {
@@ -8,22 +8,20 @@ else
 	try
 	{
 		// Proba polaczenia sie z baza
-		$polaczenie = new mysqli($host, $db_user, $db_password, $db_name);
-		$polaczenie->set_charset('utf8');
+		$connection = new mysqli($host, $db_user, $db_password, $db_name);
+		$connection->set_charset('utf8');
 
 		// Jesli powyzsza proba zawiedzie, to rzuc wyjatkiem
-		if ($polaczenie->connect_errno != 0)
-			throw new Exception($polaczenie->connect_error);
+		if ($connection->connect_errno != 0)
+			throw new Exception($connection->connect_error);
 		else
 		{
-			$haslo = $_POST['haslo'];
-
-			if (strlen($haslo) < 8)
+			$passwd = $_POST['passwd'];
+			if (strlen($passwd) < 8)
 				echo 'Hasło jest zbyt krótkie (min. 8 znaków)!';
-			else if (strlen($haslo) > 20)
+			else if (strlen($passwd) > 20)
 				echo 'Hasło jest zbyt długie (max. 20 znaków)!';
-
-			$polaczenie->close();
+			$connection->close();
 		}
 	}
 	catch (Exception $e)

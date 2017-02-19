@@ -5,7 +5,7 @@ body
 	font-size: 20px;
 }
 
-#noscript_info
+#infoAboutNoScript
 {
 	width: 530px;
 	background-color: #ff1a1a;
@@ -20,7 +20,7 @@ body
 	margin: -8px 0 0 -8px;
 }
 
-#header
+#headline
 {
 	width: 100%;
 	text-align: center;
@@ -30,7 +30,7 @@ body
 	top: calc((50% - 174px) / 2 - 44px);
 }
 
-#log_form
+#logInForm
 {
 	background-color: white;
 	width: 300px;
@@ -61,14 +61,14 @@ input[type=password]
 	margin-top: 10px;
 }
 
-.komunikat
+.errorFromAjax
 {
 	color: #ff6600;
 	font-size: 15px;
 	text-align: center;
 }
 
-#glowny_komunikat
+#errorAfterSubmit
 {
 	color: #ff6600;
 	text-align: center;
@@ -156,38 +156,38 @@ input:focus:-ms-input-placeholder
 	color: #428C42;
 }
 
-#tekst_lub
+#alternative
 {
 	text-align: center;
 	font-size: 16px;
 	margin: 10px 0 10px 0;
 }
 
-#link_rejestracji
+#linkToSignIn
 {
 	text-align: center;
 }
 
-#link_rejestracji > a
+#linkToSignIn > a
 {
 	text-decoration: none;
 	font-size: 18px;
 }
 
 /*Nieodwiedzony link*/
-#link_rejestracji > a:link
+#linkToSignIn > a:link
 {
 	color: #2C05F0;
 }
 
 /*Odwiedzony link*/
-#link_rejestracji > a:visited
+#linkToSignIn > a:visited
 {
 	color: #7DC3F5;
 }
 
 /*Link po najechaniu kursorem*/
-#link_rejestracji > a:hover
+#linkToSignIn > a:hover
 {
 	color: #36b03c;
 	cursor: pointer;

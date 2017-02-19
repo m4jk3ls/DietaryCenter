@@ -1,20 +1,23 @@
 jQuery(document).ready(function ()
 {
-	$("#email_id").on("blur", function ()
+	$("#emailID").on("blur", function ()
 	{
-		var email_value = $('input[name = email]').val();
+		var emailValue = $('input[name = email]').val();
+		var errorAfterSubmitLength = $("#email_errorAfterSubmit").text().length;
 
 		$.ajax(
 			{
 				url: "ajaxValidation/signIn_email.php",
 				type: "POST",
-				data: "email=" + email_value,
+				data: "email=" + emailValue,
 				success: function (msg)
 				{
-					if (msg != "")
-						$("#komunikat4").text(msg).css("margin-top", "5px");
-					else
-						$("#komunikat4").text(msg).css("margin-top", "0");
+					if(errorAfterSubmitLength == "" && msg != "")
+						$("#emailError").text(msg).css("margin-top", "5px");
+					else if(errorAfterSubmitLength != "" && msg == "")
+						$("#email_errorAfterSubmit").text("").css("margin-top", "0");
+					else if(msg == "")
+						$("#emailError").text("").css("margin-top", "0");
 				}
 			});
 	});

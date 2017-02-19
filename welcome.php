@@ -1,28 +1,25 @@
 <?php
 session_start();
-if (!isset($_SESSION['udana_rejestracja']))
+if (!isset($_SESSION['registrationIsOK']))
 {
 	header('Location: index.php');
 	exit();
 }
 else
-{
-	unset($_SESSION['udana_rejestracja']);
-}
+	unset($_SESSION['registrationIsOK']);
 
-if (isset($_SESSION['fr_imie'])) unset($_SESSION['fr_imie']);
-if (isset($_SESSION['fr_nazwisko'])) unset($_SESSION['fr_nazwisko']);
-if (isset($_SESSION['fr_login'])) unset($_SESSION['fr_login']);
-if (isset($_SESSION['fr_email'])) unset($_SESSION['fr_email']);
-if (isset($_SESSION['fr_haslo1'])) unset($_SESSION['fr_haslo1']);
-if (isset($_SESSION['fr_haslo2'])) unset($_SESSION['fr_haslo2']);
+if (isset($_SESSION['firstNameSaved'])) unset($_SESSION['firstNameSaved']);
+if (isset($_SESSION['lastNameSaved'])) unset($_SESSION['lastNameSaved']);
+if (isset($_SESSION['loginSaved'])) unset($_SESSION['loginSaved']);
+if (isset($_SESSION['emailSaved'])) unset($_SESSION['emailSaved']);
+if (isset($_SESSION['passwd1Saved'])) unset($_SESSION['passwd1Saved']);
+if (isset($_SESSION['passwd2Saved'])) unset($_SESSION['passwd2Saved']);
 
-if (isset($_SESSION['e_imie'])) unset($_SESSION['e_imie']);
-if (isset($_SESSION['e_nazwisko'])) unset($_SESSION['e_nazwisko']);
-if (isset($_SESSION['e_login'])) unset($_SESSION['e_login']);
-if (isset($_SESSION['e_email'])) unset($_SESSION['e_email']);
-if (isset($_SESSION['e_haslo'])) unset($_SESSION['e_haslo']);
-if (isset($_SESSION['e_bot'])) unset($_SESSION['e_bot']);
+if (isset($_SESSION['firstNameError'])) unset($_SESSION['firstNameError']);
+if (isset($_SESSION['lastNameError'])) unset($_SESSION['lastNameError']);
+if (isset($_SESSION['loginError'])) unset($_SESSION['loginError']);
+if (isset($_SESSION['emailError'])) unset($_SESSION['emailError']);
+if (isset($_SESSION['passwdError'])) unset($_SESSION['passwdError']);
 ?>
 
 <!DOCTYPE HTML>
@@ -41,10 +38,10 @@ if (isset($_SESSION['e_bot'])) unset($_SESSION['e_bot']);
 		  href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css"/>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
 	<script src="javascript_files/cookiesBanner.js"></script>
-	<noscript><div id="noscript_info">Twoja przeglądarka nie obsługuje skryptów JavaScript!</div></noscript>
+	<noscript><div id="infoAboutNoScript">Twoja przeglądarka nie obsługuje skryptów JavaScript!</div></noscript>
 </head>
 
 <body>
-	<div id="header">Dziękujemy za rejestrację w serwisie! Za chwilę zostaniesz przekierowany do formularza logowania!</div>
+<div id="headline">Dziękujemy za rejestrację w serwisie! Za chwilę zostaniesz przekierowany do formularza logowania!</div>
 </body>
 </html>

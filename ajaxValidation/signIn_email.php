@@ -17,23 +17,21 @@ else
 		try
 		{
 			// Proba polaczenia sie z baza
-			$polaczenie = new mysqli($host, $db_user, $db_password, $db_name);
-			$polaczenie->set_charset('utf8');
+			$connection = new mysqli($host, $db_user, $db_password, $db_name);
+			$connection->set_charset('utf8');
 
 			// Jesli powyzsza proba zawiedzie, to rzuc wyjatkiem
-			if ($polaczenie->connect_errno != 0)
-				throw new Exception($polaczenie->connect_error);
+			if ($connection->connect_errno != 0)
+				throw new Exception($connection->connect_error);
 			else
 			{
 				// Poszukaj, czy w bazie istnieje juz podany adres email
-				$rezultat = $polaczenie->query("select p.patientID from patient p join user u on (p.userID = u.userID) where u.email = '$email'");
-				if (!$rezultat) throw new Exception($polaczenie->error);
-
-				$ile = $rezultat->num_rows;
-				if ($ile > 0)
+				$result = $connection->query("select p.patientID from patient p join user u on (p.userID = u.userID) where u.email = '$email'");
+				if (!$result) throw new Exception($connection->error);
+				$howMany = $result->num_rows;
+				if ($howMany > 0)
 					echo 'Adres email zajęty!';
-
-				$polaczenie->close();
+				$connection->close();
 			}
 		}
 		catch (Exception $e)

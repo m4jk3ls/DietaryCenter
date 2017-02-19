@@ -6,7 +6,7 @@ body
 	font-size: 50px;
 }
 
-#noscript_info
+#infoAboutNoScript
 {
 	width: 530px;
 	background-color: #ff1a1a;
@@ -21,7 +21,7 @@ body
 	margin: -8px 0 0 -8px;
 }
 
-#header
+#headline
 {
 	text-align: center;
 	position: absolute;

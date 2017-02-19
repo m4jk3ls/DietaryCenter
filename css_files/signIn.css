@@ -4,7 +4,7 @@ body
 	background-image: url("../img/restaurant_icons.png");
 }
 
-#noscript_info
+#infoAboutNoScript
 {
 	width: 530px;
 	background-color: #ff1a1a;
@@ -19,7 +19,7 @@ body
 	margin: -8px 0 0 -8px;
 }
 
-#header
+#headline
 {
 	width: 100%;
 	text-align: center;
@@ -29,7 +29,7 @@ body
 	top: calc((50% - 216px) / 2 - 44px);
 }
 
-#sign_form
+#signInForm
 {
 	background-color: white;
 	width: 300px;
@@ -60,14 +60,14 @@ input[type=password]
 	margin-top: 5px;
 }
 
-.komunikat
+.errorFromAjax
 {
 	color: #ff6600;
 	font-size: 12px;
 	text-align: center;
 }
 
-.glowny_komunikat
+.errorAfterSubmit
 {
 	color: #ff6600;
 	font-size: 13px;
@@ -156,38 +156,38 @@ input:focus:-ms-input-placeholder
 	color: #428C42;
 }
 
-#txt_lub
+#alternative
 {
 	text-align: center;
 	margin: 5px 0 5px 0;
 	font-size: 16px;
 }
 
-#link_logowania
+#linkToLogIn
 {
 	text-align: center;
 }
 
-#link_logowania > a
+#linkToLogIn > a
 {
 	text-decoration: none;
 	font-size: 18px;
 }
 
 /*Nieodwiedzony link*/
-#link_logowania > a:link
+#linkToLogIn > a:link
 {
 	color: #2C05F0;
 }
 
 /*Odwiedzony link*/
-#link_logowania > a:visited
+#linkToLogIn > a:visited
 {
 	color: #7DC3F5;
 }
 
 /*Link po najechaniu kursorem*/
-#link_logowania > a:hover
+#linkToLogIn > a:hover
 {
 	color: #36b03c;
 	cursor: pointer;

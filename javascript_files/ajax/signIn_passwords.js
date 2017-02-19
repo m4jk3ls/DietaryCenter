@@ -1,21 +1,24 @@
 jQuery(document).ready(function ()
 {
-	$("#passwd2").on("blur", function ()
+	$("#passwd2ID").on("blur", function ()
 	{
-		var passwd1_value = $('input[name = haslo1]').val();
-		var passwd2_value = $('input[name = haslo2]').val();
+		var passwd1Value = $('input[name = passwd1]').val();
+		var passwd2Value = $('input[name = passwd2]').val();
+		var errorAfterSubmitLength = $("#passwd_errorAfterSubmit").text().length;
 
 		$.ajax(
 			{
 				url: "ajaxValidation/signIn_passwords.php",
 				type: "POST",
-				data: "passwd1=" + passwd1_value + "&" + "passwd2=" + passwd2_value,
+				data: "passwd1=" + passwd1Value + "&" + "passwd2=" + passwd2Value,
 				success: function (msg)
 				{
-					if (msg != "")
-						$("#komunikat5").text(msg).css("margin-top", "5px");
-					else
-						$("#komunikat5").text(msg).css("margin-top", "0");
+					if(errorAfterSubmitLength == "" && msg != "")
+						$("#passwdError").text(msg).css("margin-top", "5px");
+					else if(errorAfterSubmitLength != "" && msg == "")
+						$("#passwd_errorAfterSubmit").text("").css("margin-top", "0");
+					else if(msg == "")
+						$("#passwdError").text("").css("margin-top", "0");
 				}
 			});
 	});

@@ -5,7 +5,6 @@ else
 {
 	$passwd1 = $_POST['passwd1'];
 	$passwd2 = $_POST['passwd2'];
-
 	if ($passwd1 != $passwd2)
 		echo 'Hasła nie są identyczne!';
 	else if (strlen($passwd1) < 8)

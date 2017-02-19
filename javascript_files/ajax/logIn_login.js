@@ -1,20 +1,23 @@
 jQuery(document).ready(function ()
 {
-	$("#log").on("blur", function ()
+	$("#loginID").on("blur", function ()
 	{
-		var login_value = $('input[name = login]').val();
+		var loginValue = $('input[name = login]').val();
+		var errorAfterSubmitLength = $("#errorAfterSubmit").text().length;
 
 		$.ajax(
 			{
 				url: "ajaxValidation/logIn_login.php",
 				type: "POST",
-				data: "login=" + login_value,
+				data: "login=" + loginValue,
 				success: function (msg)
 				{
-					if (msg != "")
-						$("#komunikat1").text(msg).css("margin-top", "10px");
-					else
-						$("#komunikat1").text(msg).css("margin-top", "0");
+					if(errorAfterSubmitLength == "" && msg != "")
+						$("#loginError").text(msg).css("margin-top", "10px");
+					else if(errorAfterSubmitLength != "" && msg == "")
+						$("#errorAfterSubmit").text("").css("margin-top", "0");
+					else if(msg == "")
+						$("#loginError").text("").css("margin-top", "0");
 				}
 			});
 	});

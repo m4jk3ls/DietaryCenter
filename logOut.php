@@ -5,16 +5,16 @@ require_once "connect.php";
 mysqli_report(MYSQLI_REPORT_STRICT);
 try
 {
-	$polaczenie = new mysqli($host, $db_user, $db_password, $db_name);
-	$polaczenie->set_charset('utf8');
+	$connection = new mysqli($host, $db_user, $db_password, $db_name);
+	$connection->set_charset('utf8');
 
-	if ($polaczenie->connect_errno != 0)
-		throw new Exception($polaczenie->connect_error);
+	if ($connection->connect_errno != 0)
+		throw new Exception($connection->connect_error);
 	else
 	{
-		$ID_help = $_SESSION['id_uzytkownik'];
-		if (!$polaczenie->query("delete from active_sessions where userID like '$ID_help'"))
-			throw new Exception($polaczenie->error);
+		$helper_userID = $_SESSION['userID'];
+		if (!$connection->query("delete from active_sessions where userID like '$helper_userID'"))
+			throw new Exception($connection->error);
 	}
 }
 catch (Exception $e)
@@ -24,7 +24,7 @@ catch (Exception $e)
 }
 
 session_unset();
-setcookie("zalogowany_pacjent", false, time() - 1);
-setcookie("zalogowany_dietetyk", false, time() - 1);
+setcookie("patientLogged", false, time() - 1);
+setcookie("dieticianLogged", false, time() - 1);
 setcookie("token", null, time() - 1);
 header('Location: index.php');

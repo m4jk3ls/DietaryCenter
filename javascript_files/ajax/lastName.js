@@ -1,20 +1,23 @@
 jQuery(document).ready(function ()
 {
-	$("#nazwisko_id").on("blur", function ()
+	$("#lastNameID").on("blur", function ()
 	{
-		var surname_value = $('input[name = nazwisko]').val();
+		var lastNameValue = $('input[name = lastName]').val();
+		var errorAfterSubmitLength = $("#lastName_errorAfterSubmit").text().length;
 
 		$.ajax(
 			{
 				url: "ajaxValidation/signIn_lastName.php",
 				type: "POST",
-				data: "nazwisko=" + surname_value,
+				data: "lastName=" + lastNameValue,
 				success: function (msg)
 				{
-					if (msg != "")
-						$("#komunikat2").text(msg).css("margin-top", "5px");
-					else
-						$("#komunikat2").text(msg).css("margin-top", "0");
+					if(errorAfterSubmitLength == "" && msg != "")
+						$("#lastNameError").text(msg).css("margin-top", "5px");
+					else if(errorAfterSubmitLength != "" && msg == "")
+						$("#lastName_errorAfterSubmit").text("").css("margin-top", "0");
+					else if(msg == "")
+						$("#lastNameError").text("").css("margin-top", "0");
 				}
 			});
 	});

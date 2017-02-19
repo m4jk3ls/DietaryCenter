@@ -8,33 +8,32 @@ else
 	try
 	{
 		// Proba polaczenia sie z baza
-		$polaczenie = new mysqli($host, $db_user, $db_password, $db_name);
-		$polaczenie->set_charset('utf8');
+		$connection = new mysqli($host, $db_user, $db_password, $db_name);
+		$connection->set_charset('utf8');
 
 		// Jesli powyzsza proba zawiedzie, to rzuc wyjatkiem
-		if ($polaczenie->connect_errno != 0)
-			throw new Exception($polaczenie->connect_error);
+		if ($connection->connect_errno != 0)
+			throw new Exception($connection->connect_error);
 		else
 		{
 			$login = $_POST['login'];
-
 			//Walidacja i sanityzacja loginu
 			$login = htmlentities($login, ENT_QUOTES, "UTF-8");
-			if ($rezultat = $polaczenie->query(sprintf("SELECT * FROM user WHERE login='%s'", mysqli_real_escape_string($polaczenie, $login))))
+			if ($result = $connection->query(sprintf("SELECT * FROM user WHERE login='%s'", mysqli_real_escape_string($connection, $login))))
 			{
 				// Sprawdzenie, czy sa w bazie uzytkownicy o podanym loginie
-				$ilu_userow = $rezultat->num_rows;
-				if ($ilu_userow > 0)
-					$rezultat->free_result();
+				$howManyUsers = $result->num_rows;
+				if ($howManyUsers > 0)
+					$result->free_result();
 				else
 				{
-					$rezultat->free_result();
+					$result->free_result();
 					echo 'Niepoprawny login!';
 				}
 			}
 			else
-				throw new Exception($polaczenie->error);
-			$polaczenie->close();
+				throw new Exception($connection->error);
+			$connection->close();
 		}
 	}
 	catch (Exception $e)

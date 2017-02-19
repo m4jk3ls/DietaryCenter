@@ -2,19 +2,19 @@
 session_start();
 
 // Przekierowanie jesli zalogowany
-if (isset($_COOKIE["zalogowany_pacjent"]))
+if (isset($_COOKIE["patientLogged"]))
 {
 	header('Location: yourCard.php');
 	exit();
 }
-else if (isset($_COOKIE["zalogowany_dietetyk"]))
+else if (isset($_COOKIE["dieticianLogged"]))
 {
 	header('Location: dieticianCard.php');
 	exit();
 }
 
 // Funkcja do generowania soli
-function generateRandomString()
+function generateSalt()
 {
 	$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	$charactersLength = strlen($characters);
@@ -25,29 +25,29 @@ function generateRandomString()
 }
 
 // Walidacja imienia
-function imie()
+function firstName()
 {
-	$GLOBALS['imie'] = $_POST['imie'];
-	if (strlen($GLOBALS['imie']) < 1)
+	$GLOBALS['firstName'] = $_POST['firstName'];
+	if (strlen($GLOBALS['firstName']) < 1)
 	{
-		$GLOBALS['wszystko_OK'] = false;
-		$_SESSION['e_imie'] = "Nie podałeś swojego imienia!";
+		$GLOBALS['everythingOK'] = false;
+		$_SESSION['firstNameError'] = "Nie podałeś swojego imienia!";
 	}
-	// fr - formularz logowania. Zapisuje wartosc, aby przy niepoprawnej walidacji nie wpisywac jej od nowa
-	$_SESSION['fr_imie'] = $GLOBALS['imie'];
+	// Zapisuje wartosc, aby przy niepoprawnej walidacji nie wpisywac jej od nowa
+	$_SESSION['firstNameSaved'] = $GLOBALS['firstName'];
 }
 
 // Walidacja nazwiska
-function nazwisko()
+function lastName()
 {
-	$GLOBALS['nazwisko'] = $_POST['nazwisko'];
-	if (strlen($GLOBALS['nazwisko']) < 1)
+	$GLOBALS['lastName'] = $_POST['lastName'];
+	if (strlen($GLOBALS['lastName']) < 1)
 	{
-		$GLOBALS['wszystko_OK'] = false;
-		$_SESSION['e_nazwisko'] = "Nie podałeś swojego nazwiska!";
+		$GLOBALS['everythingOK'] = false;
+		$_SESSION['lastNameError'] = "Nie podałeś swojego nazwiska!";
 	}
-	// fr - formularz logowania. Zapisuje wartosc, aby przy niepoprawnej walidacji nie wpisywac jej od nowa
-	$_SESSION['fr_nazwisko'] = $GLOBALS['nazwisko'];
+	// Zapisuje wartosc, aby przy niepoprawnej walidacji nie wpisywac jej od nowa
+	$_SESSION['lastNameSaved'] = $GLOBALS['lastName'];
 }
 
 //Walidacja loginu
@@ -56,16 +56,16 @@ function login()
 	$GLOBALS['login'] = $_POST['login'];
 	if ((strlen($GLOBALS['login']) < 3) || (strlen($GLOBALS['login']) > 20))
 	{
-		$GLOBALS['wszystko_OK'] = false;
-		$_SESSION['e_login'] = "Login musi posiadać od 3 do 20 znaków!";
+		$GLOBALS['everythingOK'] = false;
+		$_SESSION['loginError'] = "Login musi posiadać od 3 do 20 znaków!";
 	}
 	if (!ctype_alnum($GLOBALS['login']))
 	{
-		$GLOBALS['wszystko_OK'] = false;
-		$_SESSION['e_login'] = "Login może składać się tylko z liter i cyfr (bez polskich znaków)";
+		$GLOBALS['everythingOK'] = false;
+		$_SESSION['loginError'] = "Login może składać się tylko z liter i cyfr (bez polskich znaków)";
 	}
-	// fr - formularz logowania. Zapisuje wartosc, aby przy niepoprawnej walidacji nie wpisywac jej od nowa
-	$_SESSION['fr_login'] = $GLOBALS['login'];
+	// Zapisuje wartosc, aby przy niepoprawnej walidacji nie wpisywac jej od nowa
+	$_SESSION['loginSaved'] = $GLOBALS['login'];
 }
 
 //Walidacja i sanityzacja email'a
@@ -75,63 +75,63 @@ function email()
 	$emailB = filter_var($GLOBALS['email'], FILTER_SANITIZE_EMAIL);
 	if (!filter_var($emailB, FILTER_VALIDATE_EMAIL) || ($emailB != $GLOBALS['email']))
 	{
-		$GLOBALS['wszystko_OK'] = false;
-		$_SESSION['e_email'] = "Podaj poprawny adres email!";
+		$GLOBALS['everythingOK'] = false;
+		$_SESSION['emailError'] = "Podaj poprawny adres email!";
 	}
-	// fr - formularz logowania. Zapisuje wartosc, aby przy niepoprawnej walidacji nie wpisywac jej od nowa
-	$_SESSION['fr_email'] = $GLOBALS['email'];
+	// Zapisuje wartosc, aby przy niepoprawnej walidacji nie wpisywac jej od nowa
+	$_SESSION['emailSaved'] = $GLOBALS['email'];
 }
 
 //Walidacja hasel
-function hasla()
+function passwds()
 {
-	$GLOBALS['haslo1'] = $_POST['haslo1'];
-	$haslo2 = $_POST['haslo2'];
-	if (strlen($GLOBALS['haslo1']) < 8 || strlen($GLOBALS['haslo1']) > 20)
+	$GLOBALS['passwd1'] = $_POST['passwd1'];
+	$passwd2 = $_POST['passwd2'];
+	if (strlen($GLOBALS['passwd1']) < 8 || strlen($GLOBALS['passwd1']) > 20)
 	{
-		$GLOBALS['wszystko_OK'] = false;
-		$_SESSION['e_haslo'] = "Hasło musi posiadać od 8 do 20 znaków!";
+		$GLOBALS['everythingOK'] = false;
+		$_SESSION['passwdError'] = "Hasło musi posiadać od 8 do 20 znaków!";
 	}
-	if ($GLOBALS['haslo1'] != $haslo2)
+	if ($GLOBALS['passwd1'] != $passwd2)
 	{
-		$GLOBALS['wszystko_OK'] = false;
-		$_SESSION['e_haslo'] = "Podane hasła nie są identyczne!";
+		$GLOBALS['everythingOK'] = false;
+		$_SESSION['passwdError'] = "Podane hasła nie są identyczne!";
 	}
-	// fr - formularz logowania. Zapisuje wartosci, aby przy niepoprawnej walidacji nie wpisywac ich od nowa
-	$_SESSION['fr_haslo1'] = $GLOBALS['haslo1'];
-	$_SESSION['fr_haslo2'] = $haslo2;
+	// Zapisuje wartosci, aby przy niepoprawnej walidacji nie wpisywac ich od nowa
+	$_SESSION['passwd1Saved'] = $GLOBALS['passwd1'];
+	$_SESSION['passwd2Saved'] = $passwd2;
 }
 
 // Sprawdzanie liczby tozsamych adresow email z podanym w formularzu
-function ile_takich_maili($rezultat)
+function howManyEmails($result)
 {
-	$ile = $rezultat->num_rows;
-	if ($ile > 0)
+	$howMany = $result->num_rows;
+	if ($howMany > 0)
 	{
-		$GLOBALS['wszystko_OK'] = false;
-		$_SESSION['e_email'] = "Istnieje już użytkownik o takim adresie email!";
+		$GLOBALS['everythingOK'] = false;
+		$_SESSION['emailError'] = "Istnieje już użytkownik o takim adresie email!";
 	}
 }
 
 // Sprawdzanie liczby tozsamych loginow z podanym w formularzu
-function ile_takich_loginow($rezultat)
+function howManyLogins($result)
 {
-	$ile = $rezultat->num_rows;
-	if ($ile > 0)
+	$howMany = $result->num_rows;
+	if ($howMany > 0)
 	{
-		$GLOBALS['wszystko_OK'] = false;
-		$_SESSION['e_login'] = "Istnieje już użytkownik o takim loginie! Wybierz inny.";
+		$GLOBALS['everythingOK'] = false;
+		$_SESSION['loginError'] = "Istnieje już użytkownik o takim loginie! Wybierz inny.";
 	}
 }
 
 // Transakcja, ktora ostatecznie wprowadza dane nowego uzytkownika-pacjenta do bazy
-function wykonaj_transakcje($haslo_hash, $salt)
+function saveNewUser($passwdHash, $salt)
 {
-	global $imie, $nazwisko, $login, $email;
+	global $firstName, $lastName, $login, $email;
 
-	$GLOBALS['polaczenie']->query("START TRANSACTION");
-	if ($GLOBALS['polaczenie']->query("insert into user values (null, '$imie', '$nazwisko', '$email', '$login', '$haslo_hash', '$salt')") &&
-		$GLOBALS['polaczenie']->query("INSERT INTO patient VALUES (NULL, LAST_INSERT_ID())")
+	$GLOBALS['connection']->query("START TRANSACTION");
+	if ($GLOBALS['connection']->query("insert into user values (null, '$firstName', '$lastName', '$email', '$login', '$passwdHash', '$salt')") &&
+		$GLOBALS['connection']->query("INSERT INTO patient VALUES (NULL, LAST_INSERT_ID())")
 	)
 		return true;
 	else
@@ -139,60 +139,60 @@ function wykonaj_transakcje($haslo_hash, $salt)
 }
 
 // Glowna funkcja, obslugujaca polaczenie z baza danych
-function polaczenie_z_baza()
+function dbConnection()
 {
-	global $login, $email, $haslo1, $host, $db_user, $db_password, $db_name;
+	global $login, $email, $passwd1, $host, $db_user, $db_password, $db_name;
 
-	if ($GLOBALS['wszystko_OK'])
+	if ($GLOBALS['everythingOK'])
 	{
 		require_once "connect.php";
 		mysqli_report(MYSQLI_REPORT_STRICT);
 		try
 		{
 			// Proba polaczenia sie z baza
-			$GLOBALS['polaczenie'] = new mysqli($host, $db_user, $db_password, $db_name);
-			$GLOBALS['polaczenie']->set_charset('utf8');
+			$GLOBALS['connection'] = new mysqli($host, $db_user, $db_password, $db_name);
+			$GLOBALS['connection']->set_charset('utf8');
 
 			// Jesli powyzsza proba zawiedzie, to rzuc wyjatkiem
-			if ($GLOBALS['polaczenie']->connect_errno != 0)
-				throw new Exception($GLOBALS['polaczenie']->connect_error);
+			if ($GLOBALS['connection']->connect_errno != 0)
+				throw new Exception($GLOBALS['connection']->connect_error);
 			else
 			{
 				// Poszukaj, czy w bazie istnieje juz podany adres email
-				$rezultat = $GLOBALS['polaczenie']->query("select p.patientID from patient p join user u on (p.userID = u.userID) where u.email = '$email'");
-				if (!$rezultat) throw new Exception($GLOBALS['polaczenie']->error);
-				ile_takich_maili($rezultat);
+				$result = $GLOBALS['connection']->query("select p.patientID from patient p join user u on (p.userID = u.userID) where u.email = '$email'");
+				if (!$result) throw new Exception($GLOBALS['connection']->error);
+				howManyEmails($result);
 
 				// Poszukaj, czy w bazie istnieje juz podany login
-				$rezultat = $GLOBALS['polaczenie']->query("select userID from user where login = '$login'");
-				if (!$rezultat) throw new Exception($GLOBALS['polaczenie']->error);
-				ile_takich_loginow($rezultat);
+				$result = $GLOBALS['connection']->query("select userID from user where login = '$login'");
+				if (!$result) throw new Exception($GLOBALS['connection']->error);
+				howManyLogins($result);
 
 				//Jesli do tej pory wszystko przebieglo pomyslnie...
-				if ($GLOBALS['wszystko_OK'])
+				if ($GLOBALS['everythingOK'])
 				{
 					try
 					{
 						// ...to wygeneruj sol, hash'uj haslo i wprowadz dane do bazy za pomoca transakcji
-						$salt = generateRandomString();
-						$haslo_hash = sha1($haslo1 . $salt);
-						if (wykonaj_transakcje($haslo_hash, $salt))
-							$GLOBALS['polaczenie']->query("COMMIT");
+						$salt = generateSalt();
+						$passwdHash = sha1($passwd1 . $salt);
+						if (saveNewUser($passwdHash, $salt))
+							$GLOBALS['connection']->query("COMMIT");
 						else
-							throw new Exception($GLOBALS['polaczenie']->error);
+							throw new Exception($GLOBALS['connection']->error);
 
 						// Ustaw prawdziwosc zmiennej 'udana_rejestracja' i prowadz do strony powitalnej
-						$_SESSION['udana_rejestracja'] = true;
+						$_SESSION['registrationIsOK'] = true;
 						header('Location: welcome.php');
 					}
 					catch (Exception $e)
 					{
-						$GLOBALS['polaczenie']->query("ROLLBACK");
+						$GLOBALS['connection']->query("ROLLBACK");
 						echo '<span style="color:red;">Błąd serwera! Prosimy o rejestrację w innym terminie!</span>';
 						//echo '<br/>Informacja developerska: '.$e;
 					}
 				}
-				$GLOBALS['polaczenie']->close();
+				$GLOBALS['connection']->close();
 			}
 		}
 		catch (Exception $e)
@@ -204,21 +204,21 @@ function polaczenie_z_baza()
 }
 
 // Glowna funkcja walidacyjna (uruchamia walidacje wszystkich pol)
-function walidacja()
+function validation()
 {
-	imie();
-	nazwisko();
+	firstName();
+	lastName();
 	login();
 	email();
-	hasla();
-	polaczenie_z_baza();
+	passwds();
+	dbConnection();
 }
 
 // Walidacja uruchomi sie, jezeli cokolwiek zostalo przeslane do formularza (nawet puste pole), np. email
 if (isset($_POST['email']))
 {
-	$GLOBALS['wszystko_OK'] = true;
-	walidacja();
+	$GLOBALS['everythingOK'] = true;
+	validation();
 }
 ?>
 
@@ -242,108 +242,119 @@ if (isset($_POST['email']))
 		  href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css"/>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
 	<script src="javascript_files/cookiesBanner.js"></script>
-	<noscript><div id="noscript_info">Twoja przeglądarka nie obsługuje skryptów JavaScript!</div></noscript>
+	<noscript><div id="infoAboutNoScript">Twoja przeglądarka nie obsługuje skryptów JavaScript!</div></noscript>
 </head>
 
 <body>
-	<div id="header">Rejestrujemy się!</div>
+<div id="headline">Rejestrujemy się!</div>
+<div id="signInForm">
+	<form method="post">
+		<!--Imie-->
+		<input type="text" id="firstNameID" name="firstName" placeholder="imię" value="<?php
+		if (isset($_SESSION['firstNameSaved']))
+		{
+			echo $_SESSION['firstNameSaved'];
+			unset($_SESSION['firstNameSaved']);
+		}
+		?>"/>
+		<div class="errorFromAjax" id="firstNameError"></div>
+		<?php
+		if (isset($_SESSION['firstNameError']))
+		{
+			echo '<div class="errorAfterSubmit" id="firstName_errorAfterSubmit">' . $_SESSION['firstNameError'] . '</div>';
+			unset($_SESSION['firstNameError']);
+		}
+		?>
 
-	<div id="sign_form">
-		<form method="post">
-			<input type="text" id="imie_id" name="imie" placeholder="imię" value="<?php //Imie
-			if (isset($_SESSION['fr_imie']))
-			{
-				echo $_SESSION['fr_imie'];
-				unset($_SESSION['fr_imie']);
-			}
-			?>"/>
-			<div class="komunikat" id="komunikat1"></div>
-			<?php
-			if (isset($_SESSION['e_imie']))
-			{
-				echo '<div class="glowny_komunikat">' . $_SESSION['e_imie'] . '</div>';
-				unset($_SESSION['e_imie']);
-			}
-			?>
 
-			<input type="text" id="nazwisko_id" name="nazwisko" placeholder="nazwisko" value="<?php //Nazwisko
-			if (isset($_SESSION['fr_nazwisko']))
-			{
-				echo $_SESSION['fr_nazwisko'];
-				unset($_SESSION['fr_nazwisko']);
-			}
-			?>"/>
-			<div class="komunikat" id="komunikat2"></div>
-			<?php
-			if (isset($_SESSION['e_nazwisko']))
-			{
-				echo '<div class="glowny_komunikat">' . $_SESSION['e_nazwisko'] . '</div>';
-				unset($_SESSION['e_nazwisko']);
-			}
-			?>
+		<!--Nazwisko-->
+		<input type="text" id="lastNameID" name="lastName" placeholder="nazwisko" value="<?php
+		if (isset($_SESSION['lastNameSaved']))
+		{
+			echo $_SESSION['lastNameSaved'];
+			unset($_SESSION['lastNameSaved']);
+		}
+		?>"/>
+		<div class="errorFromAjax" id="lastNameError"></div>
+		<?php
+		if (isset($_SESSION['lastNameError']))
+		{
+			echo '<div class="errorAfterSubmit" id="lastName_errorAfterSubmit">' . $_SESSION['lastNameError'] . '</div>';
+			unset($_SESSION['lastNameError']);
+		}
+		?>
 
-			<input type="text" id="login_id" name="login" placeholder="login" value="<?php //Login
-			if (isset($_SESSION['fr_login']))
-			{
-				echo $_SESSION['fr_login'];
-				unset($_SESSION['fr_login']);
-			}
-			?>"/>
-			<div class="komunikat" id="komunikat3"></div>
-			<?php
-			if (isset($_SESSION['e_login']))
-			{
-				echo '<div class="glowny_komunikat">' . $_SESSION['e_login'] . '</div>';
-				unset($_SESSION['e_login']);
-			}
-			?>
 
-			<input type="text" id="email_id" name="email" placeholder="e-mail" value="<?php //E-mail
-			if (isset($_SESSION['fr_email']))
-			{
-				echo $_SESSION['fr_email'];
-				unset($_SESSION['fr_email']);
-			}
-			?>"/>
-			<div class="komunikat" id="komunikat4"></div>
-			<?php
-			if (isset($_SESSION['e_email']))
-			{
-				echo '<div class="glowny_komunikat">' . $_SESSION['e_email'] . '</div>';
-				unset($_SESSION['e_email']);
-			}
-			?>
+		<!--Login-->
+		<input type="text" id="loginID" name="login" placeholder="login" value="<?php
+		if (isset($_SESSION['loginSaved']))
+		{
+			echo $_SESSION['loginSaved'];
+			unset($_SESSION['loginSaved']);
+		}
+		?>"/>
+		<div class="errorFromAjax" id="loginError"></div>
+		<?php
+		if (isset($_SESSION['loginError']))
+		{
+			echo '<div class="errorAfterSubmit" id="login_errorAfterSubmit">' . $_SESSION['loginError'] . '</div>';
+			unset($_SESSION['loginError']);
+		}
+		?>
 
-			<input type="password" id="passwd1" name="haslo1" placeholder="hasło" value="<?php //Haslo
-			if (isset($_SESSION['fr_haslo1']))
-			{
-				echo $_SESSION['fr_haslo1'];
-				unset($_SESSION['fr_haslo1']);
-			}
-			?>"/>
 
-			<input type="password" id="passwd2" name="haslo2" placeholder="powtórz hasło" value="<?php //Powtorz haslo
-			if (isset($_SESSION['fr_haslo2']))
-			{
-				echo $_SESSION['fr_haslo2'];
-				unset($_SESSION['fr_haslo2']);
-			}
-			?>"/>
-			<div class="komunikat" id="komunikat5"></div>
-			<?php
-			if (isset($_SESSION['e_haslo']))
-			{
-				echo '<div class="glowny_komunikat">' . $_SESSION['e_haslo'] . '</div>';
-				unset($_SESSION['e_haslo']);
-			}
-			?>
+		<!--Email-->
+		<input type="text" id="emailID" name="email" placeholder="e-mail" value="<?php
+		if (isset($_SESSION['emailSaved']))
+		{
+			echo $_SESSION['emailSaved'];
+			unset($_SESSION['emailSaved']);
+		}
+		?>"/>
+		<div class="errorFromAjax" id="emailError"></div>
+		<?php
+		if (isset($_SESSION['emailError']))
+		{
+			echo '<div class="errorAfterSubmit" id="email_errorAfterSubmit">' . $_SESSION['emailError'] . '</div>';
+			unset($_SESSION['emailError']);
+		}
+		?>
 
-			<input type="submit" value="Zarejestruj się"
-				   onclick="this.disabled=true; this.value='Wczytuję...'; this.form.submit();"/>
-		</form>
 
-		<div id="txt_lub">-------- lub --------</div>
-		<div id="link_logowania"><a href="index.php">Wróć do strony logowania!</a></div>
-	</div>
+		<!--Haslo-->
+		<input type="password" id="passwd1ID" name="passwd1" placeholder="hasło" value="<?php
+		if (isset($_SESSION['passwd1Saved']))
+		{
+			echo $_SESSION['passwd1Saved'];
+			unset($_SESSION['passwd1Saved']);
+		}
+		?>"/>
+
+
+		<!--Powtorzone haslo-->
+		<input type="password" id="passwd2ID" name="passwd2" placeholder="powtórz hasło" value="<?php
+		if (isset($_SESSION['passwd2Saved']))
+		{
+			echo $_SESSION['passwd2Saved'];
+			unset($_SESSION['passwd2Saved']);
+		}
+		?>"/>
+		<div class="errorFromAjax" id="passwdError"></div>
+		<?php
+		if (isset($_SESSION['passwdError']))
+		{
+			echo '<div class="errorAfterSubmit" id="passwd_errorAfterSubmit">' . $_SESSION['passwdError'] . '</div>';
+			unset($_SESSION['passwdError']);
+		}
+		?>
+
+
+		<!--Submit zatwierdzajacy-->
+		<input type="submit" value="Zarejestruj się"
+			   onclick="this.disabled=true; this.value='Wczytuję...'; this.form.submit();"/>
+	</form>
+	<div id="alternative">-------- lub --------</div>
+	<div id="linkToLogIn"><a href="index.php">Wróć do strony logowania!</a></div>
+</div>
 </body>
 </html>
