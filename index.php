@@ -10,8 +10,8 @@ if(isset($_COOKIE["dieticianLogged"]))
 	header('Location: dieticianCard.php');
 	exit();
 }
-if(isset($_SESSION['formSubmitted']))
-	unset($_SESSION['formSubmitted']);
+if(isset($_SESSION['logInFormSubmitted']))
+	unset($_SESSION['logInFormSubmitted']);
 ?>
 
 <!DOCTYPE HTML>

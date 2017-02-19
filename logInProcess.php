@@ -1,12 +1,12 @@
 <?php
 session_start();
 
-if(!isset($_SESSION['formSubmitted']))
-	$_SESSION['formSubmitted'] = true;
+if(!isset($_SESSION['logInFormSubmitted']))
+	$_SESSION['logInFormSubmitted'] = true;
 else
 {
-	$_SESSION['formSubmitted'] = false;
-	header("Location: html_files/multiclickError.html");
+	$_SESSION['logInFormSubmitted'] = false;
+	header("Location: html_files/multiclickError_logIn.html");
 	exit();
 }
 

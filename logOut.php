@@ -25,8 +25,8 @@ try
 	else
 	{
 		$helper_userID = $_SESSION['userID'];
-		// $_SESSION['formSubmitted'] ma wartosc true <=> kiedy nie nastapil multiclick
-		if($_SESSION['formSubmitted'])
+		// $_SESSION['logInFormSubmitted'] ma wartosc true <=> kiedy nie nastapil multiclick
+		if($_SESSION['logInFormSubmitted'])
 		{
 			if(!$GLOBALS['connection']->query("delete from active_sessions where userID like '$helper_userID'"))
 				throw new Exception($GLOBALS['connection']->error);
@@ -36,6 +36,7 @@ try
 			throw new Exception($GLOBALS['connection']->error);
 		else
 			$GLOBALS['connection']->query("COMMIT");
+		$GLOBALS['connection']->close();
 	}
 }
 catch (Exception $e)
