@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if (!isset($_COOKIE["dieticianLogged"]))
+if(!isset($_COOKIE["dieticianLogged"]))
 {
 	header('Location: index.php');
 	exit();
@@ -15,19 +15,19 @@ else
 		$connectione = new mysqli($host, $db_user, $db_password, $db_name);
 		$connectione->set_charset('utf8');
 
-		if ($connectione->connect_errno != 0)
+		if($connectione->connect_errno != 0)
 			throw new Exception($connectione->connect_error);
 		else
 		{
 			$helper_userID = $_SESSION['userID'];
 			$helper_token = $_COOKIE['token'];
 
-			if (!($result = $connectione->query("select count(token) from active_sessions where userID like '$helper_userID' and token like '$helper_token'")))
+			if(!($result = $connectione->query("select count(token) from active_sessions where userID like '$helper_userID' and token like '$helper_token'")))
 				throw new Exception($connectione->error);
 			// Jesli w bazie nie ma pasujacego do ciastka token'a (zostal zwrocony wiersz z wartoscia count(token)=0)
-			if (!$result->fetch_assoc()['count(token)'])
+			if(!$result->fetch_assoc()['count(token)'])
 			{
-				if (!$connectione->query("delete from active_sessions where userID like '$helper_userID'"))
+				if(!$connectione->query("delete from active_sessions where userID like '$helper_userID'"))
 					throw new Exception($connectione->error);
 				$connectione->close();
 				$result->free_result();

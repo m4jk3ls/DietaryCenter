@@ -1,5 +1,5 @@
 <?php
-if (!isset($_POST['passwd']))
+if(!isset($_POST['passwd']))
 	echo 'Nie przesłano zmiennej "haslo"';
 else
 {
@@ -12,14 +12,14 @@ else
 		$connection->set_charset('utf8');
 
 		// Jesli powyzsza proba zawiedzie, to rzuc wyjatkiem
-		if ($connection->connect_errno != 0)
+		if($connection->connect_errno != 0)
 			throw new Exception($connection->connect_error);
 		else
 		{
 			$passwd = $_POST['passwd'];
-			if (strlen($passwd) < 8)
+			if(strlen($passwd) < 8)
 				echo 'Hasło jest zbyt krótkie (min. 8 znaków)!';
-			else if (strlen($passwd) > 20)
+			else if(strlen($passwd) > 20)
 				echo 'Hasło jest zbyt długie (max. 20 znaków)!';
 			$connection->close();
 		}

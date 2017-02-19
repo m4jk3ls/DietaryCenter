@@ -1,5 +1,5 @@
 <?php
-if (!isset($_POST['login']))
+if(!isset($_POST['login']))
 	echo 'Nie przesłano zmiennej "login"';
 else
 {
@@ -12,18 +12,18 @@ else
 		$connection->set_charset('utf8');
 
 		// Jesli powyzsza proba zawiedzie, to rzuc wyjatkiem
-		if ($connection->connect_errno != 0)
+		if($connection->connect_errno != 0)
 			throw new Exception($connection->connect_error);
 		else
 		{
 			$login = $_POST['login'];
 			//Walidacja i sanityzacja loginu
 			$login = htmlentities($login, ENT_QUOTES, "UTF-8");
-			if ($result = $connection->query(sprintf("SELECT * FROM user WHERE login='%s'", mysqli_real_escape_string($connection, $login))))
+			if($result = $connection->query(sprintf("SELECT * FROM user WHERE login='%s'", mysqli_real_escape_string($connection, $login))))
 			{
 				// Sprawdzenie, czy sa w bazie uzytkownicy o podanym loginie
 				$howManyUsers = $result->num_rows;
-				if ($howManyUsers > 0)
+				if($howManyUsers > 0)
 					$result->free_result();
 				else
 				{

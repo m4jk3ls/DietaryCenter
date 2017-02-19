@@ -4,7 +4,7 @@ $(document).ready(function ()
 	var stickyNav = function ()
 	{
 		var ScrollY = $(window).scrollTop();
-		if (ScrollY > NavY)
+		if(ScrollY > NavY)
 			$('.menu').addClass('sticky');
 		else
 			$('.menu').removeClass('sticky');

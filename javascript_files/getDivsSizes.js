@@ -3,7 +3,7 @@ $(document).ready(function ()
 	var headline = $("#headline");
 	var headerHalfHeight = headline.innerHeight() / 2;
 
-	if ($("#" + "logInForm").length > 0)
+	if($("#" + "logInForm").length > 0)
 	{
 		// Pobranie rozmiaru formularza logowania (lf) i ustawienie odpowiedniego marginesu w arkuszu CSS
 		var lf = $("#logInForm");
@@ -16,7 +16,7 @@ $(document).ready(function ()
 		var lfTopValue = "calc((50% - " + lfHalfHeight + "px) / 2 - " + headerHalfHeight + "px)";
 		headline.css("top", lfTopValue);
 	}
-	else if ($("#" + "signInForm").length > 0)
+	else if($("#" + "signInForm").length > 0)
 	{
 		// Pobranie rozmiaru formularza rejestracji (sf) i ustawienie odpowiedniego marginesu w arkuszu CSS
 		var sf = $("#signInForm");
