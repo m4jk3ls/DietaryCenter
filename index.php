@@ -1,15 +1,17 @@
 <?php
 session_start();
-if (isset($_COOKIE["patientLogged"]))
+if(isset($_COOKIE["patientLogged"]))
 {
 	header('Location: yourCard.php');
 	exit();
 }
-if (isset($_COOKIE["dieticianLogged"]))
+if(isset($_COOKIE["dieticianLogged"]))
 {
 	header('Location: dieticianCard.php');
 	exit();
 }
+if(isset($_SESSION['formSubmitted']))
+	unset($_SESSION['formSubmitted']);
 ?>
 
 <!DOCTYPE HTML>
@@ -44,13 +46,14 @@ if (isset($_COOKIE["dieticianLogged"]))
 		<input type="password" name="passwd" id="passwdID" placeholder="hasło"/>
 		<div class="errorFromAjax" id="passwdError"></div>
 		<?php
-		if (isset($_SESSION['error']))
+		if(isset($_SESSION['error']))
 		{
-		echo '<div id="errorAfterSubmit">' . $_SESSION['error'] . '</div>';
-		unset($_SESSION['error']);
+			echo '<div id="errorAfterSubmit">' . $_SESSION['error'] . '</div>';
+			unset($_SESSION['error']);
 		}
 		?>
-		<input type="submit" id="logInButton" value="Zaloguj się" onclick="this.disabled=true; this.value='Wczytuję...'; this.form.submit();"/>
+		<input type="submit" id="logInButton" value="Zaloguj się"
+			   onclick="this.disabled=true; this.value='Wczytuję...'; this.form.submit();"/>
 	</form>
 	<div id="alternative">-------- lub --------</div>
 	<div id="linkToSignIn"><a href="signIn.php">Zarejestruj się i dołącz do nas!</a></div>
