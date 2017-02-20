@@ -40,9 +40,8 @@ else
 	}
 	catch (Exception $e)
 	{
-		echo '<span style="color:red;">Błąd serwera! Prosimy o ponowne zalogowanie się później!</span>';
+		header("Location: html_files/serverError_goToLogout.html");
 		//echo '<br/>Informacja developerska: '.$e;
-		header('Location: logOut.php');
 		exit();
 	}
 }

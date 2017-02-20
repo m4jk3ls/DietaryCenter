@@ -37,7 +37,7 @@ if(isset($_SESSION['login']))
 	catch (Exception $e)
 	{
 		$connection->query("ROLLBACK");
-		echo '<span style="color:red;">Błąd serwera! Prosimy spróbować jeszcze raz!</span>';
+		header("Location: html_files/serverError_goToIndex.html");
 		//echo '<br/>Informacja developerska: '.$e;
 	}
 }

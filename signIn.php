@@ -188,7 +188,7 @@ function dbConnection()
 					catch (Exception $e)
 					{
 						$GLOBALS['connection']->query("ROLLBACK");
-						echo '<span style="color:red;">Błąd serwera! Prosimy o rejestrację w innym terminie!</span>';
+						header("Location: html_files/serverError_goToIndex.html");
 						//echo '<br/>Informacja developerska: '.$e;
 					}
 				}
@@ -197,7 +197,7 @@ function dbConnection()
 		}
 		catch (Exception $e)
 		{
-			echo '<span style="color:red;">Błąd serwera! Prosimy o rejestrację w innym terminie!</span>';
+			header("Location: html_files/serverError_goToIndex.html");
 			//echo '<br/>Informacja developerska: '.$e;
 		}
 	}

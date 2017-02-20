@@ -26,7 +26,7 @@ else
 	}
 	catch (Exception $e)
 	{
-		echo 'Błąd serwera! Prosimy zalogować się ponownie później!';
+		header("Location: ../html_files/serverError.html");
 		//echo '<br/>Informacja developerska: '.$e;
 	}
 }

@@ -42,10 +42,14 @@ try
 catch (Exception $e)
 {
 	$GLOBALS['connection']->query("ROLLBACK");
-	echo '<span style="color:red;">Błąd serwera! Prosimy o ponowną próbę wylogowania się!</span>';
+	session_unset();
+	setcookie("patientLogged", false, time() - 1);
+	setcookie("dieticianLogged", false, time() - 1);
+	setcookie("token", null, time() - 1);
+	header("Location: html_files/serverError_goToIndex.html");
 	//echo '<br/>Informacja developerska: '.$e;
+	exit();
 }
-
 session_unset();
 setcookie("patientLogged", false, time() - 1);
 setcookie("dieticianLogged", false, time() - 1);

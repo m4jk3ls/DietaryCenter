@@ -177,6 +177,6 @@ try
 catch (Exception $e)
 {
 	$GLOBALS['connection']->query("ROLLBACK");
-	echo '<span style="color:red;">Błąd serwera! Prosimy zalogować się ponownie później!</span>';
+	header("Location: html_files/serverError_goToIndex.html");
 	//echo '<br/>Informacja developerska: '.$e;
 }
