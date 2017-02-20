@@ -70,7 +70,7 @@ else
 	<div id="logo"><img id="logo-img" src="img/logo.jpg"/></div>
 	<ol class="menu">
 		<li><a href="dieticianCard.php">Strona główna</a></li>
-		<li><a href="#">Ustal grafik</a></li>
+		<li><a href="workSchedule.php">Ustal grafik</a></li>
 		<li><a href="#">Wizyta</a></li>
 		<li><a href="#">Badania</a></li>
 		<li><a href="logOut.php">Wyloguj</a></li>

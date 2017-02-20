@@ -156,8 +156,7 @@ img
 	background-color: #F0EBEB;
 	margin: 10px auto 0 auto;
 	width: 920px;
-	min-height: 500px;
-	text-align: justify;
+	/*text-align: justify;*/
 	font-size: 15px;
 	padding: 40px;
 }
