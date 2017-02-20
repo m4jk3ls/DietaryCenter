@@ -55,13 +55,13 @@ img
 	text-align: center;
 	text-decoration: none;
 	color: #000;
-	background-color: #E4EDE5;
+	background-color: #F0D5D5;
 	box-shadow: 0 0 0 1px #FFF inset;
 }
 
 .menu > li:hover > a
 {
-	background-color: #DCE0DD;
+	background-color: #F2C2C2;
 }
 
 .menu > li:first-child
@@ -153,7 +153,7 @@ img
 
 #content
 {
-	background-color: #F2FAF3;
+	background-color: #F0EBEB;
 	margin: 10px auto 0 auto;
 	width: 920px;
 	min-height: 500px;
