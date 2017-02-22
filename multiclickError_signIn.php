@@ -55,6 +55,7 @@ if(isset($_SESSION['login']))
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<meta http-equiv="Refresh" content="10; url=index.php"/>
 	<title>Błąd "multiclick"</title>
+	<link rel="stylesheet" href="css_files/basic.css" type="text/css"/>
 	<link rel="stylesheet" href="css_files/multiclickError.css" type="text/css"/>
 	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext"
 		  rel="stylesheet">

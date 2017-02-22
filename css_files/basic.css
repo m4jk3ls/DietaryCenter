@@ -1,0 +1,20 @@
+body
+{
+	/* Background pattern from subtlepatterns.com */
+	background-image: url("../img/restaurant_icons.png");
+}
+
+#infoAboutNoScript
+{
+	width: 530px;
+	background-color: #ff1a1a;
+	color: #fff;
+	font-family: 'Playfair Display', serif;
+	font-size: 20px;
+	text-align: center;
+	padding: 20px 20px;
+	position: absolute;
+	transform-origin: 0 0;
+	transform: rotate(-90deg) translateX(-100%);
+	margin: -8px 0 0 -8px;
+}

@@ -23,6 +23,7 @@ if(isset($_SESSION['logInFormSubmitted']))
 		  content="naturhouse, dietetyk, najlepszy dietetyk, dieta cud, jak schudnąć do wakacji, jak być zdrowym, zdrowe odżywianie, plan dietetyczny, organizacja posiłków, metamorfoza"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<title>NaturHouse - dietetyk na wyciągnięcie ręki</title>
+	<link rel="stylesheet" href="css_files/basic.css" type="text/css"/>
 	<link rel="stylesheet" href="css_files/index.css" type="text/css"/>
 	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext"
 		  rel="stylesheet">

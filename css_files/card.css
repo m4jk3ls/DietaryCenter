@@ -3,21 +3,6 @@ body
 	font-family: 'Playfair Display', serif;
 }
 
-#infoAboutNoScript
-{
-	width: 530px;
-	background-color: #ff1a1a;
-	color: #fff;
-	font-family: 'Playfair Display', serif;
-	font-size: 20px;
-	text-align: center;
-	padding: 20px 20px;
-	position: absolute;
-	transform-origin: 0 0;
-	transform: rotate(-90deg) translateX(-570px);
-	margin: -8px 0 0 -8px;
-}
-
 img
 {
 	display: block;
@@ -55,13 +40,13 @@ img
 	text-align: center;
 	text-decoration: none;
 	color: #000;
-	background-color: #F0D5D5;
+	background-color: #E8DEBA;
 	box-shadow: 0 0 0 1px #FFF inset;
 }
 
 .menu > li:hover > a
 {
-	background-color: #F2C2C2;
+	background-color: #CCBD87;
 }
 
 .menu > li:first-child
@@ -153,10 +138,10 @@ img
 
 #content
 {
-	background-color: #F0EBEB;
+	background-color: #F7EECB;
+	text-align: justify;
 	margin: 10px auto 0 auto;
 	width: 920px;
-	/*text-align: justify;*/
 	font-size: 15px;
 	padding: 40px;
 }

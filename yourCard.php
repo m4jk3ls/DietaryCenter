@@ -53,6 +53,7 @@ else
 	<meta charset="utf-8"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<title>Twoja karta pacjenta</title>
+	<link rel="stylesheet" href="css_files/basic.css" type="text/css"/>
 	<link href="css_files/card.css" rel="stylesheet" type="text/css"/>
 	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext"
 		  rel="stylesheet">
@@ -77,7 +78,7 @@ else
 	</ol>
 	<div id="topbarPackage">
 		<div id="topbar">
-			<div id="topbarL"><img id="topbarL-img" src="img/man-vegetable.jpg"/></div>
+			<div id="topbarL"><img id="topbarL-img" src="img/man-vegetable.png"/></div>
 			<div id="topbarR">
 				<div id="quotation">"Granice? Nigdy żadnej nie widziałem, ale słyszałem, że istnieją w umysłach niektórych ludzi".</div>
 				<div id="signature">Thor Heyerdahl</div>

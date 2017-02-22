@@ -29,6 +29,7 @@ if(isset($_SESSION['passwdError'])) unset($_SESSION['passwdError']);
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<meta http-equiv="Refresh" content="5; url=index.php"/>
 	<title>NaturHouse - dietetyk na wyciągnięcie ręki</title>
+	<link rel="stylesheet" href="css_files/basic.css" type="text/css"/>
 	<link rel="stylesheet" href="css_files/welcome.css" type="text/css"/>
 	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext"
 		  rel="stylesheet">

@@ -188,6 +188,7 @@ $token = getToken();
 	<meta charset="utf-8"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<title>Twój panel dietetyka</title>
+	<link rel="stylesheet" href="css_files/basic.css" type="text/css"/>
 	<link href="css_files/card.css" rel="stylesheet" type="text/css"/>
 	<link href="css_files/workSchedule.css" rel="stylesheet" type="text/css"/>
 	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext"
@@ -213,7 +214,7 @@ $token = getToken();
 	</ol>
 	<div id="topbarPackage">
 		<div id="topbar">
-			<div id="topbarL"><img id="topbarL-img" src="img/plate.jpg"/></div>
+			<div id="topbarL"><img id="topbarL-img" src="img/heart-vegetable.png"/></div>
 			<div id="topbarR">
 				<div id="quotation">"Optymalne żywienie jest medycyną jutra".</div>
 				<div id="signature">dr Linus Pauling</div>
