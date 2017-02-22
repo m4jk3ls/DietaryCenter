@@ -6,6 +6,180 @@ if(!isset($_COOKIE["dieticianLogged"]))
 	header('Location: index.php');
 	exit();
 }
+
+require_once "connect.php";
+
+// Funkcja, zapisujaca do bazy danych zmiany odnosnie grafiku dietetyka
+function saveToDb($day, $hours)
+{
+	global $host, $db_user, $db_password, $db_name;
+	mysqli_report(MYSQLI_REPORT_STRICT);
+	try
+	{
+		// Proba polaczenia sie z baza
+		$connection = new mysqli($host, $db_user, $db_password, $db_name);
+		$connection->set_charset('utf8');
+
+		// Jesli powyzsza proba zawiedzie, to rzuc wyjatkiem
+		if($connection->connect_errno != 0)
+			throw new Exception($connection->connect_error);
+		else
+		{
+			// Zapisanie do zmiennych identyfikatora uzytkownika oraz dietetyka (pomocniczo)
+			$helper_userID = $_SESSION['userID'];
+			if(!($result = $connection->query("select dieticianID from dietician where userID like '$helper_userID'")))
+				throw new Exception($connection->error);
+			$helper_dieticianID = $result->fetch_assoc()['dieticianID'];
+			$result->free_result();
+
+			$connection->query("START TRANSACTION");
+
+			// Szukanie w bazie informacji, czy aby grafik dla danego dnia nie zostal juz ustalony
+			if(!($result2 = $connection->query("select count(*) as count from officehours where (dieticianID like '$helper_dieticianID' and dayOfTheWeek = '$day')")))
+				throw new Exception($connection->error);
+			else if($result2->fetch_assoc()['count'] == 1)	// Grafik zostal juz wczesniej ustalony dla danego dnia...
+			{
+				switch($hours)	// ...wiec musimy zrobic update danych
+				{
+					case '08:00 - 12:00':
+					{
+						if(!($connection->query("update officehours set starts_at = '08:00:00', ends_at = '12:00:00'
+								where (dieticianID like '$helper_dieticianID' and dayOfTheWeek = '$day')")))
+							throw new Exception($connection->error);
+						break;
+					}
+					case '12:00 - 16:00':
+					{
+						if(!($connection->query("update officehours set starts_at = '12:00:00', ends_at = '16:00:00'
+								where (dieticianID like '$helper_dieticianID' and dayOfTheWeek = '$day')")))
+							throw new Exception($connection->error);
+						break;
+					}
+					case '16:00 - 20:00':
+					{
+						if(!($connection->query("update officehours set starts_at = '16:00:00', ends_at = '20:00:00'
+								where (dieticianID like '$helper_dieticianID' and dayOfTheWeek = '$day')")))
+							throw new Exception($connection->error);
+						break;
+					}
+				}
+				$result2->free_result();
+			}
+			else	// $result2->fetch_assoc()['count'] = 0, zatem grafik dla danego dnia jest ustalany po raz pierwszy
+			{
+				switch($hours)
+				{
+					case '08:00 - 12:00':
+					{
+						if(!($connection->query("insert into officehours values(null, '$helper_dieticianID', '$day', '08:00:00', '12:00:00')")))
+							throw new Exception($connection->error);
+						break;
+					}
+					case '12:00 - 16:00':
+					{
+						if(!($connection->query("insert into officehours values(null, '$helper_dieticianID', '$day', '12:00:00', '16:00:00')")))
+							throw new Exception($connection->error);
+						break;
+					}
+					case '16:00 - 20:00':
+					{
+						if(!($connection->query("insert into officehours values(null, '$helper_dieticianID', '$day', '16:00:00', '20:00:00')")))
+							throw new Exception($connection->error);
+						break;
+					}
+				}
+				$result2->free_result();
+			}
+
+			$connection->query("COMMIT");
+			$connection->close();
+		}
+	}
+	catch (Exception $e)
+	{
+		$connection->query("ROLLBACK");
+		header("Location: html_files/serverError_goToLogout.html");
+		//echo '<br/>Informacja developerska: '.$e;
+	}
+}
+
+function analyzeChanges()
+{
+	// Zapis do zmiennych info, ktore checkbox'y zostaly zaznaczone
+	if(isset($_POST['monCheckbox'])) $monCheckbox = $_POST['monCheckbox'];
+	else $monCheckbox = null;
+
+	if(isset($_POST['tueCheckbox'])) $tueCheckbox = $_POST['tueCheckbox'];
+	else $tueCheckbox = null;
+
+	if(isset($_POST['wedCheckbox'])) $wedCheckbox = $_POST['wedCheckbox'];
+	else $wedCheckbox = null;
+
+	if(isset($_POST['thuCheckbox'])) $thuCheckbox = $_POST['thuCheckbox'];
+	else $thuCheckbox = null;
+
+	if(isset($_POST['friCheckbox'])) $friCheckbox = $_POST['friCheckbox'];
+	else $friCheckbox = null;
+
+	if(isset($_POST['satCheckbox'])) $satCheckbox = $_POST['satCheckbox'];
+	else $satCheckbox = null;
+
+	// Zapis do zmiennych wybranych godzin przyjec
+	$monSelect = $_POST['monSelect'];
+	$tueSelect = $_POST['tueSelect'];
+	$wedSelect = $_POST['wedSelect'];
+	$thuSelect = $_POST['thuSelect'];
+	$friSelect = $_POST['friSelect'];
+	$satSelect = $_POST['satSelect'];
+
+	// Jesli checkbox zostal zaznaczony oraz godzina zostala wybrana, to wywolujemy funkcje saveToDb()
+	if($monCheckbox != null && $monCheckbox == 'on' && $monSelect != '---brak---') saveToDb(0, $monSelect);
+	if($tueCheckbox != null && $tueCheckbox == 'on' && $tueSelect != '---brak---') saveToDb(1, $tueSelect);
+	if($wedCheckbox != null && $wedCheckbox == 'on' && $wedSelect != '---brak---') saveToDb(2, $wedSelect);
+	if($thuCheckbox != null && $thuCheckbox == 'on' && $thuSelect != '---brak---') saveToDb(3, $thuSelect);
+	if($friCheckbox != null && $friCheckbox == 'on' && $friSelect != '---brak---') saveToDb(4, $friSelect);
+	if($satCheckbox != null && $satCheckbox == 'on' && $satSelect != '---brak---') saveToDb(5, $satSelect);
+}
+
+/**************************ZABEZPIECZENIE PRZED MULTI CLICK'IEM**************************/
+
+// Funkcja generujaca token, ktory jest uzywany w formularzu
+function getToken()
+{
+	$token = sha1(mt_rand());
+	if(!isset($_SESSION['tokensPreventMulticlickInOfficehours']))
+		$_SESSION['tokensPreventMulticlickInOfficehours'] = array($token => 1);
+	else
+		$_SESSION['tokensPreventMulticlickInOfficehours'][$token] = 1;
+	return $token;
+}
+
+// Sprawdzanie poprawnosci tokenu oraz usuwanie go z listy poprawnych token'ow
+function isTokenValid($token)
+{
+	if(!empty($_SESSION['tokensPreventMulticlickInOfficehours'][$token]))
+	{
+		unset($_SESSION['tokensPreventMulticlickInOfficehours'][$token]);
+		return true;
+	}
+	return false;
+}
+
+// Sprawdzenie, czy formularz zostal wyslany
+$postedToken = filter_input(INPUT_POST, 'token');
+if(!empty($postedToken))
+{
+	if(isTokenValid($postedToken))
+		analyzeChanges();
+
+	/*Obsluzenie przypadku, w ktorym, nastepuje multiclick dla klikniec drugiego i kolejnego nie jest potrzebne, poniewaz
+	zapis godzin przyjec jest wykonywany w transakcji (wykona sie w calosci, albo w ogole). Cofanie wprowadzonych i
+	zatwierdzonych zmian byloby bez sensu, poniewaz zniszczylibysmy byc moze poprzednie dane, ktore byly dobre i zapisane
+	w tym samym wierszu tabeli. Obecna sytuacja jest dobra, poniewaz dla klikniec drugiego i kolejnego nie dzieje sie nic
+	(funkcja analyzeChanges() wywoluje sie tylko przy zgodnym token'ie, czyli tylko dla pierwszego klikniecia).*/
+}
+
+$token = getToken();
 ?>
 
 <!DOCTYPE HTML>
@@ -47,141 +221,154 @@ if(!isset($_COOKIE["dieticianLogged"]))
 		</div>
 	</div>
 	<div id="content">
-		<div class="dayOfTheWeek" id="mon">
-			Poniedziałek
-			<div class="choice">
-				<div class="checkboxDiv"><label><input type="checkbox"/>Wybieram</label></div>
-				<div class="hoursDiv">
-					<div class="lists">
-						<div class="list">
-							Od: <select title="startsAt_title" name="startsAt">
-								<option>---brak---</option>
-								<optgroup label="08:00">
-									<option>08:00</option>
-									<option>08:15</option>
-									<option>08:30</option>
-									<option>08:45</option>
-								</optgroup>
-								<optgroup label="09:00">
-									<option>09:00</option>
-									<option>09:15</option>
-									<option>09:30</option>
-									<option>09:45</option>
-								</optgroup>
-								<optgroup label="10:00">
-									<option>10:00</option>
-									<option>10:15</option>
-									<option>10:30</option>
-									<option>10:45</option>
-								</optgroup>
-								<optgroup label="11:00">
-									<option>11:00</option>
-									<option>11:15</option>
-									<option>11:30</option>
-									<option>11:45</option>
-								</optgroup>
-								<optgroup label="12:00">
-									<option>12:00</option>
-									<option>12:15</option>
-									<option>12:30</option>
-									<option>12:45</option>
-								</optgroup>
-								<optgroup label="13:00">
-									<option>13:00</option>
-									<option>13:15</option>
-									<option>13:30</option>
-									<option>13:45</option>
-								</optgroup>
-								<optgroup label="14:00">
-									<option>14:00</option>
-									<option>14:15</option>
-									<option>14:30</option>
-									<option>14:45</option>
-								</optgroup>
-								<optgroup label="15:00">
-									<option>15:00</option>
-									<option>15:15</option>
-									<option>15:30</option>
-									<option>15:45</option>
-								</optgroup>
-								<optgroup label="16:00">
-									<option>16:00</option>
-									<option>16:15</option>
-									<option>16:30</option>
-									<option>16:45</option>
-								</optgroup>
-							</select>
+		<form method="post">
+			<div id="daysOfTheWeekPackage">
+				<div class="dayOfTheWeek" id="mon">
+				Poniedziałek
+					<div class="choice">
+						<div class="divWithCheckbox"><label><input type="checkbox" name="monCheckbox"/>Wybieram</label></div>
+						<div class="divWithOfficehours">
+							<div class="selectPackage">
+								Godziny pracy:<select title="monSelect_title" name="monSelect">
+									<option>---brak---</option>
+									<optgroup label="Rano">
+										<option>08:00 - 12:00</option>
+									</optgroup>
+									<optgroup label="Po południu">
+										<option>12:00 - 16:00</option>
+									</optgroup>
+									<optgroup label="Wieczorem">
+										<option>16:00 - 20:00</option>
+									</optgroup>
+								</select>
+							</div>
 						</div>
-						<div class="list">
-							Do: <select title="endsAt_title" name="endsAt">
-								<option>---brak---</option>
-								<optgroup label="08:00">
-									<option>08:00</option>
-									<option>08:15</option>
-									<option>08:30</option>
-									<option>08:45</option>
-								</optgroup>
-								<optgroup label="09:00">
-									<option>09:00</option>
-									<option>09:15</option>
-									<option>09:30</option>
-									<option>09:45</option>
-								</optgroup>
-								<optgroup label="10:00">
-									<option>10:00</option>
-									<option>10:15</option>
-									<option>10:30</option>
-									<option>10:45</option>
-								</optgroup>
-								<optgroup label="11:00">
-									<option>11:00</option>
-									<option>11:15</option>
-									<option>11:30</option>
-									<option>11:45</option>
-								</optgroup>
-								<optgroup label="12:00">
-									<option>12:00</option>
-									<option>12:15</option>
-									<option>12:30</option>
-									<option>12:45</option>
-								</optgroup>
-								<optgroup label="13:00">
-									<option>13:00</option>
-									<option>13:15</option>
-									<option>13:30</option>
-									<option>13:45</option>
-								</optgroup>
-								<optgroup label="14:00">
-									<option>14:00</option>
-									<option>14:15</option>
-									<option>14:30</option>
-									<option>14:45</option>
-								</optgroup>
-								<optgroup label="15:00">
-									<option>15:00</option>
-									<option>15:15</option>
-									<option>15:30</option>
-									<option>15:45</option>
-								</optgroup>
-								<optgroup label="16:00">
-									<option>16:00</option>
-									<option>16:15</option>
-									<option>16:30</option>
-									<option>16:45</option>
-								</optgroup>
-							</select>
+						<div style="clear: both"></div>
+					</div>
+				</div>
+				<div class="dayOfTheWeek" id="tue">
+					Wtorek
+					<div class="choice">
+						<div class="divWithCheckbox"><label><input type="checkbox" name="tueCheckbox"/>Wybieram</label></div>
+						<div class="divWithOfficehours">
+							<div class="selectPackage">
+								Godziny pracy:<select title="tueSelect_title" name="tueSelect">
+									<option>---brak---</option>
+									<optgroup label="Rano">
+										<option>08:00 - 12:00</option>
+									</optgroup>
+									<optgroup label="Po południu">
+										<option>12:00 - 16:00</option>
+									</optgroup>
+									<optgroup label="Wieczorem">
+										<option>16:00 - 20:00</option>
+									</optgroup>
+								</select>
+							</div>
 						</div>
+						<div style="clear: both"></div>
+					</div>
+				</div>
+				<div class="dayOfTheWeek" id="wed">
+					Środa
+					<div class="choice">
+						<div class="divWithCheckbox"><label><input type="checkbox" name="wedCheckbox"/>Wybieram</label></div>
+						<div class="divWithOfficehours">
+							<div class="selectPackage">
+								Godziny pracy:<select title="wedSelect_title" name="wedSelect">
+									<option>---brak---</option>
+									<optgroup label="Rano">
+										<option>08:00 - 12:00</option>
+									</optgroup>
+									<optgroup label="Po południu">
+										<option>12:00 - 16:00</option>
+									</optgroup>
+									<optgroup label="Wieczorem">
+										<option>16:00 - 20:00</option>
+									</optgroup>
+								</select>
+							</div>
+						</div>
+						<div style="clear: both"></div>
+					</div>
+				</div>
+				<div class="dayOfTheWeek" id="thu">
+					Czwartek
+					<div class="choice">
+						<div class="divWithCheckbox"><label><input type="checkbox" name="thuCheckbox"/>Wybieram</label></div>
+						<div class="divWithOfficehours">
+							<div class="selectPackage">
+								Godziny pracy:<select title="thuSelect_title" name="thuSelect">
+									<option>---brak---</option>
+									<optgroup label="Rano">
+										<option>08:00 - 12:00</option>
+									</optgroup>
+									<optgroup label="Po południu">
+										<option>12:00 - 16:00</option>
+									</optgroup>
+									<optgroup label="Wieczorem">
+										<option>16:00 - 20:00</option>
+									</optgroup>
+								</select>
+							</div>
+						</div>
+						<div style="clear: both"></div>
+					</div>
+				</div>
+				<div class="dayOfTheWeek" id="fri">
+					Piątek
+					<div class="choice">
+						<div class="divWithCheckbox"><label><input type="checkbox" name="friCheckbox"/>Wybieram</label></div>
+						<div class="divWithOfficehours">
+							<div class="selectPackage">
+								Godziny pracy:<select title="friSelect_title" name="friSelect">
+									<option>---brak---</option>
+									<optgroup label="Rano">
+										<option>08:00 - 12:00</option>
+									</optgroup>
+									<optgroup label="Po południu">
+										<option>12:00 - 16:00</option>
+									</optgroup>
+									<optgroup label="Wieczorem">
+										<option>16:00 - 20:00</option>
+									</optgroup>
+								</select>
+							</div>
+						</div>
+						<div style="clear: both"></div>
+					</div>
+				</div>
+				<div class="dayOfTheWeek" id="sat">
+					Sobota
+					<div class="choice">
+						<div class="divWithCheckbox"><label><input type="checkbox" name="satCheckbox"/>Wybieram</label></div>
+						<div class="divWithOfficehours">
+							<div class="selectPackage">
+								Godziny pracy:<select title="satSelect_title" name="satSelect">
+									<option>---brak---</option>
+									<optgroup label="Rano">
+										<option>08:00 - 12:00</option>
+									</optgroup>
+									<optgroup label="Po południu">
+										<option>12:00 - 16:00</option>
+									</optgroup>
+									<optgroup label="Wieczorem">
+										<option>16:00 - 20:00</option>
+									</optgroup>
+								</select>
+							</div>
+						</div>
+						<div style="clear: both"></div>
 					</div>
 				</div>
 				<div style="clear: both"></div>
 			</div>
-		</div>
-		<div class="dayOfTheWeek" id="tue">Wtorek</div>
-		<div class="dayOfTheWeek" id="wed">Środa</div>
-		<div class="dayOfTheWeek" id="thu">Czwartek</div>
-		<div class="dayOfTheWeek" id="fri">Piątek</div>
-		<div class="dayOfTheWeek" id="sat">Sobota</div>
-		<div style="clear: both"></div>
+			<input type="submit" id="officeHoursButton" value="Zatwierdź"
+				   onclick="this.disabled=true; this.value='Zapisuję...'; this.form.submit();"/>
+
+			<!--Input przechowujacy token, ktory zapobiega multiclick'owi-->
+		<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+		</form>
 	</div>
 	<div id="footer">NaturHouse - Twój osobisty dietetyk. Strona w sieci od 2017 r. &copy;
 					 Wszelkie prawa zastrzeżone</div>

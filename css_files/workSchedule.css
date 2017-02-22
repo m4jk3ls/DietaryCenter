@@ -1,3 +1,8 @@
+#daysOfTheWeekPackage
+{
+	width: 100%;
+}
+
 .dayOfTheWeek
 {
 	width: 30%;
@@ -33,7 +38,7 @@
 	height: 20%;
 }
 
-.checkboxDiv
+.divWithCheckbox
 {
 	width: 50%;
 	height: 100%;
@@ -41,7 +46,7 @@
 	position: relative;
 }
 
-.hoursDiv
+.divWithOfficehours
 {
 	width: 50%;
 	height: 100%;
@@ -49,7 +54,7 @@
 	position: relative;
 }
 
-label, .lists
+label, .selectPackage
 {
 	position: absolute;
 	top: 50%;
@@ -57,4 +62,10 @@ label, .lists
 	margin-right: -50%;
 	margin-bottom: -50%;
 	transform: translate(-50%, -50%);
+}
+
+select
+{
+	display: block;
+	margin-top: 5px;
 }
