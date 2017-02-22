@@ -177,5 +177,6 @@ try
 catch (Exception $e)
 {
 	$GLOBALS['connection']->query("ROLLBACK");
+	header("Location: html_files/serverError_goToLogout.html");
 	//echo '<br/>Informacja developerska: '.$e;
 }
