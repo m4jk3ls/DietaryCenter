@@ -94,7 +94,7 @@ try
 
 		//Walidacja i sanityzacja loginu
 		$login = htmlentities($login, ENT_QUOTES, "UTF-8");
-		if($result = $GLOBALS['connection']->query(sprintf("SELECT * FROM user WHERE login='%s'", mysqli_real_escape_string($GLOBALS['connection'], $login))))
+		if($result = $GLOBALS['connection']->query(sprintf("select * from user where login='%s'", mysqli_real_escape_string($GLOBALS['connection'], $login))))
 		{
 			// Sprawdzenie, czy sa w bazie uzytkownicy o podanym loginie
 			$howManyUsers = $result->num_rows;
@@ -177,6 +177,5 @@ try
 catch (Exception $e)
 {
 	$GLOBALS['connection']->query("ROLLBACK");
-	header("Location: html_files/serverError_goToIndex.html");
 	//echo '<br/>Informacja developerska: '.$e;
 }
