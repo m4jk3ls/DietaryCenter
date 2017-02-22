@@ -226,6 +226,7 @@ $token = getToken();
 			<div id="daysOfTheWeekPackage">
 				<div class="dayOfTheWeek" id="mon">
 				Poniedziałek
+					<img src="img/monday-img.png"/>
 					<div class="choice">
 						<div class="divWithCheckbox"><label><input type="checkbox" name="monCheckbox"/>Wybieram</label></div>
 						<div class="divWithOfficehours">
@@ -249,6 +250,7 @@ $token = getToken();
 				</div>
 				<div class="dayOfTheWeek" id="tue">
 					Wtorek
+					<img src="img/tuesday-img.png"/>
 					<div class="choice">
 						<div class="divWithCheckbox"><label><input type="checkbox" name="tueCheckbox"/>Wybieram</label></div>
 						<div class="divWithOfficehours">
@@ -272,6 +274,7 @@ $token = getToken();
 				</div>
 				<div class="dayOfTheWeek" id="wed">
 					Środa
+					<img src="img/wednesday-img.png"/>
 					<div class="choice">
 						<div class="divWithCheckbox"><label><input type="checkbox" name="wedCheckbox"/>Wybieram</label></div>
 						<div class="divWithOfficehours">
@@ -295,6 +298,7 @@ $token = getToken();
 				</div>
 				<div class="dayOfTheWeek" id="thu">
 					Czwartek
+					<img src="img/thursday-img.png"/>
 					<div class="choice">
 						<div class="divWithCheckbox"><label><input type="checkbox" name="thuCheckbox"/>Wybieram</label></div>
 						<div class="divWithOfficehours">
