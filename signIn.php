@@ -269,6 +269,7 @@ $token = getToken();
 	<title>Załóż darmowe NH-konto!</title>
 	<link rel="stylesheet" href="css_files/basic.css" type="text/css"/>
 	<link rel="stylesheet" href="css_files/signIn.css" type="text/css"/>
+	<link href="css_files/submitButton.css" rel="stylesheet" type="text/css"/>
 	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext"
 		  rel="stylesheet">
 	<script src="javascript_files/jquery-3.1.1.min.js"></script>

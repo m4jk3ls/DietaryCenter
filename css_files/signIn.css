@@ -67,33 +67,6 @@ input[type=password]:focus
 	color: #428c42;
 }
 
-input[type=submit]
-{
-	width: 300px;
-	background-color: #36b03c;
-	font-size: 20px;
-	color: white;
-	padding: 15px 10px;
-	margin-top: 20px;
-	border: none;
-	border-radius: 5px;
-	cursor: pointer;
-	letter-spacing: 2px;
-	outline: none;
-}
-
-input[type=submit]:focus
-{
-	-webkit-box-shadow: 0 0 15px 5px rgba(204, 204, 204, 0.9);
-	-moz-box-shadow: 0 0 15px 5px rgba(204, 204, 204, 0.9);
-	box-shadow: 0 0 15px 5px rgba(204, 204, 204, 0.9);
-}
-
-input[type=submit]:hover
-{
-	background-color: #37b93d;
-}
-
 input::-webkit-input-placeholder
 {
 	color: #999;

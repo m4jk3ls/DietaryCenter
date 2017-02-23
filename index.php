@@ -24,6 +24,7 @@ if(isset($_SESSION['logInFormSubmitted']))
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<title>NaturHouse - dietetyk na wyciągnięcie ręki</title>
 	<link rel="stylesheet" href="css_files/basic.css" type="text/css"/>
+	<link href="css_files/submitButton.css" rel="stylesheet" type="text/css"/>
 	<link rel="stylesheet" href="css_files/index.css" type="text/css"/>
 	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext"
 		  rel="stylesheet">

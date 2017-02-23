@@ -103,6 +103,7 @@ function saveToDb($day, $hours)
 	}
 }
 
+// Funkcja, ktora analizuje wprowadzone (lub nie) zmiany do grafiku
 function analyzeChanges()
 {
 	// Zapis do zmiennych info, ktore checkbox'y zostaly zaznaczone
@@ -139,6 +140,100 @@ function analyzeChanges()
 	if($thuCheckbox != null && $thuCheckbox == 'on' && $thuSelect != '---brak---') saveToDb(3, $thuSelect);
 	if($friCheckbox != null && $friCheckbox == 'on' && $friSelect != '---brak---') saveToDb(4, $friSelect);
 	if($satCheckbox != null && $satCheckbox == 'on' && $satSelect != '---brak---') saveToDb(5, $satSelect);
+}
+
+function showOfficehours()
+{
+	global $host, $db_user, $db_password, $db_name;
+	mysqli_report(MYSQLI_REPORT_STRICT);
+	try
+	{
+		// Proba polaczenia sie z baza
+		$connection = new mysqli($host, $db_user, $db_password, $db_name);
+		$connection->set_charset('utf8');
+
+		// Jesli powyzsza proba zawiedzie, to rzuc wyjatkiem
+		if($connection->connect_errno != 0)
+			throw new Exception($connection->connect_error);
+		else
+		{
+			// Zapisanie do zmiennych identyfikatora uzytkownika oraz dietetyka (pomocniczo)
+			$helper_userID = $_SESSION['userID'];
+			if(!($result = $connection->query("select dieticianID from dietician where userID like '$helper_userID'")))
+				throw new Exception($connection->error);
+			$helper_dieticianID = $result->fetch_assoc()['dieticianID'];
+			$result->free_result();
+
+			if(!($monResult = $connection->query("select dayOfTheWeek, starts_at, ends_at from officehours where dieticianID like '$helper_dieticianID' and dayOfTheWeek = 0")) ||
+				!($tueResult = $connection->query("select dayOfTheWeek, starts_at, ends_at from officehours where dieticianID like '$helper_dieticianID' and dayOfTheWeek = 1")) ||
+				!($wedResult = $connection->query("select dayOfTheWeek, starts_at, ends_at from officehours where dieticianID like '$helper_dieticianID' and dayOfTheWeek = 2")) ||
+				!($thuResult = $connection->query("select dayOfTheWeek, starts_at, ends_at from officehours where dieticianID like '$helper_dieticianID' and dayOfTheWeek = 3")) ||
+				!($friResult = $connection->query("select dayOfTheWeek, starts_at, ends_at from officehours where dieticianID like '$helper_dieticianID' and dayOfTheWeek = 4")) ||
+				!($satResult = $connection->query("select dayOfTheWeek, starts_at, ends_at from officehours where dieticianID like '$helper_dieticianID' and dayOfTheWeek = 5")))
+				throw new Exception($connection->error);
+			else
+			{
+				$mon = $monResult->fetch_assoc();
+				$tue = $tueResult->fetch_assoc();
+				$wed = $wedResult->fetch_assoc();
+				$thu = $thuResult->fetch_assoc();
+				$fri = $friResult->fetch_assoc();
+				$sat = $satResult->fetch_assoc();
+				echo'
+				<table>
+					<tr>
+						<td colspan="3">Twój aktualny grafik</td>
+					</tr>
+					<tr>
+						<td>Dzień tygodnia</td>
+						<td>Początek zmiany</td>
+						<td>Koniec zmiany</td>
+					</tr>
+					<tr>
+						<td>Poniedziałek</td>
+						<td>'.$mon['starts_at'].'</td>
+						<td>'.$mon['ends_at'].'</td>
+					</tr>
+					<tr>
+						<td>Wtorek</td>
+						<td>'.$tue['starts_at'].'</td>
+						<td>'.$tue['ends_at'].'</td>
+					</tr>
+					<tr>
+						<td>Środa</td>
+						<td>'.$wed['starts_at'].'</td>
+						<td>'.$wed['ends_at'].'</td>
+					</tr>
+					<tr>
+						<td>Czwartek</td>
+						<td>'.$thu['starts_at'].'</td>
+						<td>'.$thu['ends_at'].'</td>
+					</tr>
+					<tr>
+						<td>Piątek</td>
+						<td>'.$fri['starts_at'].'</td>
+						<td>'.$fri['ends_at'].'</td>
+					</tr>
+					<tr>
+						<td>Sobota</td>
+						<td>'.$sat['starts_at'].'</td>
+						<td>'.$sat['ends_at'].'</td>
+					</tr>
+				</table>';
+				$monResult->free_result();
+				$tueResult->free_result();
+				$wedResult->free_result();
+				$thuResult->free_result();
+				$friResult->free_result();
+				$satResult->free_result();
+			}
+		}
+	}
+	catch (Exception $e)
+	{
+		header("Location: html_files/serverError_goToLogout.html");
+		//echo '<br/>Informacja developerska: '.$e;
+	}
 }
 
 /**************************ZABEZPIECZENIE PRZED MULTI CLICK'IEM**************************/
@@ -191,6 +286,7 @@ $token = getToken();
 	<link rel="stylesheet" href="css_files/basic.css" type="text/css"/>
 	<link href="css_files/card.css" rel="stylesheet" type="text/css"/>
 	<link href="css_files/workSchedule.css" rel="stylesheet" type="text/css"/>
+	<link href="css_files/submitButton.css" rel="stylesheet" type="text/css"/>
 	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext"
 		  rel="stylesheet">
 	<script src="javascript_files/jquery-3.1.1.min.js"></script>
@@ -223,9 +319,10 @@ $token = getToken();
 	</div>
 	<div id="content">
 		<form method="post">
+			<?php showOfficehours();?>
 			<div id="daysOfTheWeekPackage">
 				<div class="dayOfTheWeek" id="mon">
-				Poniedziałek
+					<div class="dayHeadline">Poniedziałek</div>
 					<img src="img/monday-img.png"/>
 					<div class="choice">
 						<div class="divWithCheckbox"><label><input type="checkbox" name="monCheckbox"/>Wybieram</label></div>
@@ -249,7 +346,7 @@ $token = getToken();
 					</div>
 				</div>
 				<div class="dayOfTheWeek" id="tue">
-					Wtorek
+					<div class="dayHeadline">Wtorek</div>
 					<img src="img/tuesday-img.png"/>
 					<div class="choice">
 						<div class="divWithCheckbox"><label><input type="checkbox" name="tueCheckbox"/>Wybieram</label></div>
@@ -273,7 +370,7 @@ $token = getToken();
 					</div>
 				</div>
 				<div class="dayOfTheWeek" id="wed">
-					Środa
+					<div class="dayHeadline">Środa</div>
 					<img src="img/wednesday-img.png"/>
 					<div class="choice">
 						<div class="divWithCheckbox"><label><input type="checkbox" name="wedCheckbox"/>Wybieram</label></div>
@@ -297,7 +394,7 @@ $token = getToken();
 					</div>
 				</div>
 				<div class="dayOfTheWeek" id="thu">
-					Czwartek
+					<div class="dayHeadline">Czwartek</div>
 					<img src="img/thursday-img.png"/>
 					<div class="choice">
 						<div class="divWithCheckbox"><label><input type="checkbox" name="thuCheckbox"/>Wybieram</label></div>
@@ -321,7 +418,8 @@ $token = getToken();
 					</div>
 				</div>
 				<div class="dayOfTheWeek" id="fri">
-					Piątek
+					<div class="dayHeadline">Piątek</div>
+					<img src="img/friday-img.png"/>
 					<div class="choice">
 						<div class="divWithCheckbox"><label><input type="checkbox" name="friCheckbox"/>Wybieram</label></div>
 						<div class="divWithOfficehours">
@@ -344,7 +442,8 @@ $token = getToken();
 					</div>
 				</div>
 				<div class="dayOfTheWeek" id="sat">
-					Sobota
+					<div class="dayHeadline">Sobota</div>
+					<img src="img/saturday-img.png"/>
 					<div class="choice">
 						<div class="divWithCheckbox"><label><input type="checkbox" name="satCheckbox"/>Wybieram</label></div>
 						<div class="divWithOfficehours">
