@@ -37,37 +37,45 @@ function saveToDb($day, $hours)
 			// Szukanie w bazie informacji, czy aby grafik dla danego dnia nie zostal juz ustalony
 			if(!($result2 = $connection->query("select count(*) as count from officehours where (dieticianID like '$helper_dieticianID' and dayOfTheWeek = '$day')")))
 				throw new Exception($connection->error);
-			else if($result2->fetch_assoc()['count'] == 1)	// Grafik zostal juz wczesniej ustalony dla danego dnia...
+			else if($hours == "---brak---")
 			{
-				switch($hours)	// ...wiec musimy zrobic update danych
+				if(!($connection->query("delete from officehours where (dieticianID like '$helper_dieticianID' and dayOfTheWeek = '$day')")))
+					throw new Exception($connection->error);
+			}
+			else if($result2->fetch_assoc()['count'] == 1)    // Grafik zostal juz wczesniej ustalony dla danego dnia...
+			{
+				switch ($hours)    // ...wiec musimy zrobic update danych
 				{
 					case '08:00 - 12:00':
 					{
 						if(!($connection->query("update officehours set starts_at = '08:00:00', ends_at = '12:00:00'
-								where (dieticianID like '$helper_dieticianID' and dayOfTheWeek = '$day')")))
+								where (dieticianID like '$helper_dieticianID' and dayOfTheWeek = '$day')"))
+						)
 							throw new Exception($connection->error);
 						break;
 					}
 					case '12:00 - 16:00':
 					{
 						if(!($connection->query("update officehours set starts_at = '12:00:00', ends_at = '16:00:00'
-								where (dieticianID like '$helper_dieticianID' and dayOfTheWeek = '$day')")))
+								where (dieticianID like '$helper_dieticianID' and dayOfTheWeek = '$day')"))
+						)
 							throw new Exception($connection->error);
 						break;
 					}
 					case '16:00 - 20:00':
 					{
 						if(!($connection->query("update officehours set starts_at = '16:00:00', ends_at = '20:00:00'
-								where (dieticianID like '$helper_dieticianID' and dayOfTheWeek = '$day')")))
+								where (dieticianID like '$helper_dieticianID' and dayOfTheWeek = '$day')"))
+						)
 							throw new Exception($connection->error);
 						break;
 					}
 				}
 				$result2->free_result();
 			}
-			else	// $result2->fetch_assoc()['count'] = 0, zatem grafik dla danego dnia jest ustalany po raz pierwszy
+			else    // $result2->fetch_assoc()['count'] = 0, zatem grafik dla danego dnia jest ustalany po raz pierwszy
 			{
-				switch($hours)
+				switch ($hours)
 				{
 					case '08:00 - 12:00':
 					{
@@ -134,12 +142,12 @@ function analyzeChanges()
 	$satSelect = $_POST['satSelect'];
 
 	// Jesli checkbox zostal zaznaczony oraz godzina zostala wybrana, to wywolujemy funkcje saveToDb()
-	if($monCheckbox != null && $monCheckbox == 'on' && $monSelect != '---brak---') saveToDb(0, $monSelect);
-	if($tueCheckbox != null && $tueCheckbox == 'on' && $tueSelect != '---brak---') saveToDb(1, $tueSelect);
-	if($wedCheckbox != null && $wedCheckbox == 'on' && $wedSelect != '---brak---') saveToDb(2, $wedSelect);
-	if($thuCheckbox != null && $thuCheckbox == 'on' && $thuSelect != '---brak---') saveToDb(3, $thuSelect);
-	if($friCheckbox != null && $friCheckbox == 'on' && $friSelect != '---brak---') saveToDb(4, $friSelect);
-	if($satCheckbox != null && $satCheckbox == 'on' && $satSelect != '---brak---') saveToDb(5, $satSelect);
+	if($monCheckbox != null && $monCheckbox == 'on') saveToDb(0, $monSelect);
+	if($tueCheckbox != null && $tueCheckbox == 'on') saveToDb(1, $tueSelect);
+	if($wedCheckbox != null && $wedCheckbox == 'on') saveToDb(2, $wedSelect);
+	if($thuCheckbox != null && $thuCheckbox == 'on') saveToDb(3, $thuSelect);
+	if($friCheckbox != null && $friCheckbox == 'on') saveToDb(4, $friSelect);
+	if($satCheckbox != null && $satCheckbox == 'on') saveToDb(5, $satSelect);
 }
 
 function showOfficehours()
@@ -169,7 +177,8 @@ function showOfficehours()
 				!($wedResult = $connection->query("select dayOfTheWeek, starts_at, ends_at from officehours where dieticianID like '$helper_dieticianID' and dayOfTheWeek = 2")) ||
 				!($thuResult = $connection->query("select dayOfTheWeek, starts_at, ends_at from officehours where dieticianID like '$helper_dieticianID' and dayOfTheWeek = 3")) ||
 				!($friResult = $connection->query("select dayOfTheWeek, starts_at, ends_at from officehours where dieticianID like '$helper_dieticianID' and dayOfTheWeek = 4")) ||
-				!($satResult = $connection->query("select dayOfTheWeek, starts_at, ends_at from officehours where dieticianID like '$helper_dieticianID' and dayOfTheWeek = 5")))
+				!($satResult = $connection->query("select dayOfTheWeek, starts_at, ends_at from officehours where dieticianID like '$helper_dieticianID' and dayOfTheWeek = 5"))
+			)
 				throw new Exception($connection->error);
 			else
 			{
@@ -179,7 +188,7 @@ function showOfficehours()
 				$thu = $thuResult->fetch_assoc();
 				$fri = $friResult->fetch_assoc();
 				$sat = $satResult->fetch_assoc();
-				echo'
+				echo '
 				<table>
 					<tr>
 						<td colspan="3">Twój aktualny grafik</td>
@@ -191,33 +200,33 @@ function showOfficehours()
 					</tr>
 					<tr>
 						<td>Poniedziałek</td>
-						<td>'.$mon['starts_at'].'</td>
-						<td>'.$mon['ends_at'].'</td>
+						<td>' . $mon['starts_at'] . '</td>
+						<td>' . $mon['ends_at'] . '</td>
 					</tr>
 					<tr>
 						<td>Wtorek</td>
-						<td>'.$tue['starts_at'].'</td>
-						<td>'.$tue['ends_at'].'</td>
+						<td>' . $tue['starts_at'] . '</td>
+						<td>' . $tue['ends_at'] . '</td>
 					</tr>
 					<tr>
 						<td>Środa</td>
-						<td>'.$wed['starts_at'].'</td>
-						<td>'.$wed['ends_at'].'</td>
+						<td>' . $wed['starts_at'] . '</td>
+						<td>' . $wed['ends_at'] . '</td>
 					</tr>
 					<tr>
 						<td>Czwartek</td>
-						<td>'.$thu['starts_at'].'</td>
-						<td>'.$thu['ends_at'].'</td>
+						<td>' . $thu['starts_at'] . '</td>
+						<td>' . $thu['ends_at'] . '</td>
 					</tr>
 					<tr>
 						<td>Piątek</td>
-						<td>'.$fri['starts_at'].'</td>
-						<td>'.$fri['ends_at'].'</td>
+						<td>' . $fri['starts_at'] . '</td>
+						<td>' . $fri['ends_at'] . '</td>
 					</tr>
 					<tr>
 						<td>Sobota</td>
-						<td>'.$sat['starts_at'].'</td>
-						<td>'.$sat['ends_at'].'</td>
+						<td>' . $sat['starts_at'] . '</td>
+						<td>' . $sat['ends_at'] . '</td>
 					</tr>
 				</table>';
 				$monResult->free_result();
@@ -319,7 +328,7 @@ $token = getToken();
 	</div>
 	<div id="content">
 		<form method="post">
-			<?php showOfficehours();?>
+			<?php showOfficehours(); ?>
 			<div id="daysOfTheWeekPackage">
 				<div class="dayOfTheWeek" id="mon">
 					<div class="dayHeadline">Poniedziałek</div>
