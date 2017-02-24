@@ -332,7 +332,7 @@ $token = getToken();
 			<div id="daysOfTheWeekPackage">
 				<div class="dayOfTheWeek" id="mon">
 					<div class="dayHeadline">Poniedziałek</div>
-					<img src="img/monday-img.png"/>
+					<img src="img/monday-img.png" class="officehoursImage"/>
 					<div class="choice">
 						<div class="divWithCheckbox"><label><input type="checkbox" name="monCheckbox"/>Wybieram</label></div>
 						<div class="divWithOfficehours">
@@ -356,7 +356,7 @@ $token = getToken();
 				</div>
 				<div class="dayOfTheWeek" id="tue">
 					<div class="dayHeadline">Wtorek</div>
-					<img src="img/tuesday-img.png"/>
+					<img src="img/tuesday-img.png" class="officehoursImage"/>
 					<div class="choice">
 						<div class="divWithCheckbox"><label><input type="checkbox" name="tueCheckbox"/>Wybieram</label></div>
 						<div class="divWithOfficehours">
@@ -380,7 +380,7 @@ $token = getToken();
 				</div>
 				<div class="dayOfTheWeek" id="wed">
 					<div class="dayHeadline">Środa</div>
-					<img src="img/wednesday-img.png"/>
+					<img src="img/wednesday-img.png" class="officehoursImage"/>
 					<div class="choice">
 						<div class="divWithCheckbox"><label><input type="checkbox" name="wedCheckbox"/>Wybieram</label></div>
 						<div class="divWithOfficehours">
@@ -404,7 +404,7 @@ $token = getToken();
 				</div>
 				<div class="dayOfTheWeek" id="thu">
 					<div class="dayHeadline">Czwartek</div>
-					<img src="img/thursday-img.png"/>
+					<img src="img/thursday-img.png" class="officehoursImage"/>
 					<div class="choice">
 						<div class="divWithCheckbox"><label><input type="checkbox" name="thuCheckbox"/>Wybieram</label></div>
 						<div class="divWithOfficehours">
@@ -428,7 +428,7 @@ $token = getToken();
 				</div>
 				<div class="dayOfTheWeek" id="fri">
 					<div class="dayHeadline">Piątek</div>
-					<img src="img/friday-img.png"/>
+					<img src="img/friday-img.png" class="officehoursImage"/>
 					<div class="choice">
 						<div class="divWithCheckbox"><label><input type="checkbox" name="friCheckbox"/>Wybieram</label></div>
 						<div class="divWithOfficehours">
@@ -452,7 +452,7 @@ $token = getToken();
 				</div>
 				<div class="dayOfTheWeek" id="sat">
 					<div class="dayHeadline">Sobota</div>
-					<img src="img/saturday-img.png"/>
+					<img src="img/saturday-img.png" class="officehoursImage"/>
 					<div class="choice">
 						<div class="divWithCheckbox"><label><input type="checkbox" name="satCheckbox"/>Wybieram</label></div>
 						<div class="divWithOfficehours">
