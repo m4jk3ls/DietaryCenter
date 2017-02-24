@@ -190,43 +190,43 @@ function showOfficehours()
 				$sat = $satResult->fetch_assoc();
 				echo '
 				<table>
-					<tr>
+					<tr id="tableFirstRow">
 						<td colspan="3">Twój aktualny grafik</td>
 					</tr>
-					<tr>
+					<tr id="tableSecondRow">
 						<td>Dzień tygodnia</td>
 						<td>Początek zmiany</td>
 						<td>Koniec zmiany</td>
 					</tr>
 					<tr>
-						<td>Poniedziałek</td>
-						<td>' . $mon['starts_at'] . '</td>
-						<td>' . $mon['ends_at'] . '</td>
+						<td class="tableLeftColumn">Poniedziałek</td>
+						<td class="tableHours">' . $mon['starts_at'] . '</td>
+						<td class="tableHours">' . $mon['ends_at'] . '</td>
 					</tr>
 					<tr>
-						<td>Wtorek</td>
-						<td>' . $tue['starts_at'] . '</td>
-						<td>' . $tue['ends_at'] . '</td>
+						<td class="tableLeftColumn">Wtorek</td>
+						<td class="tableHours">' . $tue['starts_at'] . '</td>
+						<td class="tableHours">' . $tue['ends_at'] . '</td>
 					</tr>
 					<tr>
-						<td>Środa</td>
-						<td>' . $wed['starts_at'] . '</td>
-						<td>' . $wed['ends_at'] . '</td>
+						<td class="tableLeftColumn">Środa</td>
+						<td class="tableHours">' . $wed['starts_at'] . '</td>
+						<td class="tableHours">' . $wed['ends_at'] . '</td>
 					</tr>
 					<tr>
-						<td>Czwartek</td>
-						<td>' . $thu['starts_at'] . '</td>
-						<td>' . $thu['ends_at'] . '</td>
+						<td class="tableLeftColumn">Czwartek</td>
+						<td class="tableHours">' . $thu['starts_at'] . '</td>
+						<td class="tableHours">' . $thu['ends_at'] . '</td>
 					</tr>
 					<tr>
-						<td>Piątek</td>
-						<td>' . $fri['starts_at'] . '</td>
-						<td>' . $fri['ends_at'] . '</td>
+						<td class="tableLeftColumn">Piątek</td>
+						<td class="tableHours">' . $fri['starts_at'] . '</td>
+						<td class="tableHours">' . $fri['ends_at'] . '</td>
 					</tr>
 					<tr>
-						<td>Sobota</td>
-						<td>' . $sat['starts_at'] . '</td>
-						<td>' . $sat['ends_at'] . '</td>
+						<td class="tableLeftColumn">Sobota</td>
+						<td class="tableHours">' . $sat['starts_at'] . '</td>
+						<td class="tableHours">' . $sat['ends_at'] . '</td>
 					</tr>
 				</table>';
 				$monResult->free_result();

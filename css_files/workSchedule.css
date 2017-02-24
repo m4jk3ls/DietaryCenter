@@ -102,6 +102,33 @@ td
 {
 	text-align: center;
 	vertical-align: middle;
-	border: solid 1px black;
+	border: solid 1px #000;
 	padding: 5px;
+}
+
+#tableFirstRow
+{
+	font-size: 25px;
+	font-weight: bold;
+	letter-spacing: 2px;
+	background-color: #FF7A7A;
+}
+
+#tableSecondRow
+{
+	background-color: #FFB0B0;
+	font-size: 21px;
+}
+
+.tableLeftColumn
+{
+	font-weight: bold;
+	font-size: 20px;
+}
+
+.tableHours
+{
+	font-size: 19px;
+	font-family: 'Calibri', serif;
+	font-style: italic;
 }
