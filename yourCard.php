@@ -71,7 +71,7 @@ else
 	<div id="logo"><img id="logo-img" src="img/logo.jpg"/></div>
 	<ol class="menu">
 		<li><a href="yourCard.php">Strona główna</a></li>
-		<li><a href="#">Twoja wizyta</a></li>
+		<li><a href="yourVisit.php">Twoja wizyta</a></li>
 		<li><a href="#">Twoje rezultaty</a></li>
 		<li><a href="contact.php">Kontakt</a></li>
 		<li><a href="logOut.php">Wyloguj</a></li>
