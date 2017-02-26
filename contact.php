@@ -17,6 +17,7 @@ if(!isset($_COOKIE["patientLogged"]))
 	<link rel="stylesheet" href="css_files/basic.css" type="text/css"/>
 	<link href="css_files/card.css" rel="stylesheet" type="text/css"/>
 	<link href="css_files/contact.css" rel="stylesheet" type="text/css"/>
+	<link href="css_files/contentCenter.css" rel="stylesheet" type="text/css"/>
 	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext"
 		  rel="stylesheet">
 	<script src="javascript_files/jquery-3.1.1.min.js"></script>
