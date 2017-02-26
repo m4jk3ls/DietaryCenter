@@ -1,0 +1,7 @@
+.dietician
+{
+	display: inline-block;
+	width: calc(100% / 3);
+	border: solid 1px #000;
+	box-sizing: border-box;
+}

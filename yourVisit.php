@@ -16,6 +16,8 @@ if(!isset($_COOKIE["patientLogged"]))
 	<title>Twoja karta pacjenta</title>
 	<link rel="stylesheet" href="css_files/basic.css" type="text/css"/>
 	<link href="css_files/card.css" rel="stylesheet" type="text/css"/>
+	<link href="css_files/yourVisit.css" rel="stylesheet" type="text/css"/>
+	<link href="css_files/contentCenter.css" rel="stylesheet" type="text/css"/>
 	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext"
 		  rel="stylesheet">
 	<script src="javascript_files/jquery-3.1.1.min.js"></script>
@@ -47,7 +49,30 @@ if(!isset($_COOKIE["patientLogged"]))
 		</div>
 	</div>
 	<div id="content">
-	Twoja wizyta!!!
+		<?php
+		require_once("connect.php");
+		mysqli_report(MYSQLI_REPORT_STRICT);
+		try
+		{
+			$connection = new mysqli($host, $db_user, $db_password, $db_name);
+			$connection->set_charset('utf8');
+			if($connection->connect_errno != 0)
+				throw new Exception($connection->connect_error);
+			else
+			{
+				if(!($result = $connection->query("select * from dietician d join user u on (d.userID = u.userID)")))
+					throw new Exception($connection->connect_error);
+				while ($row = $result->fetch_assoc())
+					echo '<div class="dietician">' . $row['firstName'] . ' ' . $row['lastName'] . '</div>';
+			}
+		}
+		catch (Exception $e)
+		{
+			header("Location: html_files/serverError_goToLogout.html");
+			//echo '<br/>Informacja developerska: '.$e;
+			exit();
+		}
+		?>
 	</div>
 	<div id="footer">NaturHouse - Twój osobisty dietetyk. Strona w sieci od 2017 r. &copy;
 					 Wszelkie prawa zastrzeżone</div>
