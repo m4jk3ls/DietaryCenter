@@ -23,10 +23,4 @@ $(document).ready(function ()
 		var sfTopValue = "calc((50% - " + sfHalfHeight + "px) / 2 - " + headlineHalfHeight + "px)";
 		headline.css("top", sfTopValue);
 	}
-	// Jezeli nie ma na stronie zadnego z formularzy, to ustaw naglowek na srodku strony (welcome.php)
-	else
-	{
-		var headlineHalfWidth = headline.innerWidth() / 2;
-		headline.css({"margin-top": "-" + headlineHalfHeight + "px", "margin-left": "-" + headlineHalfWidth + "px"});
-	}
 });
