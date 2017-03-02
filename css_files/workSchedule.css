@@ -38,15 +38,7 @@
 	height: 20%;
 }
 
-.divWithCheckbox
-{
-	width: 50%;
-	height: 100%;
-	float: left;
-	position: relative;
-}
-
-.divWithOfficehours
+.divWithCheckbox, .divWithOfficehours
 {
 	width: 50%;
 	height: 100%;
@@ -77,7 +69,7 @@ select
 
 .officehoursImage
 {
-	margin-top: 10px;
+	margin: 10px auto 0 auto;
 }
 
 .dayHeadline

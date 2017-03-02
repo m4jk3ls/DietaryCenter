@@ -62,8 +62,17 @@ if(!isset($_COOKIE["patientLogged"]))
 			{
 				if(!($result = $connection->query("select * from dietician d join user u on (d.userID = u.userID)")))
 					throw new Exception($connection->connect_error);
+				$counter = 1;
 				while ($row = $result->fetch_assoc())
-					echo '<div class="dietician">' . $row['firstName'] . ' ' . $row['lastName'] . '</div>';
+				{
+					echo
+						'<div class="dietician">
+							<div class="nameHeadline">' . $row['firstName'] . ' ' . $row['lastName'] . '</div>
+							<img src="img/dietician' . $counter . '.png" class="dieticianImage"/>
+							<div class="divWithCheckbox"><label><input type="checkbox" name="monCheckbox"/>Wybieram</label></div>
+						</div>';
+					$counter++;
+				}
 			}
 		}
 		catch (Exception $e)
