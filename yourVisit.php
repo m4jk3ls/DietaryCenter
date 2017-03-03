@@ -53,7 +53,7 @@ $token = getToken();
 		</div>
 	</div>
 	<div id="content">
-		<form method="post">
+		<form action="selectDate.php" method="post">
 			<?php
 			require_once("connect.php");
 			mysqli_report(MYSQLI_REPORT_STRICT);
@@ -72,8 +72,8 @@ $token = getToken();
 							'<div class="dietician">
 								<div class="nameHeadline">' . $row['firstName'] . ' ' . $row['lastName'] . '</div>
 								<img src="' . $row['pathToImage'] . '" class="dieticianImage"/>
-								<div class="divWithCheckbox"><label><input type="checkbox" 
-								name="checkbox' . $row['dieticianID'] . '"/>Wybieram</label></div>
+								<div class="divWithCheckbox"><label><input type="checkbox"
+								name="CBgroup[]" value="' . $row['dieticianID'] . '"/>Wybieram</label></div>
 							</div>';
 				}
 			}
