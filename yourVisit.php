@@ -72,8 +72,9 @@ $token = getToken();
 							'<div class="dietician">
 								<div class="nameHeadline">' . $row['firstName'] . ' ' . $row['lastName'] . '</div>
 								<img src="' . $row['pathToImage'] . '" class="dieticianImage"/>
-								<div class="divWithCheckbox"><label><input type="checkbox"
-								name="CBgroup[]" value="' . $row['dieticianID'] . '"/>Wybieram</label></div>
+								<div class="divWithRadio">
+									<label><input type="radio" name="radioButton" value="' . $row['dieticianID'] . '"/>Wybieram</label>
+								</div>
 							</div>';
 				}
 			}

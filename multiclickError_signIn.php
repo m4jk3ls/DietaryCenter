@@ -53,7 +53,7 @@ if(isset($_SESSION['login']))
 <head>
 	<meta charset="utf-8"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-	<meta http-equiv="Refresh" content="10; url=index.php"/>
+	<meta http-equiv="Refresh" content="5; url=index.php"/>
 	<title>Błąd "multiclick"</title>
 	<link rel="stylesheet" href="css_files/basic.css" type="text/css"/>
 	<link rel="stylesheet" href="css_files/Error.css" type="text/css"/>
@@ -63,6 +63,6 @@ if(isset($_SESSION['login']))
 </head>
 
 <body>
-<div id="headline">Dane wprowadzone do formularza można zatwierdzić tylko jeden raz! Włącz obsługę JavaScript, aby uniknąć tego problemu. Za chwilę zostaniesz przekierowany na stronę główną!</div>
+<div id="headline">Dane wprowadzone do formularza można zatwierdzić tylko jeden raz! Poczekaj i spróbuj ponownie...</div>
 </body>
 </html>
