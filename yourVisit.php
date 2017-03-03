@@ -6,6 +6,9 @@ if(!isset($_COOKIE["patientLogged"]))
 	header('Location: index.php');
 	exit();
 }
+
+require_once('multiClickPrevent.php');
+$token = getToken();
 ?>
 
 <!DOCTYPE HTML>
@@ -18,6 +21,7 @@ if(!isset($_COOKIE["patientLogged"]))
 	<link href="css_files/card.css" rel="stylesheet" type="text/css"/>
 	<link href="css_files/yourVisit.css" rel="stylesheet" type="text/css"/>
 	<link href="css_files/contentCenter.css" rel="stylesheet" type="text/css"/>
+	<link href="css_files/submitButton.css" rel="stylesheet" type="text/css"/>
 	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext"
 		  rel="stylesheet">
 	<script src="javascript_files/jquery-3.1.1.min.js"></script>
@@ -49,39 +53,43 @@ if(!isset($_COOKIE["patientLogged"]))
 		</div>
 	</div>
 	<div id="content">
-		<?php
-		require_once("connect.php");
-		mysqli_report(MYSQLI_REPORT_STRICT);
-		try
-		{
-			$connection = new mysqli($host, $db_user, $db_password, $db_name);
-			$connection->set_charset('utf8');
-			if($connection->connect_errno != 0)
-				throw new Exception($connection->connect_error);
-			else
+		<form method="post">
+			<?php
+			require_once("connect.php");
+			mysqli_report(MYSQLI_REPORT_STRICT);
+			try
 			{
-				if(!($result = $connection->query("select * from dietician d join user u on (d.userID = u.userID)")))
+				$connection = new mysqli($host, $db_user, $db_password, $db_name);
+				$connection->set_charset('utf8');
+				if($connection->connect_errno != 0)
 					throw new Exception($connection->connect_error);
-				$counter = 1;
-				while ($row = $result->fetch_assoc())
+				else
 				{
-					echo
-						'<div class="dietician">
-							<div class="nameHeadline">' . $row['firstName'] . ' ' . $row['lastName'] . '</div>
-							<img src="img/dietician' . $counter . '.png" class="dieticianImage"/>
-							<div class="divWithCheckbox"><label><input type="checkbox" name="monCheckbox"/>Wybieram</label></div>
-						</div>';
-					$counter++;
+					if(!($result = $connection->query("select * from dietician d join user u on (d.userID = u.userID)")))
+						throw new Exception($connection->connect_error);
+					while ($row = $result->fetch_assoc())
+						echo
+							'<div class="dietician">
+								<div class="nameHeadline">' . $row['firstName'] . ' ' . $row['lastName'] . '</div>
+								<img src="' . $row['pathToImage'] . '" class="dieticianImage"/>
+								<div class="divWithCheckbox"><label><input type="checkbox" 
+								name="checkbox' . $row['dieticianID'] . '"/>Wybieram</label></div>
+							</div>';
 				}
 			}
-		}
-		catch (Exception $e)
-		{
-			header("Location: html_files/serverError_goToLogout.html");
-			//echo '<br/>Informacja developerska: '.$e;
-			exit();
-		}
-		?>
+			catch (Exception $e)
+			{
+				header("Location: html_files/serverError_goToLogout.html");
+				//echo '<br/>Informacja developerska: '.$e;
+				exit();
+			}
+			?>
+			<input type="submit" id="dieticianChoiceButton" value="Zatwierdź"
+				   onclick="this.disabled=true; this.value='Zapisuję...'; this.form.submit();"/>
+
+			<!--Input przechowujacy token, ktory zapobiega multiclick'owi-->
+		<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+		</form>
 	</div>
 	<div id="footer">NaturHouse - Twój osobisty dietetyk. Strona w sieci od 2017 r. &copy;
 					 Wszelkie prawa zastrzeżone</div>

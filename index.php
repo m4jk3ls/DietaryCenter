@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 if(isset($_COOKIE["patientLogged"]))
 {
 	header('Location: yourCard.php');
@@ -10,8 +11,9 @@ if(isset($_COOKIE["dieticianLogged"]))
 	header('Location: dieticianCard.php');
 	exit();
 }
-if(isset($_SESSION['logInFormSubmitted']))
-	unset($_SESSION['logInFormSubmitted']);
+
+require_once('multiClickPrevent.php');
+$token = getToken();
 ?>
 
 <!DOCTYPE HTML>
@@ -56,6 +58,9 @@ if(isset($_SESSION['logInFormSubmitted']))
 		?>
 		<input type="submit" id="logInButton" value="Zaloguj się"
 			   onclick="this.disabled=true; this.value='Wczytuję...'; this.form.submit();"/>
+
+		<!--Input przechowujacy token, ktory zapobiega multiclick'owi-->
+		<input type="hidden" name="token" value="<?php echo $token; ?>"/>
 	</form>
 	<div id="alternative">-------- lub --------</div>
 	<div id="linkToSignIn"><a href="signIn.php">Zarejestruj się i dołącz do nas!</a></div>

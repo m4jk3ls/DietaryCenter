@@ -1,15 +1,6 @@
 <?php
 session_start();
 
-if(!isset($_SESSION['logInFormSubmitted']))
-	$_SESSION['logInFormSubmitted'] = true;
-else
-{
-	$_SESSION['logInFormSubmitted'] = false;
-	header("Location: html_files/multiclickError_logIn.html");
-	exit();
-}
-
 // Przekierowanie jesli pola formularza nie zostaly ustawione
 if((!isset($_POST['login'])) || (!isset($_POST['passwd'])))
 {
@@ -76,86 +67,94 @@ function cookies($token, $who)
 	setcookie("token", $token);
 }
 
-require_once "connect.php";
-mysqli_report(MYSQLI_REPORT_STRICT);
-try
+function letsLogIn()
 {
-	// Proba polaczenia sie z baza
-	$GLOBALS['connection'] = new mysqli($host, $db_user, $db_password, $db_name);
-	$GLOBALS['connection']->set_charset('utf8');
-
-	// Jesli powyzsza proba zawiedzie, to rzuc wyjatkiem
-	if($GLOBALS['connection']->connect_errno != 0)
-		throw new Exception($GLOBALS['connection']->connect_error);
-	else
+	require_once "connect.php";
+	mysqli_report(MYSQLI_REPORT_STRICT);
+	try
 	{
-		$login = $_POST['login'];
-		$passwd = $_POST['passwd'];
+		// Proba polaczenia sie z baza
+		$GLOBALS['connection'] = new mysqli($host, $db_user, $db_password, $db_name);
+		$GLOBALS['connection']->set_charset('utf8');
 
-		//Walidacja i sanityzacja loginu
-		$login = htmlentities($login, ENT_QUOTES, "UTF-8");
-		if($result = $GLOBALS['connection']->query(sprintf("select * from user where login='%s'", mysqli_real_escape_string($GLOBALS['connection'], $login))))
+		// Jesli powyzsza proba zawiedzie, to rzuc wyjatkiem
+		if($GLOBALS['connection']->connect_errno != 0)
+			throw new Exception($GLOBALS['connection']->connect_error);
+		else
 		{
-			// Sprawdzenie, czy sa w bazie uzytkownicy o podanym loginie
-			$howManyUsers = $result->num_rows;
-			if($howManyUsers > 0)
+			$login = $_POST['login'];
+			$passwd = $_POST['passwd'];
+
+			//Walidacja i sanityzacja loginu
+			$login = htmlentities($login, ENT_QUOTES, "UTF-8");
+			if($result = $GLOBALS['connection']->query(sprintf("select * from user where login='%s'", mysqli_real_escape_string($GLOBALS['connection'], $login))))
 			{
-				// Czy podane haslo sie zgadza
-				$row = $result->fetch_assoc();
-				if(!strcmp(sha1($passwd . $row['salt']), $row['password']))
+				// Sprawdzenie, czy sa w bazie uzytkownicy o podanym loginie
+				$howManyUsers = $result->num_rows;
+				if($howManyUsers > 0)
 				{
-					// Zebranie potrzebnych danych oraz wykonanie zapytania do bazy o aktywne_sesje
-					necessaryData($IPAddress, $allAboutBrowser, $browserName, $helper_userID, $helper_login, $token, $row);
-					if(!($result2 = $GLOBALS['connection']->query("select * from active_sessions where userID like '$helper_userID'")))
-						throw new Exception($GLOBALS['connection']->error);
-
-
-					// Jesli nie ma aktywnej sesji uzytkownika, na konto ktorego chce sie zalogowac...
-					if(!$result2->num_rows)
+					// Czy podane haslo sie zgadza
+					$row = $result->fetch_assoc();
+					if(!strcmp(sha1($passwd . $row['salt']), $row['password']))
 					{
-						// ...to wykonuje transakcje nr 1...
-						if(activeSessionIs($helper_userID, $helper_login, $IPAddress, $browserName, $token))
+						// Zebranie potrzebnych danych oraz wykonanie zapytania do bazy o aktywne_sesje
+						necessaryData($IPAddress, $allAboutBrowser, $browserName, $helper_userID, $helper_login, $token, $row);
+						if(!($result2 = $GLOBALS['connection']->query("select * from active_sessions where userID like '$helper_userID'")))
+							throw new Exception($GLOBALS['connection']->error);
+
+
+						// Jesli nie ma aktywnej sesji uzytkownika, na konto ktorego chce sie zalogowac...
+						if(!$result2->num_rows)
+						{
+							// ...to wykonuje transakcje nr 1...
+							if(activeSessionIs($helper_userID, $helper_login, $IPAddress, $browserName, $token))
+								$GLOBALS['connection']->query("COMMIT");
+							else
+								throw new Exception($GLOBALS['connection']->error);
+						}
+						// ...w przeciwnym wypadku wykonuje transakcje nr 2
+						else if(activeSessionIsnt($helper_userID, $helper_login, $IPAddress, $browserName, $token))
 							$GLOBALS['connection']->query("COMMIT");
 						else
 							throw new Exception($GLOBALS['connection']->error);
+
+
+						//Loguje sie pacjent, czy dietetyk?
+						if(!$result3 = $GLOBALS['connection']->query("select * from user u join patient p on(p.userID = u.userID) where (p.userID = '$helper_userID')"))
+							throw new Exception($GLOBALS['connection']->error);
+						else if($result3->num_rows)    //Logujacym sie uzytkownikem jest pacjent
+						{
+							$who = "patient";
+							header('Location: yourCard.php');
+						}
+						else if(!$result4 = $GLOBALS['connection']->query("select * from user u join dietician d on(d.userID = u.userID) where (d.userID = '$helper_userID')"))
+							throw new Exception($GLOBALS['connection']->error);
+						else if($result4->num_rows)    //Logujacym sie uzytkownikem jest dietetyk
+						{
+							$who = "dietician";
+							header('Location: dieticianCard.php');
+						}
+						else
+						{
+							echo '<span style="color:red;">Twoje konto zostało przed chwilą usunięte :(</span>';
+							exit();
+						}
+
+
+						//Ustawiamy ciasteczko i zwalniamy dotychczasowo uzywana pamiec
+						cookies($token, $who);
+						unset($_SESSION['error']);
+						$result->free_result();
+						$result2->free_result();
+						$result3->free_result();
+						if(isset($result4))
+							$result4->free_result();
 					}
-					// ...w przeciwnym wypadku wykonuje transakcje nr 2
-					else if(activeSessionIsnt($helper_userID, $helper_login, $IPAddress, $browserName, $token))
-						$GLOBALS['connection']->query("COMMIT");
 					else
-						throw new Exception($GLOBALS['connection']->error);
-
-
-					//Loguje sie pacjent, czy dietetyk?
-					if(!$result3 = $GLOBALS['connection']->query("select * from user u join patient p on(p.userID = u.userID) where (p.userID = '$helper_userID')"))
-						throw new Exception($GLOBALS['connection']->error);
-					else if($result3->num_rows)    //Logujacym sie uzytkownikem jest pacjent
 					{
-						$who = "patient";
-						header('Location: yourCard.php');
+						$_SESSION['error'] = "Nieprawidłowy login lub hasło!";
+						header('Location: index.php');
 					}
-					else if(!$result4 = $GLOBALS['connection']->query("select * from user u join dietician d on(d.userID = u.userID) where (d.userID = '$helper_userID')"))
-						throw new Exception($GLOBALS['connection']->error);
-					else if($result4->num_rows)    //Logujacym sie uzytkownikem jest dietetyk
-					{
-						$who = "dietician";
-						header('Location: dieticianCard.php');
-					}
-					else
-					{
-						echo '<span style="color:red;">Twoje konto zostało przed chwilą usunięte :(</span>';
-						exit();
-					}
-
-
-					//Ustawiamy ciasteczko i zwalniamy dotychczasowo uzywana pamiec
-					cookies($token, $who);
-					unset($_SESSION['error']);
-					$result->free_result();
-					$result2->free_result();
-					$result3->free_result();
-					if(isset($result4))
-						$result4->free_result();
 				}
 				else
 				{
@@ -164,19 +163,31 @@ try
 				}
 			}
 			else
-			{
-				$_SESSION['error'] = "Nieprawidłowy login lub hasło!";
-				header('Location: index.php');
-			}
+				throw new Exception($GLOBALS['connection']->error);
+			$GLOBALS['connection']->close();
 		}
-		else
-			throw new Exception($GLOBALS['connection']->error);
-		$GLOBALS['connection']->close();
+	}
+	catch (Exception $e)
+	{
+		$GLOBALS['connection']->query("ROLLBACK");
+		header("Location: html_files/serverError_goToLogout.html");
+		//echo '<br/>Informacja developerska: '.$e;
 	}
 }
-catch (Exception $e)
+
+/**************************ZABEZPIECZENIE PRZED MULTI CLICK'IEM**************************/
+
+require_once('multiClickPrevent.php');
+
+// Sprawdzenie, czy formularz zostal wyslany
+$postedToken = filter_input(INPUT_POST, 'token');
+if(!empty($postedToken))
 {
-	$GLOBALS['connection']->query("ROLLBACK");
-	header("Location: html_files/serverError_goToLogout.html");
-	//echo '<br/>Informacja developerska: '.$e;
+	if(isTokenValid($postedToken))
+		letsLogIn();
+	else
+	{
+		header("Location: html_files/multiclickError_logIn.html");
+		exit();
+	}
 }

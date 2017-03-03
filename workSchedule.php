@@ -247,27 +247,7 @@ function showOfficehours()
 
 /**************************ZABEZPIECZENIE PRZED MULTI CLICK'IEM**************************/
 
-// Funkcja generujaca token, ktory jest uzywany w formularzu
-function getToken()
-{
-	$token = sha1(mt_rand());
-	if(!isset($_SESSION['tokensPreventMulticlickInOfficehours']))
-		$_SESSION['tokensPreventMulticlickInOfficehours'] = array($token => 1);
-	else
-		$_SESSION['tokensPreventMulticlickInOfficehours'][$token] = 1;
-	return $token;
-}
-
-// Sprawdzanie poprawnosci tokenu oraz usuwanie go z listy poprawnych token'ow
-function isTokenValid($token)
-{
-	if(!empty($_SESSION['tokensPreventMulticlickInOfficehours'][$token]))
-	{
-		unset($_SESSION['tokensPreventMulticlickInOfficehours'][$token]);
-		return true;
-	}
-	return false;
-}
+require_once('multiClickPrevent.php');
 
 // Sprawdzenie, czy formularz zostal wyslany
 $postedToken = filter_input(INPUT_POST, 'token');
