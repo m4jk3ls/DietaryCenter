@@ -235,6 +235,7 @@ function showOfficehours()
 				$thuResult->free_result();
 				$friResult->free_result();
 				$satResult->free_result();
+				$connection->close();
 			}
 		}
 	}

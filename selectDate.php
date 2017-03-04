@@ -30,8 +30,34 @@ function showOfficehours()
 				throw new Exception($connection->connect_error);
 			else
 			{
-				while ($row = $result->fetch_assoc())
-					echo $row['dayOfTheWeek'] . '<br/>' . $row['starts_at'] . '<br/>' . $row['ends_at'] . '<br/><br/>';
+				$days = array("Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota", "Niedziela");
+				$j = 1;
+
+				// 3 iteracje, bo chcemy wyswietlic najblizsze 3 tygodnie (21 dni)
+				for ($i = 0; $i < 3; $i++)
+				{
+					echo '<table><tr>';
+
+					// Wypisanie najblizszych 21 dni
+					for ($k = 0; $k < 7; $k++)
+					{
+						echo
+							'<td>' .
+							date("Y-m-d", strtotime("+" . ($i + $j) . " day")) .
+							' <br/>' .
+							$days[date("N", strtotime("+" . ($i + (($k < 6) ? $j++ : $j)) . " day")) - 1] .
+							'</td >';
+					}
+					echo '</tr><tr>';
+
+					// Wypisanie wszystkich godzin przyjec w dany dzien
+					for($k = 0; $k < 7; $k++)
+						echo '<td>Tutaj będą terminy!</td>';
+
+					echo '</tr></table><br/>';
+				}
+				$result->free_result();
+				$connection->close();
 			}
 		}
 	}
@@ -86,6 +112,28 @@ else
 	<script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
 	<script src="javascript_files/cookiesBanner.js"></script>
 	<noscript><div id="infoAboutNoScript">Twoja przeglądarka nie obsługuje skryptów JavaScript!</div></noscript>
+
+
+	<style>
+		table
+		{
+			width: 100%;
+			margin-left: auto;
+			margin-right: auto;
+			border: solid 1px black;
+			border-collapse: collapse;
+			font-size: 20px;
+		}
+
+		td
+		{
+			width: calc(100% / 7);
+			text-align: center;
+			vertical-align: middle;
+			border: solid 1px #000;
+			padding: 5px;
+		}
+	</style>
 </head>
 
 <body>
