@@ -24,14 +24,22 @@ function showOfficehours()
 		else
 		{
 			$helper_dieticianID = (int)$_POST['radioButton'];
-			if(!($result = $connection->query("select * from officehours oh join dietician d on (oh.dieticianID = d.dieticianID)
+			if(!($result = $connection->query("select oh.dayOfTheWeek, oh.starts_at, oh.ends_at from officehours oh
+											   join dietician d on (oh.dieticianID = d.dieticianID)
 											   where oh.dieticianID like '$helper_dieticianID' order by oh.dayOfTheWeek asc"))
 			)
 				throw new Exception($connection->connect_error);
 			else
 			{
-				$days = array("Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota", "Niedziela");
+				$polishDays = array("Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota", "Niedziela");
+				$datesCopy = array(array());
+				$queryResults = array();
 				$j = 1;
+				$m = 0;
+				$n = 0;
+				while ($queryResults[$n++] = $result->fetch_assoc())
+				{
+				}
 
 				// 3 iteracje, bo chcemy wyswietlic najblizsze 3 tygodnie (21 dni)
 				for ($i = 0; $i < 3; $i++)
@@ -43,19 +51,33 @@ function showOfficehours()
 					{
 						echo
 							'<td>' .
-							date("Y-m-d", strtotime("+" . ($i + $j) . " day")) .
+							($datesCopy[$m][0] = date("Y-m-d", strtotime("+" . ($i + $j) . " day"))) .
 							' <br/>' .
-							$days[date("N", strtotime("+" . ($i + (($k < 6) ? $j++ : $j)) . " day")) - 1] .
+							$polishDays[($datesCopy[$m++][1] = date("N", strtotime("+" . ($i + (($k < 6) ? $j++ : $j)) . " day")) - 1)] .
 							'</td >';
 					}
 					echo '</tr><tr>';
 
-					// Wypisanie wszystkich godzin przyjec w dany dzien
-					for($k = 0; $k < 7; $k++)
-						echo '<td>Tutaj będą terminy!</td>';
+					// Wypisanie godzin przyjec w dany dzien
+					for ($k = 0; $k < 7; $k++)
+					{
+						$flag = false;
+						foreach ($queryResults as $z)
+						{
+							if($z['dayOfTheWeek'] != null && (int)$z['dayOfTheWeek'] == $datesCopy[$k + 7 * $i][1])
+							{
+								echo '<td>' . $z['starts_at'] . '<br/>-<br/>' . $z['ends_at'] . '</td>';
+								$flag = true;
+								break;
+							}
+						}
+						if(!$flag)
+							echo '<td>X</td>';
+					}
 
 					echo '</tr></table><br/>';
 				}
+
 				$result->free_result();
 				$connection->close();
 			}
