@@ -34,26 +34,67 @@ function draw()
 				$polishDays[($datesCopy[$m++][1] = date("N", strtotime("+" . ($i + (($k < 6) ? $j++ : $j)) . " day")) - 1)] .
 				'</td >';
 		}
-		echo '</tr><tr>';
+		echo '</tr>';
 
-		// Wypisanie godzin przyjec w dany dzien
+		// Obliczanie maksymalnej roznicy miedzy godzinami przyjec (trzeba wiedziec ile narysowac wierszy)
+		$maxDifference = 0;
+		foreach ($queryResults as $row)
+		{
+			$startHour = (int)substr($row['starts_at'], -8, 2);
+			$endHour = (int)substr($row['ends_at'], -8, 2);
+			$difference = $endHour - $startHour;
+			if($difference > $maxDifference)
+				$maxDifference = $difference;
+		}
+
+		// Tablica, ktora przechowuje godziny wizyty dla wiersza poprzedniego (podczas rysowania tabeli)
+		$intermediateTime = array();
+
+		// Inicjuje tablice $intermediateTime wartosciami poczatkowymi
 		for ($k = 0; $k < 7; $k++)
 		{
 			$flag = false;
-			foreach ($queryResults as $z)
+			foreach ($queryResults as $row)
 			{
-				if($z['dayOfTheWeek'] != null && (int)$z['dayOfTheWeek'] == $datesCopy[$k + 7 * $i][1])
+				if($row['dayOfTheWeek'] != null && (int)$row['dayOfTheWeek'] == $datesCopy[$k + 7 * $i][1])
 				{
-					echo '<td>' . $z['starts_at'] . '<br/>-<br/>' . $z['ends_at'] . '</td>';
+					$startHour = substr($row['starts_at'], -8, 5);
+					$intermediateTime[$k] = strtotime($startHour);
 					$flag = true;
 					break;
 				}
 			}
 			if(!$flag)
-				echo '<td>X</td>';
+				$intermediateTime[$k] = null;
 		}
 
-		echo '</tr></table><br/>';
+		// Petla, ktora tworzy wiersze a w kazdym z wierszy...
+		for ($k = 0; $k < $maxDifference * 4; $k++)
+		{
+			echo '<tr>';
+
+			// ...tworzy 7 kolumn, w ktorych przechowywana jest godzina mozliwej wizyty
+			for ($t = 0; $t < 7; $t++)
+			{
+				$flag = false;
+				foreach ($queryResults as $row)
+				{
+					// Jesli wynik z bazy zgadza sie z aktualnie obslugiwanym dniem tygodnia
+					if($row['dayOfTheWeek'] != null && (int)$row['dayOfTheWeek'] == $datesCopy[$t + 7 * $i][1])
+					{
+						echo '<td>' . date("H:i", $intermediateTime[$t]) . "</td>";
+						$intermediateTime[$t] = strtotime("+15 minutes", $intermediateTime[$t]);
+						$flag = true;
+						break;
+					}
+				}
+				if(!$flag)
+					echo '<td>X</td>';
+			}
+			echo '</tr>';
+		}
+
+		echo '</table><br/>';
 	}
 }
 
