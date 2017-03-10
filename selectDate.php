@@ -66,6 +66,26 @@ function intermediateTime_initialization($i)
 	}
 }
 
+// Wyswietla godzine wizyty w danej komorce i ustawia jej tlo w zaleznosci od zajetosci terminu
+function letsColor($i, $j)
+{
+	global $intermediateTime, $datesCopy, $helper_dieticianID;
+
+	// Zmienne, ktore poslemy do bazy w celu weryfikacji
+	$checkingTime = date("H:i:s", $intermediateTime[$j]);
+	$checkingDate = $datesCopy[$j + 7 * $i][0];
+
+	if(!($result = $GLOBALS['connection']->query("select visitHour from visit where visitHour like '$checkingTime' and
+													  		  visitDate like '$checkingDate' and
+													  		  dieticianID like '$helper_dieticianID' limit 1"))
+	)
+		throw new Exception($GLOBALS['connection']->connect_error);
+	else if($result->num_rows == 1)
+		echo '<td class="booked">' . date("H:i", $intermediateTime[$j]) . "</td>";
+	else
+		echo '<td class="free">' . date("H:i", $intermediateTime[$j]) . "</td>";
+}
+
 function addColumns($i)
 {
 	global $intermediateTime, $datesCopy, $queryResults;
@@ -79,7 +99,7 @@ function addColumns($i)
 			// Jesli wynik z bazy zgadza sie z aktualnie obslugiwanym dniem tygodnia
 			if($row['dayOfTheWeek'] != null && (int)$row['dayOfTheWeek'] == $datesCopy[$j + 7 * $i][1])
 			{
-				echo '<td>' . date("H:i", $intermediateTime[$j]) . "</td>";
+				letsColor($i, $j);
 				$intermediateTime[$j] = strtotime("+15 minutes", $intermediateTime[$j]);
 				$flag = true;
 				break;
@@ -111,7 +131,7 @@ function draw()
 	$queryResults = array();
 	$j = 1;
 	$m = 0;
-	$intermediateTime = array();	// Tablica, ktora przechowuje godziny wizyty dla wiersza poprzedniego (podczas rysowania tabeli)
+	$intermediateTime = array();    // Tablica, ktora przechowuje godziny wizyty dla wiersza poprzedniego (podczas rysowania tabeli)
 
 	// Wypelnienie tablicy $queryResults[] wartosciami ze zmiennej $GLOBALS['result'], przechowujacej wyniki zapytania do bazy
 	$n = 0;
@@ -136,26 +156,29 @@ function drawCalendar()
 	try
 	{
 		// Proba polaczenia sie z baza
-		$connection = new mysqli($host, $db_user, $db_password, $db_name);
-		$connection->set_charset('utf8');
+		$GLOBALS['connection'] = new mysqli($host, $db_user, $db_password, $db_name);
+		$GLOBALS['connection']->set_charset('utf8');
 
 		// Jesli powyzsza proba zawiedzie, to rzuc wyjatkiem
-		if($connection->connect_errno != 0)
-			throw new Exception($connection->connect_error);
+		if($GLOBALS['connection']->connect_errno != 0)
+			throw new Exception($GLOBALS['connection']->connect_error);
 		else
 		{
+			// ID dietetyka zapisujemy do zmiennej globalnej, poniewaz jeszcze nam sie przyda
+			global $helper_dieticianID;
 			$helper_dieticianID = (int)$_POST['radioButton'];
-			if(!($GLOBALS['result'] = $connection->query("select oh.dayOfTheWeek, oh.starts_at, oh.ends_at from officehours oh
+
+			if(!($GLOBALS['result'] = $GLOBALS['connection']->query("select oh.dayOfTheWeek, oh.starts_at, oh.ends_at from officehours oh
 											   join dietician d on (oh.dieticianID = d.dieticianID)
 											   where oh.dieticianID like '$helper_dieticianID' order by oh.dayOfTheWeek asc"))
 			)
-				throw new Exception($connection->connect_error);
+				throw new Exception($GLOBALS['connection']->connect_error);
 			else
 			{
 				draw();
 
 				$GLOBALS['result']->free_result();
-				$connection->close();
+				$GLOBALS['connection']->close();
 			}
 		}
 	}
@@ -230,6 +253,24 @@ else
 			vertical-align: middle;
 			border: solid 1px #000;
 			padding: 5px;
+		}
+
+		.booked
+		{
+			background-color: #ff0000;
+			color: #000;
+		}
+
+		.free
+		{
+			background-color: #29a329;
+			color: #fff;
+		}
+
+		table
+		{
+			font-family: 'Calibri', serif;
+			font-style: italic;
 		}
 	</style>
 </head>
