@@ -39,6 +39,7 @@ CREATE TABLE `active_sessions` (
 
 LOCK TABLES `active_sessions` WRITE;
 /*!40000 ALTER TABLE `active_sessions` DISABLE KEYS */;
+INSERT INTO `active_sessions` VALUES (4,'::1','Chrome','2017-03-10 20:32:46','wlo9h7KtNsEcwpk9rAtH05kGcvBqtVvNPWM7HECe4ELvp2pLGnimmOD8pT9riJ250V2sZynndeKca1nLNy0oATPYuEzOZUrL3hbb');
 /*!40000 ALTER TABLE `active_sessions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -64,6 +65,7 @@ CREATE TABLE `archive_logs` (
 
 LOCK TABLES `archive_logs` WRITE;
 /*!40000 ALTER TABLE `archive_logs` DISABLE KEYS */;
+INSERT INTO `archive_logs` VALUES (1,'anka','::1','Chrome','2017-02-22 15:08:39'),(4,'jan','::1','Chrome','2017-02-22 16:57:30'),(1,'anka','::1','Chrome','2017-02-22 17:16:46'),(4,'jan','::1','Chrome','2017-02-22 17:17:24'),(1,'anka','::1','Chrome','2017-02-22 17:17:43'),(4,'jan','::1','Chrome','2017-02-22 17:32:05'),(1,'anka','::1','Chrome','2017-02-22 17:32:19'),(1,'anka','::1','Chrome','2017-02-22 17:47:27'),(1,'anka','::1','Chrome','2017-02-23 15:21:02'),(2,'justyna','::1','Chrome','2017-02-23 17:24:26'),(1,'anka','::1','Chrome','2017-02-23 19:12:26'),(3,'gosia','::1','Chrome','2017-02-24 19:20:00'),(2,'justyna','::1','Chrome','2017-02-24 20:09:33'),(1,'anka','::1','Chrome','2017-02-24 20:09:51'),(3,'gosia','::1','Chrome','2017-02-24 20:10:10'),(4,'jan','::1','Chrome','2017-02-24 21:52:58'),(4,'jan','::1','Chrome','2017-02-24 22:05:23'),(5,'piotr','::1','Chrome','2017-02-24 22:19:53'),(4,'jan','::1','Chrome','2017-02-25 16:08:06'),(4,'jan','::1','Chrome','2017-02-25 16:35:32'),(4,'jan','::1','Chrome','2017-02-26 19:03:16'),(1,'anka','::1','Chrome','2017-02-26 20:34:31'),(1,'anka','::1','Chrome','2017-02-26 20:34:44'),(1,'anka','::1','Chrome','2017-02-26 20:35:53'),(1,'anka','::1','Chrome','2017-02-26 20:37:54'),(4,'jan','::1','Chrome','2017-02-26 20:40:19'),(3,'gosia','::1','Chrome','2017-02-26 20:40:33'),(2,'justyna','::1','Chrome','2017-02-26 20:41:39'),(1,'anka','::1','Chrome','2017-02-26 20:42:19'),(4,'jan','::1','Chrome','2017-02-26 20:48:20'),(1,'anka','::1','Chrome','2017-02-26 20:52:34'),(4,'jan','::1','Chrome','2017-02-26 20:53:12'),(6,'adam','::1','Chrome','2017-02-26 20:58:28'),(1,'anka','::1','Chrome','2017-02-26 20:59:05'),(4,'jan','::1','Chrome','2017-02-26 20:59:22'),(4,'jan','::1','Chrome','2017-02-26 21:03:01'),(2,'justyna','::1','Chrome','2017-02-26 21:03:15'),(4,'jan','::1','Chrome','2017-02-26 21:04:23'),(4,'jan','::1','Chrome','2017-02-26 21:04:57'),(4,'jan','::1','Chrome','2017-02-26 21:07:18'),(5,'piotr','::1','Chrome','2017-02-26 21:11:34'),(4,'jan','::1','Chrome','2017-02-26 21:11:55'),(4,'jan','::1','IE','2017-03-02 16:58:43'),(4,'jan','::1','IE','2017-03-02 17:02:03'),(4,'jan','::1','Chrome','2017-03-02 17:07:27'),(1,'anka','::1','Chrome','2017-03-02 17:26:52'),(4,'jan','::1','Chrome','2017-03-02 17:27:58'),(1,'anka','::1','Chrome','2017-03-02 17:28:33'),(4,'jan','::1','Chrome','2017-03-02 17:29:19'),(1,'anka','::1','Chrome','2017-03-02 17:31:28'),(4,'jan','::1','Chrome','2017-03-02 17:31:43'),(1,'anka','::1','Chrome','2017-03-02 18:45:44'),(4,'jan','::1','Chrome','2017-03-02 18:47:19'),(4,'jan','::1','Chrome','2017-03-02 18:48:36'),(1,'anka','::1','Chrome','2017-03-02 18:48:46'),(4,'jan','::1','Chrome','2017-03-02 18:49:31'),(4,'jan','::1','Chrome','2017-03-03 16:50:19'),(1,'anka','::1','Chrome','2017-03-03 18:00:47'),(4,'jan','::1','Chrome','2017-03-03 18:01:19'),(4,'jan','::1','Chrome','2017-03-10 20:32:46');
 /*!40000 ALTER TABLE `archive_logs` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -111,10 +113,12 @@ CREATE TABLE `dietician` (
   `userID` int(10) unsigned NOT NULL,
   `personalIdentityNumber` varchar(20) NOT NULL,
   `dateOfBirth` date NOT NULL,
+  `pathToImage` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`dieticianID`),
   UNIQUE KEY `userID_index` (`userID`),
+  UNIQUE KEY `pathToImage` (`pathToImage`),
   CONSTRAINT `dietician_fk1` FOREIGN KEY (`userID`) REFERENCES `user` (`userID`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -123,6 +127,7 @@ CREATE TABLE `dietician` (
 
 LOCK TABLES `dietician` WRITE;
 /*!40000 ALTER TABLE `dietician` DISABLE KEYS */;
+INSERT INTO `dietician` VALUES (1,1,'90052441235','1990-05-24','img/Anna Juraszczyk.png'),(2,2,'88123084512','1988-12-30','img/Justyna Krupczyk.png'),(3,3,'75020545876','1975-02-05','img/Małgorzata Łachman.png');
 /*!40000 ALTER TABLE `dietician` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -200,7 +205,7 @@ CREATE TABLE `officehours` (
   PRIMARY KEY (`officeHoursID`),
   KEY `dieticianID_index` (`dieticianID`),
   CONSTRAINT `officeHours_fk1` FOREIGN KEY (`dieticianID`) REFERENCES `dietician` (`dieticianID`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -209,6 +214,7 @@ CREATE TABLE `officehours` (
 
 LOCK TABLES `officehours` WRITE;
 /*!40000 ALTER TABLE `officehours` DISABLE KEYS */;
+INSERT INTO `officehours` VALUES (6,2,2,'12:00:00','16:00:00'),(8,2,4,'16:00:00','20:00:00'),(13,1,5,'08:00:00','12:00:00'),(26,3,2,'12:00:00','16:00:00'),(27,3,4,'16:00:00','20:00:00'),(29,3,0,'12:00:00','16:00:00'),(35,1,2,'12:00:00','16:00:00'),(36,1,0,'08:00:00','12:00:00'),(39,1,4,'16:00:00','20:00:00');
 /*!40000 ALTER TABLE `officehours` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -225,7 +231,7 @@ CREATE TABLE `patient` (
   PRIMARY KEY (`patientID`),
   UNIQUE KEY `userID_index` (`userID`),
   CONSTRAINT `patient_fk1` FOREIGN KEY (`userID`) REFERENCES `user` (`userID`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -234,6 +240,7 @@ CREATE TABLE `patient` (
 
 LOCK TABLES `patient` WRITE;
 /*!40000 ALTER TABLE `patient` DISABLE KEYS */;
+INSERT INTO `patient` VALUES (1,4),(2,5),(3,6),(4,7),(5,8);
 /*!40000 ALTER TABLE `patient` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -249,7 +256,7 @@ CREATE TABLE `supplement` (
   `name` varchar(100) NOT NULL,
   `price` float NOT NULL,
   PRIMARY KEY (`supplementID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -258,6 +265,7 @@ CREATE TABLE `supplement` (
 
 LOCK TABLES `supplement` WRITE;
 /*!40000 ALTER TABLE `supplement` DISABLE KEYS */;
+INSERT INTO `supplement` VALUES (1,'Pertres',50);
 /*!40000 ALTER TABLE `supplement` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -279,7 +287,7 @@ CREATE TABLE `user` (
   PRIMARY KEY (`userID`),
   UNIQUE KEY `email_index` (`email`),
   UNIQUE KEY `login_index` (`login`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -288,6 +296,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES (1,'Anna','Juraszczyk','anka@wp.pl','anka','131282524a4384d62d2d7eeea7d7b8e57b3feeb2','umqQ06eko9'),(2,'Justyna','Krupczyk','justyna@o2.pl','justyna','320380d1a5f928392d89ef772b1191acd6460cf2','TqYYulCyDO'),(3,'Małgorzata','Łachman','gosia@gmail.com','gosia','34a76b055064be5d1be9a9e1d8d87538cc6981f3','Elo2VjoLNW'),(4,'Jan','Kowalski','jan@o2.pl','jan','407d02bc07e0e76b884ec0b27d811b775ad3d434','8Vr4pfkMfm'),(5,'Piotr','Nowak','piotr@o2.pl','piotr','c78007d51a900be0bea9c6af9d88ac49eb09e25c','wNwZwKBRcA'),(6,'Adam','Król','adam@o2.pl','adam','e3a3ad3f06b88110b2efa10485bbef3ce2d58d6d','ay3Vp9gV91'),(7,'Mateusz','Nowakowski','mateusz@o2.pl','mateusz','c39c9a4b0290ba1d4cd62aa0ed6f6677f9d4b27d','n01oF22Scg'),(8,'Piotr','Żyła','piotrek@o2.pl','piotrek','77f4e9405f7eb43c5164b71d4a7b880008f1ff4c','NHMGnH48iW');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -313,7 +322,7 @@ CREATE TABLE `visit` (
   CONSTRAINT `visit_fk1` FOREIGN KEY (`patientID`) REFERENCES `patient` (`patientID`) ON UPDATE CASCADE,
   CONSTRAINT `visit_fk2` FOREIGN KEY (`dieticianID`) REFERENCES `dietician` (`dieticianID`) ON UPDATE CASCADE,
   CONSTRAINT `visit_fk3` FOREIGN KEY (`supplementID`) REFERENCES `supplement` (`supplementID`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -322,21 +331,29 @@ CREATE TABLE `visit` (
 
 LOCK TABLES `visit` WRITE;
 /*!40000 ALTER TABLE `visit` DISABLE KEYS */;
+INSERT INTO `visit` VALUES (1,4,2,1,'2017-03-15',95,'12:30:00');
 /*!40000 ALTER TABLE `visit` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_unicode_ci */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `ifDieticianAvailable` BEFORE INSERT ON `visit`
- FOR EACH ROW begin
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER dietary_center.ifDieticianAvailable
 
-    if(((select dayofweek(new.visitDate))!=(select oh.dayOfTheWeek from officehours oh where oh.dieticianID = new.dieticianID)) or
+	BEFORE INSERT
+
+	ON dietary_center.visit
+
+	FOR EACH ROW
+
+begin
+
+    if((select oh.dayOfTheWeek from officehours oh where oh.dieticianID = new.dieticianID and oh.dayOfTheWeek = (select weekday(new.visitDate))) is null or
 
         (select new.visitHour < (select starts_at from officehours)) or
 
@@ -366,4 +383,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-02-17  0:00:37
+-- Dump completed on 2017-03-10 21:56:10
