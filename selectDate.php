@@ -7,13 +7,113 @@ if(!isset($_COOKIE["patientLogged"]))
 }
 require_once "connect.php";
 
+function draw7days($i)
+{
+	global $polishDays, $datesCopy, $j, $m;
+
+	echo '<table><tr>';
+
+	// Wypisanie najblizszych 7 dni
+	for ($k = 0; $k < 7; $k++)
+	{
+		echo
+			'<td>' .
+			($datesCopy[$m][0] = date("Y-m-d", strtotime("+" . ($i + $j) . " day"))) .
+			' <br/>' .
+			$polishDays[($datesCopy[$m++][1] = date("N", strtotime("+" . ($i + (($k < 6) ? $j++ : $j)) . " day")) - 1)] .
+			'</td >';
+	}
+	echo '</tr>';
+}
+
+function getMaxDifference()
+{
+	global $queryResults;
+
+	// Obliczanie maksymalnej roznicy miedzy godzinami przyjec (trzeba wiedziec ile narysowac wierszy)
+	$maxDifference = 0;
+	foreach ($queryResults as $row)
+	{
+		$startHour = (int)substr($row['starts_at'], -8, 2);
+		$endHour = (int)substr($row['ends_at'], -8, 2);
+		$difference = $endHour - $startHour;
+		if($difference > $maxDifference)
+			$maxDifference = $difference;
+	}
+	return $maxDifference;
+}
+
+function intermediateTime_initialization($i)
+{
+	global $intermediateTime, $datesCopy, $queryResults;
+
+	// Inicjuje tablice $intermediateTime wartosciami poczatkowymi
+	for ($j = 0; $j < 7; $j++)
+	{
+		$flag = false;
+		foreach ($queryResults as $row)
+		{
+			if($row['dayOfTheWeek'] != null && (int)$row['dayOfTheWeek'] == $datesCopy[$j + 7 * $i][1])
+			{
+				$startHour = substr($row['starts_at'], -8, 5);
+				$intermediateTime[$j] = strtotime($startHour);
+				$flag = true;
+				break;
+			}
+		}
+		if(!$flag)
+			$intermediateTime[$j] = null;
+	}
+}
+
+function addColumns($i)
+{
+	global $intermediateTime, $datesCopy, $queryResults;
+
+	// Petla, ktora dodaje 7 kolumn, w ktorych przechowywana jest godzina mozliwej wizyty
+	for ($j = 0; $j < 7; $j++)
+	{
+		$flag = false;
+		foreach ($queryResults as $row)
+		{
+			// Jesli wynik z bazy zgadza sie z aktualnie obslugiwanym dniem tygodnia
+			if($row['dayOfTheWeek'] != null && (int)$row['dayOfTheWeek'] == $datesCopy[$j + 7 * $i][1])
+			{
+				echo '<td>' . date("H:i", $intermediateTime[$j]) . "</td>";
+				$intermediateTime[$j] = strtotime("+15 minutes", $intermediateTime[$j]);
+				$flag = true;
+				break;
+			}
+		}
+		if(!$flag)
+			echo '<td>X</td>';
+	}
+}
+
+function createRows($i)
+{
+	// Petla, ktora tworzy wiersze
+	for ($j = 0; $j < getMaxDifference() * 4; $j++)
+	{
+		echo '<tr>';
+		addColumns($i);
+		echo '</tr>';
+	}
+	echo '</table><br/>';
+}
+
 function draw()
 {
+	// Utworzenie potrzebnych zmiennych globalnych
+	global $polishDays, $datesCopy, $queryResults, $j, $m, $intermediateTime;
 	$polishDays = array("Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota", "Niedziela");
 	$datesCopy = array(array());
 	$queryResults = array();
 	$j = 1;
 	$m = 0;
+	$intermediateTime = array();	// Tablica, ktora przechowuje godziny wizyty dla wiersza poprzedniego (podczas rysowania tabeli)
+
+	// Wypelnienie tablicy $queryResults[] wartosciami ze zmiennej $GLOBALS['result'], przechowujacej wyniki zapytania do bazy
 	$n = 0;
 	while ($queryResults[$n++] = $GLOBALS['result']->fetch_assoc())
 	{
@@ -22,79 +122,9 @@ function draw()
 	// 3 iteracje, bo chcemy wyswietlic najblizsze 3 tygodnie (21 dni)
 	for ($i = 0; $i < 3; $i++)
 	{
-		echo '<table><tr>';
-
-		// Wypisanie najblizszych 21 dni
-		for ($k = 0; $k < 7; $k++)
-		{
-			echo
-				'<td>' .
-				($datesCopy[$m][0] = date("Y-m-d", strtotime("+" . ($i + $j) . " day"))) .
-				' <br/>' .
-				$polishDays[($datesCopy[$m++][1] = date("N", strtotime("+" . ($i + (($k < 6) ? $j++ : $j)) . " day")) - 1)] .
-				'</td >';
-		}
-		echo '</tr>';
-
-		// Obliczanie maksymalnej roznicy miedzy godzinami przyjec (trzeba wiedziec ile narysowac wierszy)
-		$maxDifference = 0;
-		foreach ($queryResults as $row)
-		{
-			$startHour = (int)substr($row['starts_at'], -8, 2);
-			$endHour = (int)substr($row['ends_at'], -8, 2);
-			$difference = $endHour - $startHour;
-			if($difference > $maxDifference)
-				$maxDifference = $difference;
-		}
-
-		// Tablica, ktora przechowuje godziny wizyty dla wiersza poprzedniego (podczas rysowania tabeli)
-		$intermediateTime = array();
-
-		// Inicjuje tablice $intermediateTime wartosciami poczatkowymi
-		for ($k = 0; $k < 7; $k++)
-		{
-			$flag = false;
-			foreach ($queryResults as $row)
-			{
-				if($row['dayOfTheWeek'] != null && (int)$row['dayOfTheWeek'] == $datesCopy[$k + 7 * $i][1])
-				{
-					$startHour = substr($row['starts_at'], -8, 5);
-					$intermediateTime[$k] = strtotime($startHour);
-					$flag = true;
-					break;
-				}
-			}
-			if(!$flag)
-				$intermediateTime[$k] = null;
-		}
-
-		// Petla, ktora tworzy wiersze a w kazdym z wierszy...
-		for ($k = 0; $k < $maxDifference * 4; $k++)
-		{
-			echo '<tr>';
-
-			// ...tworzy 7 kolumn, w ktorych przechowywana jest godzina mozliwej wizyty
-			for ($t = 0; $t < 7; $t++)
-			{
-				$flag = false;
-				foreach ($queryResults as $row)
-				{
-					// Jesli wynik z bazy zgadza sie z aktualnie obslugiwanym dniem tygodnia
-					if($row['dayOfTheWeek'] != null && (int)$row['dayOfTheWeek'] == $datesCopy[$t + 7 * $i][1])
-					{
-						echo '<td>' . date("H:i", $intermediateTime[$t]) . "</td>";
-						$intermediateTime[$t] = strtotime("+15 minutes", $intermediateTime[$t]);
-						$flag = true;
-						break;
-					}
-				}
-				if(!$flag)
-					echo '<td>X</td>';
-			}
-			echo '</tr>';
-		}
-
-		echo '</table><br/>';
+		draw7days($i);
+		intermediateTime_initialization($i);
+		createRows($i);
 	}
 }
 
