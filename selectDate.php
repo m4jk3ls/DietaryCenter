@@ -32,10 +32,10 @@ function getMaxDifference()
 
 	// Obliczanie maksymalnej roznicy miedzy godzinami przyjec (trzeba wiedziec ile narysowac wierszy)
 	$maxDifference = 0;
-	foreach ($queryResults as $row)
+	foreach ($queryResults as $curr)
 	{
-		$startHour = (int)substr($row['starts_at'], -8, 2);
-		$endHour = (int)substr($row['ends_at'], -8, 2);
+		$startHour = (int)substr($curr['starts_at'], -8, 2);
+		$endHour = (int)substr($curr['ends_at'], -8, 2);
 		$difference = $endHour - $startHour;
 		if($difference > $maxDifference)
 			$maxDifference = $difference;
@@ -51,11 +51,11 @@ function intermediateTime_initialization($i)
 	for ($j = 0; $j < 7; $j++)
 	{
 		$flag = false;
-		foreach ($queryResults as $row)
+		foreach ($queryResults as $curr)
 		{
-			if($row['dayOfTheWeek'] != null && (int)$row['dayOfTheWeek'] == $datesCopy[$j + 7 * $i][1])
+			if($curr['dayOfTheWeek'] != null && (int)$curr['dayOfTheWeek'] == $datesCopy[$j + 7 * $i][1])
 			{
-				$startHour = substr($row['starts_at'], -8, 5);
+				$startHour = substr($curr['starts_at'], -8, 5);
 				$intermediateTime[$j] = strtotime($startHour);
 				$flag = true;
 				break;
@@ -94,10 +94,10 @@ function addColumns($i)
 	for ($j = 0; $j < 7; $j++)
 	{
 		$flag = false;
-		foreach ($queryResults as $row)
+		foreach ($queryResults as $curr)
 		{
 			// Jesli wynik z bazy zgadza sie z aktualnie obslugiwanym dniem tygodnia
-			if($row['dayOfTheWeek'] != null && (int)$row['dayOfTheWeek'] == $datesCopy[$j + 7 * $i][1])
+			if($curr['dayOfTheWeek'] != null && (int)$curr['dayOfTheWeek'] == $datesCopy[$j + 7 * $i][1])
 			{
 				letsColor($i, $j);
 				$intermediateTime[$j] = strtotime("+15 minutes", $intermediateTime[$j]);
@@ -135,9 +135,8 @@ function draw()
 
 	// Wypelnienie tablicy $queryResults[] wartosciami ze zmiennej $GLOBALS['result'], przechowujacej wyniki zapytania do bazy
 	$n = 0;
-	while ($queryResults[$n++] = $GLOBALS['result']->fetch_assoc())
-	{
-	}
+	while ($tmp = $GLOBALS['result']->fetch_assoc())
+		$queryResults[$n++] = $tmp;
 
 	// 3 iteracje, bo chcemy wyswietlic najblizsze 3 tygodnie (21 dni)
 	for ($i = 0; $i < 3; $i++)
@@ -186,6 +185,31 @@ function drawCalendar()
 	{
 		header("Location: html_files/serverError_goToLogout.html");
 		//echo '<br/>Informacja developerska: '.$e;
+	}
+}
+
+function availableDays($weekNumber)
+{
+	global $queryResults, $datesCopy;
+	$availableDays = array();
+	$i = 7 * --$weekNumber;
+
+	// Kopiowanie do $availableDays[] indeksow dni, w ktore dostepny jest dany dietetyk
+	foreach ($queryResults as $curr)
+		$availableDays[] = (int)$curr['dayOfTheWeek'];
+
+	// Przegladaj elementy 0-6 albo 7-13 albo 14-20 (zalezne od $weekNumber) tablicy $datesCopy[][]
+	for ($j = $i; $j < $i + 7; $j++)
+	{
+		foreach ($availableDays as $curr2)
+		{
+			// Sprawdzam, czy dany dzien w $datesCopy[][] jest na liscie dostepnych dni w $availableDays[]
+			if($datesCopy[$j][1] == $curr2)
+			{
+				echo '<option>' . $datesCopy[$j][0] . '</option>';
+				break;
+			}
+		}
 	}
 }
 
@@ -296,6 +320,16 @@ else
 	</div>
 	<div id="content">
 		<?php drawCalendar(); ?>
+
+		<br/><br/>
+
+		<select title="daysToChoose_title" name="daysToChoose">
+			<option>---brak---</option>
+			<optgroup label="1. tydzień"><?php availableDays(1); ?></optgroup>
+			<optgroup label="2. tydzień"><?php availableDays(2); ?></optgroup>
+			<optgroup label="3. tydzień"><?php availableDays(3); ?></optgroup>
+		</select>
+
 	</div>
 	<div id="footer">NaturHouse - Twój osobisty dietetyk. Strona w sieci od 2017 r. &copy;
 					 Wszelkie prawa zastrzeżone</div>
