@@ -69,10 +69,12 @@ function cookies($token, $who)
 
 function letsLogIn()
 {
-	require_once "connect.php";
+	global $host, $db_user, $db_password, $db_name;
 	mysqli_report(MYSQLI_REPORT_STRICT);
 	try
 	{
+		require_once "connect.php";
+
 		// Proba polaczenia sie z baza
 		$GLOBALS['connection'] = new mysqli($host, $db_user, $db_password, $db_name);
 		$GLOBALS['connection']->set_charset('utf8');
