@@ -76,8 +76,8 @@ function letsColor($i, $j)
 	$checkingDate = $datesCopy[$j + 7 * $i][0];
 
 	if(!($result = $GLOBALS['connection']->query("select visitHour from visit where visitHour like '$checkingTime' and
-													  		  visitDate like '$checkingDate' and
-													  		  dieticianID like '$helper_dieticianID' limit 1"))
+												  visitDate like '$checkingDate' and
+												  dieticianID like '$helper_dieticianID' limit 1"))
 	)
 		throw new Exception($GLOBALS['connection']->connect_error);
 	else if($result->num_rows == 1)
@@ -258,6 +258,20 @@ else
 	<script src="javascript_files/cookiesBanner.js"></script>
 	<noscript><div id="infoAboutNoScript">Twoja przeglądarka nie obsługuje skryptów JavaScript!</div></noscript>
 
+	<script>
+		jQuery(document).ready(function ()
+		{
+			$("select[name=daysToChoose]").on('change', function ()
+			{
+				var myValue = $(this).val();
+				$("select[name=hoursToChoice]").append($('<option>',
+					{
+						value: myValue,
+						text: myValue
+					}));
+			});
+		});
+	</script>
 
 	<style>
 		table
@@ -329,6 +343,7 @@ else
 			<optgroup label="2. tydzień"><?php availableDays(2); ?></optgroup>
 			<optgroup label="3. tydzień"><?php availableDays(3); ?></optgroup>
 		</select>
+		<select title="hoursToChoice_title" name="hoursToChoice"></select>
 
 	</div>
 	<div id="footer">NaturHouse - Twój osobisty dietetyk. Strona w sieci od 2017 r. &copy;
