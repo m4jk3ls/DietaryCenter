@@ -8,7 +8,7 @@ jQuery(document).ready(function ()
 
 		$.ajax(
 			{
-				url: "ajaxValidation/signIn_passwords.php",
+				url: "phpForAjax/signIn_passwords.php",
 				type: "POST",
 				data: "passwd1=" + passwd1Value + "&" + "passwd2=" + passwd2Value,
 				success: function (msg)

@@ -7,7 +7,7 @@ jQuery(document).ready(function ()
 
 		$.ajax(
 			{
-				url: "ajaxValidation/signIn_email.php",
+				url: "phpForAjax/signIn_email.php",
 				type: "POST",
 				data: "email=" + emailValue,
 				success: function (msg)

@@ -19,7 +19,7 @@ else
 			$login = $_POST['login'];
 			//Walidacja i sanityzacja loginu
 			$login = htmlentities($login, ENT_QUOTES, "UTF-8");
-			if($result = $connection->query(sprintf("SELECT * FROM user WHERE login='%s'", mysqli_real_escape_string($connection, $login))))
+			if($result = $connection->query(sprintf("select * from user where login='%s'", mysqli_real_escape_string($connection, $login))))
 			{
 				// Sprawdzenie, czy sa w bazie uzytkownicy o podanym loginie
 				$howManyUsers = $result->num_rows;
