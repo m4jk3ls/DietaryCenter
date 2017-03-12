@@ -69,7 +69,7 @@ function intermediateTime_initialization($i)
 // Wyswietla godzine wizyty w danej komorce i ustawia jej tlo w zaleznosci od zajetosci terminu
 function letsColor($i, $j)
 {
-	global $intermediateTime, $datesCopy, $helper_dieticianID, $freeHoursByDay;
+	global $intermediateTime, $datesCopy, $helper_dieticianID;
 
 	// Zmienne, ktore poslemy do bazy w celu weryfikacji
 	$checkingTime = date("H:i:s", $intermediateTime[$j]);
@@ -88,7 +88,7 @@ function letsColor($i, $j)
 	else
 	{
 		echo '<td class="free">' . $checkingTime_shorter . "</td>";
-		$freeHoursByDay[$checkingDate][] = $checkingTime_shorter;
+		$_SESSION['freeHoursByDay'][$checkingDate][] = $checkingTime_shorter;
 	}
 }
 
@@ -131,16 +131,13 @@ function createRows($i)
 function draw()
 {
 	// Utworzenie potrzebnych zmiennych globalnych
-	global $polishDays, $datesCopy, $queryResults, $j, $m, $intermediateTime, $freeHoursByDay;
+	global $polishDays, $datesCopy, $queryResults, $j, $m, $intermediateTime;
 	$polishDays = array("Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota", "Niedziela");
 	$datesCopy = array(array());
 	$queryResults = array();
 	$j = 1;
 	$m = 0;
 	$intermediateTime = array();    // Tablica, ktora przechowuje godziny wizyty dla wiersza poprzedniego (podczas rysowania tabeli)
-
-	// Tablica asocjacyjna/mapa/slownik, ktora przechowuje dni, wraz ze wszystkimi dostepnymi wtedy godzinami wizyty
-	$freeHoursByDay = array(array());
 
 	// Wypelnienie tablicy $queryResults[] wartosciami ze zmiennej $GLOBALS['result'], przechowujacej wyniki zapytania do bazy
 	$n = 0;
@@ -159,6 +156,10 @@ function draw()
 // Funkcja, ktora wyjmuje z bazy informacje o godzinach pracy dietetyka
 function drawCalendar()
 {
+	// Wyczyszczenie rozpiski wolnych godzin w okreslone dni (zeby przy odswiezeniu zapisywac wszystko do "czystej" tablicy)
+	if(isset($_SESSION['freeHoursByDay']))
+		unset($_SESSION['freeHoursByDay']);
+
 	global $host, $db_user, $db_password, $db_name;
 	mysqli_report(MYSQLI_REPORT_STRICT);
 	try
@@ -257,31 +258,16 @@ else
 	<link rel="stylesheet" href="css_files/basic.css" type="text/css"/>
 	<link href="css_files/card.css" rel="stylesheet" type="text/css"/>
 	<link href="css_files/submitButton.css" rel="stylesheet" type="text/css"/>
+	<script src="javascript_files/jquery-3.1.1.min.js"></script>
+	<script src="javascript_files/ajax/freeHours.js"></script>
 	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext"
 		  rel="stylesheet">
-	<script src="javascript_files/jquery-3.1.1.min.js"></script>
 	<script type="text/javascript" src="javascript_files/stickyMenu.js"></script>
 	<link rel="stylesheet" type="text/css"
 		  href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css"/>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
 	<script src="javascript_files/cookiesBanner.js"></script>
 	<noscript><div id="infoAboutNoScript">Twoja przeglądarka nie obsługuje skryptów JavaScript!</div></noscript>
-
-	<script>
-		jQuery(document).ready(function ()
-		{
-			$("select[name=daysToChoose]").on('change', function ()
-			{
-				var myValue = $(this).val();
-				$("select[name=hoursToChoice]").append($('<option>',
-					{
-						value: myValue,
-						text: myValue
-					}));
-			});
-		});
-	</script>
-
 	<style>
 		table
 		{
