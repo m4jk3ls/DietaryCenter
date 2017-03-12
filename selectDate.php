@@ -69,11 +69,14 @@ function intermediateTime_initialization($i)
 // Wyswietla godzine wizyty w danej komorce i ustawia jej tlo w zaleznosci od zajetosci terminu
 function letsColor($i, $j)
 {
-	global $intermediateTime, $datesCopy, $helper_dieticianID;
+	global $intermediateTime, $datesCopy, $helper_dieticianID, $freeHoursByDay;
 
 	// Zmienne, ktore poslemy do bazy w celu weryfikacji
 	$checkingTime = date("H:i:s", $intermediateTime[$j]);
 	$checkingDate = $datesCopy[$j + 7 * $i][0];
+
+	// Zmienna pomocnicza
+	$checkingTime_shorter = date("H:i", $intermediateTime[$j]);
 
 	if(!($result = $GLOBALS['connection']->query("select visitHour from visit where visitHour like '$checkingTime' and
 												  visitDate like '$checkingDate' and
@@ -81,9 +84,12 @@ function letsColor($i, $j)
 	)
 		throw new Exception($GLOBALS['connection']->connect_error);
 	else if($result->num_rows == 1)
-		echo '<td class="booked">' . date("H:i", $intermediateTime[$j]) . "</td>";
+		echo '<td class="booked">' . $checkingTime_shorter . "</td>";
 	else
-		echo '<td class="free">' . date("H:i", $intermediateTime[$j]) . "</td>";
+	{
+		echo '<td class="free">' . $checkingTime_shorter . "</td>";
+		$freeHoursByDay[$checkingDate][] = $checkingTime_shorter;
+	}
 }
 
 function addColumns($i)
@@ -125,13 +131,16 @@ function createRows($i)
 function draw()
 {
 	// Utworzenie potrzebnych zmiennych globalnych
-	global $polishDays, $datesCopy, $queryResults, $j, $m, $intermediateTime;
+	global $polishDays, $datesCopy, $queryResults, $j, $m, $intermediateTime, $freeHoursByDay;
 	$polishDays = array("Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota", "Niedziela");
 	$datesCopy = array(array());
 	$queryResults = array();
 	$j = 1;
 	$m = 0;
 	$intermediateTime = array();    // Tablica, ktora przechowuje godziny wizyty dla wiersza poprzedniego (podczas rysowania tabeli)
+
+	// Tablica asocjacyjna/mapa/slownik, ktora przechowuje dni, wraz ze wszystkimi dostepnymi wtedy godzinami wizyty
+	$freeHoursByDay = array(array());
 
 	// Wypelnienie tablicy $queryResults[] wartosciami ze zmiennej $GLOBALS['result'], przechowujacej wyniki zapytania do bazy
 	$n = 0;
