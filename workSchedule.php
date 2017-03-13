@@ -39,7 +39,9 @@ function saveToDb($day, $hours)
 				throw new Exception($connection->error);
 			else if($hours == "---brak---")
 			{
-				if(!($connection->query("delete from officehours where (dieticianID like '$helper_dieticianID' and dayOfTheWeek = '$day')")))
+				if(!($connection->query("delete from officehours where (dieticianID like '$helper_dieticianID' and dayOfTheWeek = '$day')")) ||
+					!($connection->query("delete from visit where dieticianID like '$helper_dieticianID' and weekday(visitDate) = '$day'"))
+				)
 					throw new Exception($connection->error);
 			}
 			else if($result2->fetch_assoc()['count'] == 1)    // Grafik zostal juz wczesniej ustalony dla danego dnia...
