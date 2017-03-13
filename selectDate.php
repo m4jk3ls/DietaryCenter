@@ -173,9 +173,10 @@ function drawCalendar()
 			throw new Exception($GLOBALS['connection']->connect_error);
 		else
 		{
-			// ID dietetyka zapisujemy do zmiennej globalnej, poniewaz jeszcze nam sie przyda
+			// ID dietetyka zapisujemy do sesji, poniewaz jeszcze nam sie przyda
 			global $helper_dieticianID;
 			$helper_dieticianID = (int)$_POST['radioButton'];
+			$_SESSION['dieticianID'] = $helper_dieticianID;
 
 			if(!($GLOBALS['result'] = $GLOBALS['connection']->query("select oh.dayOfTheWeek, oh.starts_at, oh.ends_at from officehours oh
 											   join dietician d on (oh.dieticianID = d.dieticianID)
@@ -247,6 +248,7 @@ else
 	header("Location: yourVisit.php");
 	exit();
 }
+$token = getToken();
 ?>
 
 <!DOCTYPE HTML>
@@ -329,17 +331,23 @@ else
 	</div>
 	<div id="content">
 		<?php drawCalendar(); ?>
+		<br/>
+		<form method="post" action="saveNewVisit.php">
+			<select title="daysToChoose_title" name="daysToChoose">
+				<option>---brak---</option>
+				<optgroup label="1. tydzień"><?php availableDays(1); ?></optgroup>
+				<optgroup label="2. tydzień"><?php availableDays(2); ?></optgroup>
+				<optgroup label="3. tydzień"><?php availableDays(3); ?></optgroup>
+			</select>
 
-		<br/><br/>
+			<select title="hoursToChoice_title" name="hoursToChoice"></select>
 
-		<select title="daysToChoose_title" name="daysToChoose">
-			<option>---brak---</option>
-			<optgroup label="1. tydzień"><?php availableDays(1); ?></optgroup>
-			<optgroup label="2. tydzień"><?php availableDays(2); ?></optgroup>
-			<optgroup label="3. tydzień"><?php availableDays(3); ?></optgroup>
-		</select>
-		<select title="hoursToChoice_title" name="hoursToChoice"></select>
+			<input type="submit" id="visitDateButton" value="Zatwierdź"
+				   onclick="this.disabled=true; this.value='Zapisuję...'; this.form.submit();"/>
 
+			<!--Input przechowujacy token, ktory zapobiega multiclick'owi-->
+			<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+		</form>
 	</div>
 	<div id="footer">NaturHouse - Twój osobisty dietetyk. Strona w sieci od 2017 r. &copy;
 					 Wszelkie prawa zastrzeżone</div>
