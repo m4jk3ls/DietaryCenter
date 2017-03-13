@@ -11,7 +11,7 @@ function draw7days($i)
 {
 	global $polishDays, $datesCopy, $j, $m;
 
-	echo '<table><tr>';
+	echo '<table><tr class="firstRow">';
 
 	// Wypisanie najblizszych 7 dni
 	for ($k = 0; $k < 7; $k++)
@@ -125,7 +125,7 @@ function createRows($i)
 		addColumns($i);
 		echo '</tr>';
 	}
-	echo '</table><br/>';
+	echo '</table>';
 }
 
 function draw()
@@ -260,6 +260,7 @@ $token = getToken();
 	<link rel="stylesheet" href="css_files/basic.css" type="text/css"/>
 	<link href="css_files/card.css" rel="stylesheet" type="text/css"/>
 	<link href="css_files/submitButton.css" rel="stylesheet" type="text/css"/>
+	<link href="css_files/selectDate.css" rel="stylesheet" type="text/css"/>
 	<script src="javascript_files/jquery-3.1.1.min.js"></script>
 	<script src="javascript_files/ajax/freeHours.js"></script>
 	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext"
@@ -270,44 +271,6 @@ $token = getToken();
 	<script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
 	<script src="javascript_files/cookiesBanner.js"></script>
 	<noscript><div id="infoAboutNoScript">Twoja przeglądarka nie obsługuje skryptów JavaScript!</div></noscript>
-	<style>
-		table
-		{
-			width: 100%;
-			margin-left: auto;
-			margin-right: auto;
-			border: solid 1px black;
-			border-collapse: collapse;
-			font-size: 20px;
-		}
-
-		td
-		{
-			width: calc(100% / 7);
-			text-align: center;
-			vertical-align: middle;
-			border: solid 1px #000;
-			padding: 5px;
-		}
-
-		.booked
-		{
-			background-color: #ff0000;
-			color: #000;
-		}
-
-		.free
-		{
-			background-color: #29a329;
-			color: #fff;
-		}
-
-		table
-		{
-			font-family: 'Calibri', serif;
-			font-style: italic;
-		}
-	</style>
 </head>
 
 <body>
@@ -331,23 +294,26 @@ $token = getToken();
 	</div>
 	<div id="content">
 		<?php drawCalendar(); ?>
-		<br/>
-		<form method="post" action="saveNewVisit.php">
-			<select title="daysToChoose_title" name="daysToChoose">
-				<option>---brak---</option>
-				<optgroup label="1. tydzień"><?php availableDays(1); ?></optgroup>
-				<optgroup label="2. tydzień"><?php availableDays(2); ?></optgroup>
-				<optgroup label="3. tydzień"><?php availableDays(3); ?></optgroup>
-			</select>
 
-			<select title="hoursToChoice_title" name="hoursToChoice"></select>
+		<div id="formPackage">
+			<form method="post" action="saveNewVisit.php">
+				<select title="daysToChoose_title" name="daysToChoose">
+					<option>---brak---</option>
+					<optgroup label="1. tydzień"><?php availableDays(1); ?></optgroup>
+					<optgroup label="2. tydzień"><?php availableDays(2); ?></optgroup>
+					<optgroup label="3. tydzień"><?php availableDays(3); ?></optgroup>
+				</select>
+				<select title="hoursToChoice_title" name="hoursToChoice"></select>
 
-			<input type="submit" id="visitDateButton" value="Zatwierdź"
-				   onclick="this.disabled=true; this.value='Zapisuję...'; this.form.submit();"/>
+				<div>
+					<input type="submit" id="visitDateButton" value="Zatwierdź"
+						   onclick="this.disabled=true; this.value='Zapisuję...'; this.form.submit();"/>
+				</div>
 
-			<!--Input przechowujacy token, ktory zapobiega multiclick'owi-->
-			<input type="hidden" name="token" value="<?php echo $token; ?>"/>
-		</form>
+				<!--Input przechowujacy token, ktory zapobiega multiclick'owi-->
+				<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+			</form>
+		</div>
 	</div>
 	<div id="footer">NaturHouse - Twój osobisty dietetyk. Strona w sieci od 2017 r. &copy;
 					 Wszelkie prawa zastrzeżone</div>

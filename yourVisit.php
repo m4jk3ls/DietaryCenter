@@ -53,6 +53,7 @@ $token = getToken();
 		</div>
 	</div>
 	<div id="content">
+		<h1>Rezerwuj wizytę</h1>
 		<form action="selectDate.php" method="post">
 			<?php
 			require_once("connect.php");
