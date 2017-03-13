@@ -2,9 +2,9 @@ jQuery(document).ready(function ()
 {
 	var selectWithHours = $("select[name=hoursToChoice]");
 
-	(function($)
+	(function ($)
 	{
-		$.fn.deactivate = function()
+		$.fn.chooseDay = function ()
 		{
 			selectWithHours.append($('<option>',
 				{
@@ -13,10 +13,20 @@ jQuery(document).ready(function ()
 				}));
 			selectWithHours.prop("disabled", true);
 		};
+
+		$.fn.ThereIsNoHours = function (textToShow)
+		{
+			selectWithHours.append($('<option>',
+				{
+					value: textToShow,
+					text: textToShow
+				}));
+			selectWithHours.prop("disabled", true);
+		};
 	})(jQuery);
 
 	selectWithHours.empty();
-	selectWithHours.deactivate();
+	selectWithHours.chooseDay();
 
 	$("select[name=daysToChoose]").on('change', function ()
 	{
@@ -27,23 +37,26 @@ jQuery(document).ready(function ()
 				type: "POST",
 				data: "date=" + selectedDate,
 				dataType: 'json',
-				success: function (array)
+				success: function (msg)
 				{
 					selectWithHours.empty();
-					if(array == "---brak---")
-						selectWithHours.deactivate();
-					else
+
+					if(msg == "---brak---")
+						selectWithHours.chooseDay();
+					else if(typeof msg != "string")
 					{
 						selectWithHours.prop("disabled", false);
-						for (var i = 0; i < array.length; i++)
+						for (var i = 0; i < msg.length; i++)
 						{
 							selectWithHours.append($('<option>',
 								{
-									value: array[i],
-									text: array[i]
+									value: msg[i],
+									text: msg[i]
 								}));
 						}
 					}
+					else
+						selectWithHours.ThereIsNoHours(msg);
 				}
 			});
 	});

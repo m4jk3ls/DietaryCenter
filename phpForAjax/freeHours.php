@@ -10,4 +10,6 @@ else
 		echo json_encode($_SESSION['freeHoursByDay'][$date]);
 	else if($date == "---brak---")
 		echo json_encode("---brak---");
+	else
+		echo json_encode("Brak wolnej wizyty");
 }
