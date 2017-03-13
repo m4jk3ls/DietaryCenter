@@ -28,7 +28,7 @@ function necessaryData(&$IPAddress, &$allAboutBrowser, &$browserName, &$helper_u
 	$browserName = $allAboutBrowser['browser'];
 	$helper_userID = $row['userID'];
 	$helper_login = $row['login'];
-	$_SESSION['userID'] = $row['userID'];
+	$_SESSION['userID'] = (int)$row['userID'];
 	$_SESSION['login'] = $row['login'];
 	$token = generateToken();
 }
