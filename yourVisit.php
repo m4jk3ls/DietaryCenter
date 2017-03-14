@@ -31,6 +31,41 @@ $token = getToken();
 	<script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
 	<script src="javascript_files/cookiesBanner.js"></script>
 	<noscript><div id="infoAboutNoScript">Twoja przeglądarka nie obsługuje skryptów JavaScript!</div></noscript>
+	<style>
+		table
+		{
+			width: 870px;
+			margin-left: auto;
+			margin-right: auto;
+			border: solid 1px black;
+			border-collapse: collapse;
+			font-size: 18px;
+			margin-bottom: 50px;
+		}
+
+		.firstRow
+		{
+			font-size: 20px;
+			color: #fff;
+			font-weight: bold;
+			background-color: #808080;
+		}
+
+		.anotherRow
+		{
+			font-family: 'Calibri', serif;
+			font-style: italic;
+		}
+
+		td
+		{
+			width: calc(100% / 2);
+			text-align: center;
+			vertical-align: middle;
+			border: solid 1px #000;
+			padding: 5px;
+		}
+	</style>
 </head>
 
 <body>
@@ -53,6 +88,56 @@ $token = getToken();
 		</div>
 	</div>
 	<div id="content">
+		<h1>Nadchodzące wizyty</h1>
+		<?php
+		require_once("connect.php");
+		mysqli_report(MYSQLI_REPORT_STRICT);
+		try
+		{
+			$connection = new mysqli($host, $db_user, $db_password, $db_name);
+			$connection->set_charset('utf8');
+			if($connection->connect_errno != 0)
+				throw new Exception($connection->connect_error);
+			else
+			{
+				$helper_userID = $_SESSION['userID'];
+				if(!($result = $connection->query("select visitDate, visitHour from visit where patientID in
+					(select patientID from patient where userID like '$helper_userID') order by visitDate asc"))
+				)
+					throw new Exception($connection->connect_error);
+				else
+				{
+					echo
+					'<table>
+						<tr class="firstRow">
+							<td>Data</td>
+							<td>Godzina</td>
+						</tr>';
+
+					while ($row = $result->fetch_assoc())
+					{
+						echo
+							'<tr class="anotherRow">
+								<td>' . $row['visitDate'] . '</td>
+								<td>' . substr($row['visitHour'], -8, 5) . '</td>
+							</tr>';
+					}
+
+					echo '</table>';
+					$result->free_result();
+				}
+				$connection->close();
+			}
+		}
+		catch (Exception $e)
+		{
+			header("Location: html_files/serverError_goToLogout.html");
+			//echo '<br/>Informacja developerska: '.$e;
+			exit();
+		}
+		?>
+
+
 		<h1>Rezerwuj wizytę</h1>
 		<form action="selectDate.php" method="post">
 			<?php
@@ -68,15 +153,22 @@ $token = getToken();
 				{
 					if(!($result = $connection->query("select * from dietician d join user u on (d.userID = u.userID)")))
 						throw new Exception($connection->connect_error);
-					while ($row = $result->fetch_assoc())
-						echo
-							'<div class="dietician">
-								<div class="nameHeadline">' . $row['firstName'] . ' ' . $row['lastName'] . '</div>
-								<img src="' . $row['pathToImage'] . '" class="dieticianImage"/>
-								<div class="divWithRadio">
-									<label><input type="radio" name="radioButton" value="' . $row['dieticianID'] . '"/>Wybieram</label>
-								</div>
-							</div>';
+					else
+					{
+						while ($row = $result->fetch_assoc())
+						{
+							echo
+								'<div class="dietician">
+									<div class="nameHeadline">' . $row['firstName'] . ' ' . $row['lastName'] . '</div>
+									<img src="' . $row['pathToImage'] . '" class="dieticianImage"/>
+										<div class="divWithRadio">
+										<label><input type="radio" name="radioButton" value="' . $row['dieticianID'] . '"/>Wybieram</label>
+									</div>
+								</div>';
+						}
+						$result->free_result();
+					}
+					$connection->close();
 				}
 			}
 			catch (Exception $e)
