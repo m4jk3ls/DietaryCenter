@@ -298,7 +298,7 @@ $token = getToken();
 		<div id="formPackage">
 			<form method="post" action="saveNewVisit.php">
 				<select title="daysToChoose_title" name="daysToChoose">
-					<option>---brak---</option>
+					<option>Termin</option>
 					<optgroup label="1. tydzień"><?php availableDays(1); ?></optgroup>
 					<optgroup label="2. tydzień"><?php availableDays(2); ?></optgroup>
 					<optgroup label="3. tydzień"><?php availableDays(3); ?></optgroup>

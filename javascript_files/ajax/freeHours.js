@@ -41,7 +41,7 @@ jQuery(document).ready(function ()
 				{
 					selectWithHours.empty();
 
-					if(msg == "---brak---")
+					if(msg == "Termin")
 						selectWithHours.chooseDay();
 					else if(typeof msg != "string")
 					{

@@ -5,7 +5,7 @@ if(!isset($_COOKIE["patientLogged"]))
 	header('Location: index.php');
 	exit();
 }
-if(!isset($_POST['token']))
+if(!isset($_POST['hoursToChoice']))
 {
 	header('Location: yourVisit.php');
 	exit();
