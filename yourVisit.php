@@ -40,7 +40,7 @@ $token = getToken();
 			border: solid 1px black;
 			border-collapse: collapse;
 			font-size: 18px;
-			margin-bottom: 50px;
+			margin-bottom: 60px;
 		}
 
 		.firstRow
@@ -88,7 +88,7 @@ $token = getToken();
 		</div>
 	</div>
 	<div id="content">
-		<h1>Nadchodzące wizyty</h1>
+		<h1 style="margin-bottom: 35px;">Nadchodzące wizyty</h1>
 		<?php
 		require_once("connect.php");
 		mysqli_report(MYSQLI_REPORT_STRICT);
@@ -126,7 +126,6 @@ $token = getToken();
 					echo '</table>';
 					$result->free_result();
 				}
-				$connection->close();
 			}
 		}
 		catch (Exception $e)
@@ -141,35 +140,26 @@ $token = getToken();
 		<h1>Rezerwuj wizytę</h1>
 		<form action="selectDate.php" method="post">
 			<?php
-			require_once("connect.php");
-			mysqli_report(MYSQLI_REPORT_STRICT);
 			try
 			{
-				$connection = new mysqli($host, $db_user, $db_password, $db_name);
-				$connection->set_charset('utf8');
-				if($connection->connect_errno != 0)
+				if(!($result = $connection->query("select * from dietician d join user u on (d.userID = u.userID)")))
 					throw new Exception($connection->connect_error);
 				else
 				{
-					if(!($result = $connection->query("select * from dietician d join user u on (d.userID = u.userID)")))
-						throw new Exception($connection->connect_error);
-					else
+					while ($row = $result->fetch_assoc())
 					{
-						while ($row = $result->fetch_assoc())
-						{
-							echo
-								'<div class="dietician">
+						echo
+							'<div class="dietician">
 									<div class="nameHeadline">' . $row['firstName'] . ' ' . $row['lastName'] . '</div>
 									<img src="' . $row['pathToImage'] . '" class="dieticianImage"/>
 										<div class="divWithRadio">
 										<label><input type="radio" name="radioButton" value="' . $row['dieticianID'] . '"/>Wybieram</label>
 									</div>
 								</div>';
-						}
-						$result->free_result();
 					}
-					$connection->close();
+					$result->free_result();
 				}
+				$connection->close();
 			}
 			catch (Exception $e)
 			{
