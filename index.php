@@ -11,6 +11,11 @@ if(isset($_COOKIE["dieticianLogged"]))
 	header('Location: dieticianCard.php');
 	exit();
 }
+if(isset($_COOKIE["adminLogged"]))
+{
+	header('Location: adminPanel.php');
+	exit();
+}
 
 require_once('multiClickPrevent.php');
 $token = getToken();

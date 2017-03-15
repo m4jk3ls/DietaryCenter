@@ -7,9 +7,14 @@ if(isset($_COOKIE["patientLogged"]))
 	header('Location: yourCard.php');
 	exit();
 }
-else if(isset($_COOKIE["dieticianLogged"]))
+if(isset($_COOKIE["dieticianLogged"]))
 {
 	header('Location: dieticianCard.php');
+	exit();
+}
+if(isset($_COOKIE["adminLogged"]))
+{
+	header('Location: adminPanel.php');
 	exit();
 }
 

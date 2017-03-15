@@ -20,25 +20,25 @@ function generateToken()
 }
 
 // Funkcja zdobywajaca kilka potrzebnych informacji, ktore trzeba wrzucic do bazy danych lub, ktore potem beda jakos potrzebne
-function necessaryData(&$IPAddress, &$allAboutBrowser, &$browserName, &$helper_userID, &$helper_login, &$token, $row)
+function necessaryData(&$IPAddress, &$allAboutBrowser, &$browserName, &$userID, &$login, &$token, $row)
 {
 	$IPAddress = $_SERVER['REMOTE_ADDR'];
 	// http://php.net/manual/en/function.get-browser.php PAMIETAC O PLIKU browscap.ini !!!
 	$allAboutBrowser = get_browser(null, true);
 	$browserName = $allAboutBrowser['browser'];
-	$helper_userID = $row['userID'];
-	$helper_login = $row['login'];
+	$userID = $row['userID'];
+	$login = $row['login'];
 	$_SESSION['userID'] = (int)$row['userID'];
 	$_SESSION['login'] = $row['login'];
 	$token = generateToken();
 }
 
 // Transakcja wykonujaca sie w momencie, w ktorym nie ma aktywnej sesji usera, na konto ktorego chce sie zalogowac
-function activeSessionIs($helper_userID, $helper_login, $IPAddress, $browserName, $token)
+function activeSessionIs($userID, $login, $IPAddress, $browserName, $token)
 {
 	$GLOBALS['connection']->query("START TRANSACTION");
-	if($GLOBALS['connection']->query("insert into active_sessions values ('$helper_userID', '$IPAddress', '$browserName', now(), '$token')") &&
-		$GLOBALS['connection']->query("insert into archive_logs values ('$helper_userID', '$helper_login', '$IPAddress', '$browserName', now())")
+	if($GLOBALS['connection']->query("insert into active_sessions values ('$userID', '$IPAddress', '$browserName', now(), '$token')") &&
+		$GLOBALS['connection']->query("insert into archive_logs values ('$userID', '$login', '$IPAddress', '$browserName', now())")
 	)
 		return true;
 	else
@@ -46,11 +46,11 @@ function activeSessionIs($helper_userID, $helper_login, $IPAddress, $browserName
 }
 
 // Transakcja wykonujaca sie w momencie, w ktorym jest juz aktywna sesja usera, na konto ktorego chce sie zalogowac ('zepsucie' ciasteczka)
-function activeSessionIsnt($helper_userID, $helper_login, $IPAddress, $browserName, $token)
+function activeSessionIsnt($userID, $login, $IPAddress, $browserName, $token)
 {
 	$GLOBALS['connection']->query("START TRANSACTION");
-	if($GLOBALS['connection']->query("update active_sessions set token='$token' where userID like '$helper_userID'") &&
-		$GLOBALS['connection']->query("insert into archive_logs values ('$helper_userID', '$helper_login', '$IPAddress', '$browserName', now())")
+	if($GLOBALS['connection']->query("update active_sessions set token='$token' where userID like '$userID'") &&
+		$GLOBALS['connection']->query("insert into archive_logs values ('$userID', '$login', '$IPAddress', '$browserName', now())")
 	)
 		return true;
 	else
@@ -60,11 +60,79 @@ function activeSessionIsnt($helper_userID, $helper_login, $IPAddress, $browserNa
 // Ustawienie ciasteczek oraz wpisanie ciut potrzebnych danych do sesji
 function cookies($token, $who)
 {
-	if($who == "patient")
-		setcookie("patientLogged", true, time() + 86400);
-	else
-		setcookie("dieticianLogged", true, time() + 86400);
+	switch ($who)
+	{
+		case "patient":
+		{
+			setcookie("patientLogged", true, time() + 86400);
+			break;
+		}
+		case "dietician":
+		{
+			setcookie("dieticianLogged", true, time() + 86400);
+			break;
+		}
+		case "admin":
+		{
+			setcookie("adminLogged", true, time() + 86400);
+			break;
+		}
+	}
 	setcookie("token", $token);
+}
+
+// Funkcja sprawdzajaca czy aby juz nie istnieje sesja uzytkownika, na konto ktorego probujemy sie zalogowac
+function checkActiveSessions($userID, $login, $IPAddress, $browserName, $token)
+{
+	if(!$dupa = $GLOBALS['connection']->query("select * from active_sessions where userID like '$userID'"))
+		return false;
+	else if(!$dupa->num_rows)    // Jesli nie ma aktywnej sesji uzytkownika, na konto ktorego chce sie zalogowac...
+	{
+		// ...to wykonuje transakcje nr 1...
+		if(activeSessionIs($userID, $login, $IPAddress, $browserName, $token))
+			$GLOBALS['connection']->query("COMMIT");
+		else
+			return false;
+	}
+	// ...w przeciwnym wypadku wykonuje transakcje nr 2
+	else if(activeSessionIsnt($userID, $login, $IPAddress, $browserName, $token))
+		$GLOBALS['connection']->query("COMMIT");
+	else
+		return false;
+	return true;
+}
+
+// Funkcja sprawdzajaca jaki typ uzytkownika chce sie aktualnie zalogowac
+function whoIsLogging($userID, &$who)
+{
+	//Loguje sie pacjent, dietetyk czy moze admin?
+	if(!$result1 = $GLOBALS['connection']->query("select * from user u join patient p on(p.userID = u.userID) where (p.userID = '$userID')"))
+		return false;
+	else if($result1->num_rows)    //Logujacym sie uzytkownikem jest pacjent
+	{
+		$who = "patient";
+		header('Location: yourCard.php');
+	}
+	else if(!$result2 = $GLOBALS['connection']->query("select * from user u join dietician d on(d.userID = u.userID) where (d.userID = '$userID')"))
+		return false;
+	else if($result2->num_rows)    //Logujacym sie uzytkownikem jest dietetyk
+	{
+		$who = "dietician";
+		header('Location: dieticianCard.php');
+	}
+	else if(!($result3 = $GLOBALS['connection']->query("select login from user where login like 'admin'")))
+		return false;
+	else if($result3->num_rows)    // Logujacym sie uzytkownikiem jest sam admin :D
+	{
+		$who = "admin";
+		header('Location: adminPanel.php');
+	}
+	else
+	{
+		echo '<span style="color:red;">Twoje konto zostało przed chwilą usunięte :(</span>';
+		exit();
+	}
+	return true;
 }
 
 function letsLogIn()
@@ -99,58 +167,20 @@ function letsLogIn()
 					$row = $result->fetch_assoc();
 					if(!strcmp(sha1($passwd . $row['salt']), $row['password']))
 					{
-						// Zebranie potrzebnych danych oraz wykonanie zapytania do bazy o aktywne_sesje
+						// Zebranie potrzebnych danych
 						necessaryData($IPAddress, $allAboutBrowser, $browserName, $helper_userID, $helper_login, $token, $row);
-						if(!($result2 = $GLOBALS['connection']->query("select * from active_sessions where userID like '$helper_userID'")))
+						$who = "somebody";
+
+						// Wykonanie zapytania do bazy o aktywne sesje
+						if(!(checkActiveSessions($helper_userID, $helper_login, $IPAddress, $browserName, $token) &&
+							whoIsLogging($helper_userID, $who))
+						)
 							throw new Exception($GLOBALS['connection']->error);
-
-
-						// Jesli nie ma aktywnej sesji uzytkownika, na konto ktorego chce sie zalogowac...
-						if(!$result2->num_rows)
-						{
-							// ...to wykonuje transakcje nr 1...
-							if(activeSessionIs($helper_userID, $helper_login, $IPAddress, $browserName, $token))
-								$GLOBALS['connection']->query("COMMIT");
-							else
-								throw new Exception($GLOBALS['connection']->error);
-						}
-						// ...w przeciwnym wypadku wykonuje transakcje nr 2
-						else if(activeSessionIsnt($helper_userID, $helper_login, $IPAddress, $browserName, $token))
-							$GLOBALS['connection']->query("COMMIT");
-						else
-							throw new Exception($GLOBALS['connection']->error);
-
-
-						//Loguje sie pacjent, czy dietetyk?
-						if(!$result3 = $GLOBALS['connection']->query("select * from user u join patient p on(p.userID = u.userID) where (p.userID = '$helper_userID')"))
-							throw new Exception($GLOBALS['connection']->error);
-						else if($result3->num_rows)    //Logujacym sie uzytkownikem jest pacjent
-						{
-							$who = "patient";
-							header('Location: yourCard.php');
-						}
-						else if(!$result4 = $GLOBALS['connection']->query("select * from user u join dietician d on(d.userID = u.userID) where (d.userID = '$helper_userID')"))
-							throw new Exception($GLOBALS['connection']->error);
-						else if($result4->num_rows)    //Logujacym sie uzytkownikem jest dietetyk
-						{
-							$who = "dietician";
-							header('Location: dieticianCard.php');
-						}
-						else
-						{
-							echo '<span style="color:red;">Twoje konto zostało przed chwilą usunięte :(</span>';
-							exit();
-						}
-
 
 						//Ustawiamy ciasteczko i zwalniamy dotychczasowo uzywana pamiec
 						cookies($token, $who);
 						unset($_SESSION['error']);
 						$result->free_result();
-						$result2->free_result();
-						$result3->free_result();
-						if(isset($result4))
-							$result4->free_result();
 					}
 					else
 					{

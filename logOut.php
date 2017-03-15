@@ -25,6 +25,7 @@ catch (Exception $e)
 	session_unset();
 	setcookie("patientLogged", false, time() - 1);
 	setcookie("dieticianLogged", false, time() - 1);
+	setcookie("adminLogged", false, time() - 1);
 	setcookie("token", null, time() - 1);
 	header("Location: html_files/serverError_goToIndex.html");
 	//echo '<br/>Informacja developerska: '.$e;
@@ -33,5 +34,6 @@ catch (Exception $e)
 session_unset();
 setcookie("patientLogged", false, time() - 1);
 setcookie("dieticianLogged", false, time() - 1);
+setcookie("adminLogged", false, time() - 1);
 setcookie("token", null, time() - 1);
 header('Location: index.php');
