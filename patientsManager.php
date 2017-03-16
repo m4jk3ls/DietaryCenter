@@ -6,6 +6,61 @@ if(!isset($_COOKIE['adminLogged']))
 	header("Location: index.php");
 	exit();
 }
+require_once "connect.php";
+
+function showAllPatients()
+{
+	global $host, $db_user, $db_password, $db_name;
+	mysqli_report(MYSQLI_REPORT_STRICT);
+	try
+	{
+		$connection = new mysqli($host, $db_user, $db_password, $db_name);
+		$connection->set_charset('utf8');
+
+		if($connection->connect_errno != 0)
+			throw new Exception($connection->connect_error);
+		else
+		{
+			if(!($result = $connection->query("select concat(u.lastName, ' ', u.firstName) as ourPatient, u.login, u.email
+				from patient p join user u on(p.userID = u.userID) order by ourPatient asc"))
+			)
+				throw new Exception($connection->error);
+
+			echo
+			'<table>
+				<tr>
+					<td>Nazwisko oraz imię</td>
+					<td>Login</td>
+					<td>Adres e-mail</td>
+					<td>Czy usunąć?</td>
+				</tr>';
+
+			while ($row = $result->fetch_assoc())
+			{
+				echo
+				'<tr>
+					<td>'.$row['ourPatient'].'</td>
+					<td>'.$row['login'].'</td>
+					<td>'.$row['email'].'</td>
+					<td><input type="submit" value="Usuń"/></td>
+				</tr>';
+			}
+
+			echo
+			'</table>';
+
+			$result->free_result();
+			$connection->close();
+		}
+	}
+	catch (Exception $e)
+	{
+		header("Location: html_files/serverError_goToLogout.html");
+		//echo '<br/>Informacja developerska: '.$e;
+		exit();
+	}
+}
+
 ?>
 
 <!DOCTYPE HTML>
@@ -16,6 +71,7 @@ if(!isset($_COOKIE['adminLogged']))
 	<title>Panel admina NaturHouse</title>
 	<link rel="stylesheet" href="css_files/basic.css" type="text/css"/>
 	<link href="css_files/card.css" rel="stylesheet" type="text/css"/>
+	<link href="css_files/patientsManager.css" rel="stylesheet" type="text/css"/>
 	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext"
 		  rel="stylesheet">
 	<script src="javascript_files/jquery-3.1.1.min.js"></script>
@@ -67,6 +123,7 @@ if(!isset($_COOKIE['adminLogged']))
 		</div>
 	</div>
 	<div id="content">
+		<?php showAllPatients(); ?>
 	</div>
 	<div id="footer">NaturHouse - Twój osobisty dietetyk. Strona w sieci od 2017 r. &copy;
 					 Wszelkie prawa zastrzeżone</div>
