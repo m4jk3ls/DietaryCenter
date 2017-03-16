@@ -171,7 +171,7 @@ function letsLogIn()
 						necessaryData($IPAddress, $allAboutBrowser, $browserName, $helper_userID, $helper_login, $token, $row);
 						$who = "somebody";
 
-						// Wykonanie zapytania do bazy o aktywne sesje
+						// Wykonanie zapytania do bazy o aktywne sesje oraz sprawdzenie jaki typ uzytkownika probuje sie zalogowac
 						if(!(checkActiveSessions($helper_userID, $helper_login, $IPAddress, $browserName, $token) &&
 							whoIsLogging($helper_userID, $who))
 						)
