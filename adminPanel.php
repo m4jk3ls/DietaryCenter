@@ -84,11 +84,6 @@ else
 		{
 			width: 25%;
 		}
-
-		.menu > li:first-child + li + li + li + li
-		{
-			width: 25%;
-		}
 	</style>
 </head>
 
