@@ -23,6 +23,32 @@ if(!isset($_COOKIE['adminLogged']))
 	<script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
 	<script src="javascript_files/cookiesBanner.js"></script>
 	<noscript><div id="infoAboutNoScript">Twoja przeglądarka nie obsługuje skryptów JavaScript!</div></noscript>
+	<style>
+		.menu > li:first-child
+		{
+			width: 25%;
+		}
+
+		.menu > li:first-child + li
+		{
+			width: 25%;
+		}
+
+		.menu > li:first-child + li + li
+		{
+			width: 25%;
+		}
+
+		.menu > li:first-child + li + li + li
+		{
+			width: 25%;
+		}
+
+		.menu > li:first-child + li + li + li + li
+		{
+			width: 25%;
+		}
+	</style>
 </head>
 
 <body>
@@ -32,7 +58,6 @@ if(!isset($_COOKIE['adminLogged']))
 		<li><a href="adminPanel.php">Strona główna</a></li>
 		<li><a href="dieticiansManager.php">Dietetycy</a></li>
 		<li><a href="patientsManager.php">Pacjenci</a></li>
-		<li><a href="contact.php">Kontakt</a></li>
 		<li><a href="logOut.php">Wyloguj</a></li>
 	</ol>
 	<div id="topbarPackage">
