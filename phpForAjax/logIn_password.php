@@ -26,7 +26,7 @@ else
 	}
 	catch (Exception $e)
 	{
-		header("Location: ../html_files/serverError.html");
+		header("Location: ../html_files/serverError_goToIndex.html");
 		//echo '<br/>Informacja developerska: '.$e;
 	}
 }
