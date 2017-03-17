@@ -25,15 +25,10 @@ if(isset($_SESSION['login']))
 				$row = $result->fetch_assoc();
 				$helper_userID = $row['userID'];
 
-				$connection->query("START TRANSACTION");
-
 				// Kasujemy zapisanego za pomoca pierwszego click'u pacjenta
-				if($connection->query("delete from patient where userID like '$helper_userID'") &&
-					$connection->query("delete from user where userID like '$helper_userID'")
-				)
-					$connection->query("COMMIT");
-				else
+				if(!$connection->query("delete from user where userID like '$helper_userID'"))
 					throw new Exception($connection->connect_error);
+
 				$result->free_result();
 			}
 			$connection->close();
@@ -41,7 +36,6 @@ if(isset($_SESSION['login']))
 	}
 	catch (Exception $e)
 	{
-		$connection->query("ROLLBACK");
 		header("Location: html_files/serverError_goToIndex.html");
 		//echo '<br/>Informacja developerska: '.$e;
 	}
