@@ -74,6 +74,7 @@ function showAllPatients()
 	<link rel="stylesheet" href="css_files/basic.css" type="text/css"/>
 	<link href="css_files/card.css" rel="stylesheet" type="text/css"/>
 	<link href="css_files/tablesForAdmin.css" rel="stylesheet" type="text/css"/>
+	<link href="css_files/contentCenter.css" rel="stylesheet" type="text/css"/>
 	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext"
 		  rel="stylesheet">
 	<script src="javascript_files/jquery-3.1.1.min.js"></script>
@@ -85,6 +86,11 @@ function showAllPatients()
 	<script src="javascript_files/cookiesBanner.js"></script>
 	<noscript><div id="infoAboutNoScript">Twoja przeglądarka nie obsługuje skryptów JavaScript!</div></noscript>
 	<style>
+		h1
+		{
+			margin: 0 0 20px 0;
+		}
+
 		.menu > li:first-child
 		{
 			width: 25%;
@@ -131,6 +137,7 @@ function showAllPatients()
 		</div>
 	</div>
 	<div id="content">
+		<h1>Pacjenci NaturHouse</h1>
 		<?php showAllPatients(); ?>
 	</div>
 	<div id="footer">NaturHouse - Twój osobisty dietetyk. Strona w sieci od 2017 r. &copy;

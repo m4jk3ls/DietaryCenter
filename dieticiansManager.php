@@ -8,7 +8,7 @@ if(!isset($_COOKIE['adminLogged']))
 }
 require_once "connect.php";
 
-function manageDieticians()
+function showAllDieticians()
 {
 	global $host, $db_user, $db_password, $db_name;
 	mysqli_report(MYSQLI_REPORT_STRICT);
@@ -79,6 +79,8 @@ function manageDieticians()
 	<link rel="stylesheet" href="css_files/basic.css" type="text/css"/>
 	<link href="css_files/card.css" rel="stylesheet" type="text/css"/>
 	<link href="css_files/tablesForAdmin.css" rel="stylesheet" type="text/css"/>
+	<link href="css_files/contentCenter.css" rel="stylesheet" type="text/css"/>
+	<link href="css_files/dieticiansManager.css" rel="stylesheet" type="text/css"/>
 	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext"
 		  rel="stylesheet">
 	<script src="javascript_files/jquery-3.1.1.min.js"></script>
@@ -135,7 +137,9 @@ function manageDieticians()
 		</div>
 	</div>
 	<div id="content">
-		<?php manageDieticians(); ?>
+		<h1>Aktualni pracownicy</h1>
+		<?php showAllDieticians(); ?>
+		<button type="button" id="addDieticianButton">Dodaj</button>
 	</div>
 	<div id="footer">NaturHouse - Twój osobisty dietetyk. Strona w sieci od 2017 r. &copy;
 					 Wszelkie prawa zastrzeżone</div>

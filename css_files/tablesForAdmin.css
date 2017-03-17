@@ -30,7 +30,7 @@ td
 	padding: 5px;
 }
 
-button
+.removingButton
 {
 	width: 100px;
 	background-color: #e60000;
@@ -43,14 +43,14 @@ button
 	outline: none;
 }
 
-button:focus
+.removingButton:focus
 {
 	-webkit-box-shadow: 0 0 15px 5px rgba(204, 204, 204, 0.9);
 	-moz-box-shadow: 0 0 15px 5px rgba(204, 204, 204, 0.9);
 	box-shadow: 0 0 15px 5px rgba(204, 204, 204, 0.9);
 }
 
-button:hover
+.removingButton:hover
 {
 	background-color: #ff0000;
 }
