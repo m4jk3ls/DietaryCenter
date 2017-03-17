@@ -5,12 +5,12 @@ table
 	margin-right: auto;
 	border: solid 1px black;
 	border-collapse: collapse;
-	font-size: 18px;
+	font-size: 17px;
 }
 
 .firstRow
 {
-	font-size: 20px;
+	font-size: 19px;
 	color: #fff;
 	font-weight: bold;
 	background-color: #808080;
@@ -24,7 +24,6 @@ table
 
 td
 {
-	width: calc(100% / 4);
 	text-align: center;
 	vertical-align: middle;
 	border: solid 1px #000;

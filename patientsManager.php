@@ -29,7 +29,7 @@ function showAllPatients()
 			echo
 			'<table>
 				<tr class="firstRow">
-					<td>Nazwisko oraz imię</td>
+					<td>Nazwisko i imię</td>
 					<td>Login</td>
 					<td>Adres e-mail</td>
 					<td>Czy usunąć?</td>
@@ -73,7 +73,7 @@ function showAllPatients()
 	<title>Panel admina NaturHouse</title>
 	<link rel="stylesheet" href="css_files/basic.css" type="text/css"/>
 	<link href="css_files/card.css" rel="stylesheet" type="text/css"/>
-	<link href="css_files/patientsManager.css" rel="stylesheet" type="text/css"/>
+	<link href="css_files/tablesForAdmin.css" rel="stylesheet" type="text/css"/>
 	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext"
 		  rel="stylesheet">
 	<script src="javascript_files/jquery-3.1.1.min.js"></script>
@@ -103,6 +103,11 @@ function showAllPatients()
 		.menu > li:first-child + li + li + li
 		{
 			width: 25%;
+		}
+
+		td
+		{
+			width: calc(100% / 4);
 		}
 	</style>
 </head>
