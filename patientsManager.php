@@ -28,7 +28,7 @@ function showAllPatients()
 
 			echo
 			'<table>
-				<tr>
+				<tr class="firstRow">
 					<td>Nazwisko oraz imię</td>
 					<td>Login</td>
 					<td>Adres e-mail</td>
@@ -38,7 +38,7 @@ function showAllPatients()
 			while ($row = $result->fetch_assoc())
 			{
 				echo
-					'<tr>
+					'<tr class="anotherRow">
 						<td>' . $row['ourPatient'] . '</td>
 						<td>' . $row['login'] . '</td>
 						<td>' . $row['email'] . '</td>
