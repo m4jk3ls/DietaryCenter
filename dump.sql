@@ -29,7 +29,7 @@ CREATE TABLE `active_sessions` (
   `dateAndTime` datetime DEFAULT NULL,
   `token` varchar(100) DEFAULT NULL,
   KEY `activeSessions_fk1` (`userID`),
-  CONSTRAINT `activeSessions_fk1` FOREIGN KEY (`userID`) REFERENCES `user` (`userID`) ON UPDATE CASCADE
+  CONSTRAINT `activeSessions_fk1` FOREIGN KEY (`userID`) REFERENCES `user` (`userID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -39,7 +39,7 @@ CREATE TABLE `active_sessions` (
 
 LOCK TABLES `active_sessions` WRITE;
 /*!40000 ALTER TABLE `active_sessions` DISABLE KEYS */;
-INSERT INTO `active_sessions` VALUES (4,'::1','Chrome','2017-03-14 17:19:18','dwo7zZA5V5n7Sx8GwzHJsTpLMK7I4O95qlmPs25pe7bNmjZtVPlnxnB1gdBlJ1GO11GpIXXBU1mldWd8HWmUYKa98ysPM5ApYAoS');
+INSERT INTO `active_sessions` VALUES (9,'::1','Chrome','2017-03-17 17:13:41','tbDhGew5y0oYBBsNLBsTv7A6PJzLaxDJv7uljBmryyYoH4w0IKKD5FR9KsARcb8CpreMOl5bqsqaFUsAyfVLwB1zyztk7dvTa9QB');
 /*!40000 ALTER TABLE `active_sessions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -65,7 +65,7 @@ CREATE TABLE `archive_logs` (
 
 LOCK TABLES `archive_logs` WRITE;
 /*!40000 ALTER TABLE `archive_logs` DISABLE KEYS */;
-INSERT INTO `archive_logs` VALUES (1,'anka','::1','Chrome','2017-02-22 15:08:39'),(4,'jan','::1','Chrome','2017-02-22 16:57:30'),(1,'anka','::1','Chrome','2017-02-22 17:16:46'),(4,'jan','::1','Chrome','2017-02-22 17:17:24'),(1,'anka','::1','Chrome','2017-02-22 17:17:43'),(4,'jan','::1','Chrome','2017-02-22 17:32:05'),(1,'anka','::1','Chrome','2017-02-22 17:32:19'),(1,'anka','::1','Chrome','2017-02-22 17:47:27'),(1,'anka','::1','Chrome','2017-02-23 15:21:02'),(2,'justyna','::1','Chrome','2017-02-23 17:24:26'),(1,'anka','::1','Chrome','2017-02-23 19:12:26'),(3,'gosia','::1','Chrome','2017-02-24 19:20:00'),(2,'justyna','::1','Chrome','2017-02-24 20:09:33'),(1,'anka','::1','Chrome','2017-02-24 20:09:51'),(3,'gosia','::1','Chrome','2017-02-24 20:10:10'),(4,'jan','::1','Chrome','2017-02-24 21:52:58'),(4,'jan','::1','Chrome','2017-02-24 22:05:23'),(5,'piotr','::1','Chrome','2017-02-24 22:19:53'),(4,'jan','::1','Chrome','2017-02-25 16:08:06'),(4,'jan','::1','Chrome','2017-02-25 16:35:32'),(4,'jan','::1','Chrome','2017-02-26 19:03:16'),(1,'anka','::1','Chrome','2017-02-26 20:34:31'),(1,'anka','::1','Chrome','2017-02-26 20:34:44'),(1,'anka','::1','Chrome','2017-02-26 20:35:53'),(1,'anka','::1','Chrome','2017-02-26 20:37:54'),(4,'jan','::1','Chrome','2017-02-26 20:40:19'),(3,'gosia','::1','Chrome','2017-02-26 20:40:33'),(2,'justyna','::1','Chrome','2017-02-26 20:41:39'),(1,'anka','::1','Chrome','2017-02-26 20:42:19'),(4,'jan','::1','Chrome','2017-02-26 20:48:20'),(1,'anka','::1','Chrome','2017-02-26 20:52:34'),(4,'jan','::1','Chrome','2017-02-26 20:53:12'),(6,'adam','::1','Chrome','2017-02-26 20:58:28'),(1,'anka','::1','Chrome','2017-02-26 20:59:05'),(4,'jan','::1','Chrome','2017-02-26 20:59:22'),(4,'jan','::1','Chrome','2017-02-26 21:03:01'),(2,'justyna','::1','Chrome','2017-02-26 21:03:15'),(4,'jan','::1','Chrome','2017-02-26 21:04:23'),(4,'jan','::1','Chrome','2017-02-26 21:04:57'),(4,'jan','::1','Chrome','2017-02-26 21:07:18'),(5,'piotr','::1','Chrome','2017-02-26 21:11:34'),(4,'jan','::1','Chrome','2017-02-26 21:11:55'),(4,'jan','::1','IE','2017-03-02 16:58:43'),(4,'jan','::1','IE','2017-03-02 17:02:03'),(4,'jan','::1','Chrome','2017-03-02 17:07:27'),(1,'anka','::1','Chrome','2017-03-02 17:26:52'),(4,'jan','::1','Chrome','2017-03-02 17:27:58'),(1,'anka','::1','Chrome','2017-03-02 17:28:33'),(4,'jan','::1','Chrome','2017-03-02 17:29:19'),(1,'anka','::1','Chrome','2017-03-02 17:31:28'),(4,'jan','::1','Chrome','2017-03-02 17:31:43'),(1,'anka','::1','Chrome','2017-03-02 18:45:44'),(4,'jan','::1','Chrome','2017-03-02 18:47:19'),(4,'jan','::1','Chrome','2017-03-02 18:48:36'),(1,'anka','::1','Chrome','2017-03-02 18:48:46'),(4,'jan','::1','Chrome','2017-03-02 18:49:31'),(4,'jan','::1','Chrome','2017-03-03 16:50:19'),(1,'anka','::1','Chrome','2017-03-03 18:00:47'),(4,'jan','::1','Chrome','2017-03-03 18:01:19'),(4,'jan','::1','Chrome','2017-03-12 22:38:29'),(4,'jan','::1','Chrome','2017-03-12 22:38:49'),(4,'jan','::1','Chrome','2017-03-12 22:39:22'),(5,'piotr','::1','Chrome','2017-03-12 22:39:46'),(4,'jan','::1','Chrome','2017-03-12 22:40:19'),(4,'jan','::1','Chrome','2017-03-12 22:40:48'),(4,'jan','::1','Chrome','2017-03-13 15:12:15'),(1,'anka','::1','Chrome','2017-03-13 15:30:41'),(4,'jan','::1','Chrome','2017-03-13 15:31:44'),(4,'jan','::1','Chrome','2017-03-13 16:22:34'),(4,'jan','::1','Chrome','2017-03-13 16:39:26'),(4,'jan','::1','Chrome','2017-03-13 16:42:34'),(4,'jan','::1','Chrome','2017-03-13 18:41:38'),(4,'jan','::1','Chrome','2017-03-13 19:03:51'),(4,'jan','::1','Chrome','2017-03-13 19:07:34'),(5,'piotr','::1','Chrome','2017-03-13 19:09:52'),(4,'jan','::1','Chrome','2017-03-13 19:27:29'),(4,'jan','::1','Chrome','2017-03-13 19:43:23'),(1,'anka','::1','Chrome','2017-03-13 19:44:21'),(4,'jan','::1','Chrome','2017-03-13 19:44:44'),(1,'anka','::1','Chrome','2017-03-13 20:07:37'),(4,'jan','::1','Chrome','2017-03-13 20:08:11'),(3,'gosia','::1','Chrome','2017-03-13 20:09:18'),(6,'adam','::1','Chrome','2017-03-13 20:09:51'),(4,'jan','::1','Chrome','2017-03-13 20:45:23'),(4,'jan','::1','Chrome','2017-03-14 16:42:43'),(4,'jan','::1','Chrome','2017-03-14 17:19:18');
+INSERT INTO `archive_logs` VALUES (1,'anka','::1','Chrome','2017-02-22 15:08:39'),(4,'jan','::1','Chrome','2017-02-22 16:57:30'),(1,'anka','::1','Chrome','2017-02-22 17:16:46'),(4,'jan','::1','Chrome','2017-02-22 17:17:24'),(1,'anka','::1','Chrome','2017-02-22 17:17:43'),(4,'jan','::1','Chrome','2017-02-22 17:32:05'),(1,'anka','::1','Chrome','2017-02-22 17:32:19'),(1,'anka','::1','Chrome','2017-02-22 17:47:27'),(1,'anka','::1','Chrome','2017-02-23 15:21:02'),(2,'justyna','::1','Chrome','2017-02-23 17:24:26'),(1,'anka','::1','Chrome','2017-02-23 19:12:26'),(3,'gosia','::1','Chrome','2017-02-24 19:20:00'),(2,'justyna','::1','Chrome','2017-02-24 20:09:33'),(1,'anka','::1','Chrome','2017-02-24 20:09:51'),(3,'gosia','::1','Chrome','2017-02-24 20:10:10'),(4,'jan','::1','Chrome','2017-02-24 21:52:58'),(4,'jan','::1','Chrome','2017-02-24 22:05:23'),(5,'piotr','::1','Chrome','2017-02-24 22:19:53'),(4,'jan','::1','Chrome','2017-02-25 16:08:06'),(4,'jan','::1','Chrome','2017-02-25 16:35:32'),(4,'jan','::1','Chrome','2017-02-26 19:03:16'),(1,'anka','::1','Chrome','2017-02-26 20:34:31'),(1,'anka','::1','Chrome','2017-02-26 20:34:44'),(1,'anka','::1','Chrome','2017-02-26 20:35:53'),(1,'anka','::1','Chrome','2017-02-26 20:37:54'),(4,'jan','::1','Chrome','2017-02-26 20:40:19'),(3,'gosia','::1','Chrome','2017-02-26 20:40:33'),(2,'justyna','::1','Chrome','2017-02-26 20:41:39'),(1,'anka','::1','Chrome','2017-02-26 20:42:19'),(4,'jan','::1','Chrome','2017-02-26 20:48:20'),(1,'anka','::1','Chrome','2017-02-26 20:52:34'),(4,'jan','::1','Chrome','2017-02-26 20:53:12'),(6,'adam','::1','Chrome','2017-02-26 20:58:28'),(1,'anka','::1','Chrome','2017-02-26 20:59:05'),(4,'jan','::1','Chrome','2017-02-26 20:59:22'),(4,'jan','::1','Chrome','2017-02-26 21:03:01'),(2,'justyna','::1','Chrome','2017-02-26 21:03:15'),(4,'jan','::1','Chrome','2017-02-26 21:04:23'),(4,'jan','::1','Chrome','2017-02-26 21:04:57'),(4,'jan','::1','Chrome','2017-02-26 21:07:18'),(5,'piotr','::1','Chrome','2017-02-26 21:11:34'),(4,'jan','::1','Chrome','2017-02-26 21:11:55'),(4,'jan','::1','IE','2017-03-02 16:58:43'),(4,'jan','::1','IE','2017-03-02 17:02:03'),(4,'jan','::1','Chrome','2017-03-02 17:07:27'),(1,'anka','::1','Chrome','2017-03-02 17:26:52'),(4,'jan','::1','Chrome','2017-03-02 17:27:58'),(1,'anka','::1','Chrome','2017-03-02 17:28:33'),(4,'jan','::1','Chrome','2017-03-02 17:29:19'),(1,'anka','::1','Chrome','2017-03-02 17:31:28'),(4,'jan','::1','Chrome','2017-03-02 17:31:43'),(1,'anka','::1','Chrome','2017-03-02 18:45:44'),(4,'jan','::1','Chrome','2017-03-02 18:47:19'),(4,'jan','::1','Chrome','2017-03-02 18:48:36'),(1,'anka','::1','Chrome','2017-03-02 18:48:46'),(4,'jan','::1','Chrome','2017-03-02 18:49:31'),(4,'jan','::1','Chrome','2017-03-03 16:50:19'),(1,'anka','::1','Chrome','2017-03-03 18:00:47'),(4,'jan','::1','Chrome','2017-03-03 18:01:19'),(4,'jan','::1','Chrome','2017-03-12 22:38:29'),(4,'jan','::1','Chrome','2017-03-12 22:38:49'),(4,'jan','::1','Chrome','2017-03-12 22:39:22'),(5,'piotr','::1','Chrome','2017-03-12 22:39:46'),(4,'jan','::1','Chrome','2017-03-12 22:40:19'),(4,'jan','::1','Chrome','2017-03-12 22:40:48'),(4,'jan','::1','Chrome','2017-03-13 15:12:15'),(1,'anka','::1','Chrome','2017-03-13 15:30:41'),(4,'jan','::1','Chrome','2017-03-13 15:31:44'),(4,'jan','::1','Chrome','2017-03-13 16:22:34'),(4,'jan','::1','Chrome','2017-03-13 16:39:26'),(4,'jan','::1','Chrome','2017-03-13 16:42:34'),(4,'jan','::1','Chrome','2017-03-13 18:41:38'),(4,'jan','::1','Chrome','2017-03-13 19:03:51'),(4,'jan','::1','Chrome','2017-03-13 19:07:34'),(5,'piotr','::1','Chrome','2017-03-13 19:09:52'),(4,'jan','::1','Chrome','2017-03-13 19:27:29'),(4,'jan','::1','Chrome','2017-03-13 19:43:23'),(1,'anka','::1','Chrome','2017-03-13 19:44:21'),(4,'jan','::1','Chrome','2017-03-13 19:44:44'),(1,'anka','::1','Chrome','2017-03-13 20:07:37'),(4,'jan','::1','Chrome','2017-03-13 20:08:11'),(3,'gosia','::1','Chrome','2017-03-13 20:09:18'),(6,'adam','::1','Chrome','2017-03-13 20:09:51'),(4,'jan','::1','Chrome','2017-03-13 20:45:23'),(4,'jan','::1','Chrome','2017-03-14 16:42:43'),(4,'jan','::1','Chrome','2017-03-14 17:19:18'),(4,'jan','::1','Chrome','2017-03-17 16:23:39'),(9,'admin','::1','Chrome','2017-03-17 16:30:07'),(9,'admin','::1','Chrome','2017-03-17 17:08:07'),(9,'admin','::1','Chrome','2017-03-17 17:13:41');
 /*!40000 ALTER TABLE `archive_logs` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -117,7 +117,7 @@ CREATE TABLE `dietician` (
   PRIMARY KEY (`dieticianID`),
   UNIQUE KEY `userID_index` (`userID`),
   UNIQUE KEY `pathToImage` (`pathToImage`),
-  CONSTRAINT `dietician_fk1` FOREIGN KEY (`userID`) REFERENCES `user` (`userID`) ON UPDATE CASCADE
+  CONSTRAINT `dietician_fk1` FOREIGN KEY (`userID`) REFERENCES `user` (`userID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -140,17 +140,43 @@ UNLOCK TABLES;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `checkTheDateOfDieticianBirth` BEFORE INSERT ON `dietician`
+
+
  FOR EACH ROW begin
+
+
+
+
 
 	if NEW.dateOfBirth > curdate()
 
+
+
+
+
     then
+
+
+
+
 
         signal sqlstate '45000'
 
+
+
+
+
         set message_text = 'Date of birth is invalid! You cannot add the date in the future!';
 
+
+
+
+
     end if;
+
+
+
+
 
 end */;;
 DELIMITER ;
@@ -176,7 +202,7 @@ CREATE TABLE `measurement` (
   `BMI` int(3) unsigned NOT NULL,
   PRIMARY KEY (`measurementID`),
   KEY `patientID_index` (`patientID`),
-  CONSTRAINT `measurement_fk1` FOREIGN KEY (`patientID`) REFERENCES `patient` (`patientID`) ON UPDATE CASCADE
+  CONSTRAINT `measurement_fk1` FOREIGN KEY (`patientID`) REFERENCES `patient` (`patientID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -204,7 +230,7 @@ CREATE TABLE `officehours` (
   `ends_at` time NOT NULL,
   PRIMARY KEY (`officeHoursID`),
   KEY `dieticianID_index` (`dieticianID`),
-  CONSTRAINT `officeHours_fk1` FOREIGN KEY (`dieticianID`) REFERENCES `dietician` (`dieticianID`) ON UPDATE CASCADE
+  CONSTRAINT `officeHours_fk1` FOREIGN KEY (`dieticianID`) REFERENCES `dietician` (`dieticianID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -230,8 +256,8 @@ CREATE TABLE `patient` (
   `userID` int(10) unsigned NOT NULL,
   PRIMARY KEY (`patientID`),
   UNIQUE KEY `userID_index` (`userID`),
-  CONSTRAINT `patient_fk1` FOREIGN KEY (`userID`) REFERENCES `user` (`userID`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+  CONSTRAINT `patient_fk1` FOREIGN KEY (`userID`) REFERENCES `user` (`userID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -240,7 +266,7 @@ CREATE TABLE `patient` (
 
 LOCK TABLES `patient` WRITE;
 /*!40000 ALTER TABLE `patient` DISABLE KEYS */;
-INSERT INTO `patient` VALUES (1,4),(2,5),(3,6),(4,7),(5,8);
+INSERT INTO `patient` VALUES (1,4),(2,5),(4,7);
 /*!40000 ALTER TABLE `patient` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -287,7 +313,7 @@ CREATE TABLE `user` (
   PRIMARY KEY (`userID`),
   UNIQUE KEY `email_index` (`email`),
   UNIQUE KEY `login_index` (`login`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -296,7 +322,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'Anna','Juraszczyk','anka@wp.pl','anka','131282524a4384d62d2d7eeea7d7b8e57b3feeb2','umqQ06eko9'),(2,'Justyna','Krupczyk','justyna@o2.pl','justyna','320380d1a5f928392d89ef772b1191acd6460cf2','TqYYulCyDO'),(3,'Małgorzata','Łachman','gosia@gmail.com','gosia','34a76b055064be5d1be9a9e1d8d87538cc6981f3','Elo2VjoLNW'),(4,'Jan','Kowalski','jan@o2.pl','jan','407d02bc07e0e76b884ec0b27d811b775ad3d434','8Vr4pfkMfm'),(5,'Piotr','Nowak','piotr@o2.pl','piotr','c78007d51a900be0bea9c6af9d88ac49eb09e25c','wNwZwKBRcA'),(6,'Adam','Król','adam@o2.pl','adam','e3a3ad3f06b88110b2efa10485bbef3ce2d58d6d','ay3Vp9gV91'),(7,'Mateusz','Nowakowski','mateusz@o2.pl','mateusz','c39c9a4b0290ba1d4cd62aa0ed6f6677f9d4b27d','n01oF22Scg'),(8,'Piotr','Żyła','piotrek@o2.pl','piotrek','77f4e9405f7eb43c5164b71d4a7b880008f1ff4c','NHMGnH48iW');
+INSERT INTO `user` VALUES (1,'Anna','Juraszczyk','anka@wp.pl','anka','131282524a4384d62d2d7eeea7d7b8e57b3feeb2','umqQ06eko9'),(2,'Justyna','Krupczyk','justyna@o2.pl','justyna','320380d1a5f928392d89ef772b1191acd6460cf2','TqYYulCyDO'),(3,'Małgorzata','Łachman','gosia@gmail.com','gosia','34a76b055064be5d1be9a9e1d8d87538cc6981f3','Elo2VjoLNW'),(4,'Jan','Kowalski','jan@o2.pl','jan','407d02bc07e0e76b884ec0b27d811b775ad3d434','8Vr4pfkMfm'),(5,'Piotr','Nowak','piotr@o2.pl','piotr','c78007d51a900be0bea9c6af9d88ac49eb09e25c','wNwZwKBRcA'),(7,'Mateusz','Nowakowski','mateusz@o2.pl','mateusz','c39c9a4b0290ba1d4cd62aa0ed6f6677f9d4b27d','n01oF22Scg'),(9,'Michał','Sroka','m4jk3ls@gmail.com','admin','42026ea8f10494f1b99d7541eec0c5da31b0167d','fDCyCdm7Tl');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -310,7 +336,7 @@ DROP TABLE IF EXISTS `visit`;
 CREATE TABLE `visit` (
   `visitID` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `patientID` int(10) unsigned NOT NULL,
-  `dieticianID` int(10) unsigned NOT NULL,
+  `dieticianID` int(10) unsigned DEFAULT NULL,
   `supplementID` int(10) unsigned DEFAULT NULL,
   `visitDate` date DEFAULT NULL,
   `visitPrice` float unsigned DEFAULT NULL,
@@ -319,10 +345,10 @@ CREATE TABLE `visit` (
   KEY `dieticianID_index` (`dieticianID`),
   KEY `patientID_index` (`patientID`),
   KEY `supplementID_index` (`supplementID`),
-  CONSTRAINT `visit_fk1` FOREIGN KEY (`patientID`) REFERENCES `patient` (`patientID`) ON UPDATE CASCADE,
-  CONSTRAINT `visit_fk2` FOREIGN KEY (`dieticianID`) REFERENCES `dietician` (`dieticianID`) ON UPDATE CASCADE,
-  CONSTRAINT `visit_fk3` FOREIGN KEY (`supplementID`) REFERENCES `supplement` (`supplementID`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8;
+  CONSTRAINT `visit_fk1` FOREIGN KEY (`patientID`) REFERENCES `patient` (`patientID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `visit_fk2` FOREIGN KEY (`dieticianID`) REFERENCES `dietician` (`dieticianID`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `visit_fk3` FOREIGN KEY (`supplementID`) REFERENCES `supplement` (`supplementID`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -331,7 +357,7 @@ CREATE TABLE `visit` (
 
 LOCK TABLES `visit` WRITE;
 /*!40000 ALTER TABLE `visit` DISABLE KEYS */;
-INSERT INTO `visit` VALUES (50,3,1,NULL,'2017-03-16',NULL,'13:30:00'),(51,3,1,NULL,'2017-03-16',NULL,'13:45:00'),(52,3,1,NULL,'2017-03-16',NULL,'14:15:00'),(53,1,1,NULL,'2017-03-23',NULL,'14:00:00'),(55,3,3,NULL,'2017-03-17',NULL,'16:00:00'),(57,2,2,NULL,'2017-03-15',NULL,'12:00:00'),(58,2,2,NULL,'2017-03-15',NULL,'15:45:00'),(59,1,1,NULL,'2017-03-20',NULL,'09:00:00');
+INSERT INTO `visit` VALUES (53,1,1,NULL,'2017-03-23',NULL,'14:00:00'),(57,2,2,NULL,'2017-03-15',NULL,'12:00:00'),(58,2,2,NULL,'2017-03-15',NULL,'15:45:00'),(59,1,1,NULL,'2017-03-20',NULL,'09:00:00'),(60,1,3,NULL,'2017-03-24',NULL,'16:00:00');
 /*!40000 ALTER TABLE `visit` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -345,33 +371,93 @@ UNLOCK TABLES;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER dietary_center.ifDieticianAvailable
 
+
+
+
+
 	BEFORE INSERT
+
+
+
+
 
 	ON dietary_center.visit
 
+
+
+
+
 	FOR EACH ROW
+
+
+
+
 
 	begin
 
+
+
+
+
 	if
+
+
+
+
 
 	(
 
+
+
+
+
 		(select oh.dayOfTheWeek from officehours oh where (oh.dieticianID = new.dieticianID) and (oh.dayOfTheWeek in (select weekday(new.visitDate)))) is null or
+
+
+
+
 
 		((select new.visitHour) < (select starts_at from officehours oh where (oh.dieticianID = new.dieticianID) and (oh.dayOfTheWeek in (select weekday(new.visitDate))))) or
 
+
+
+
+
 		((select new.visitHour) > (select subtime((select ends_at from officehours oh where (oh.dieticianID = new.dieticianID) and
+
+
+
+
 
 		(oh.dayOfTheWeek in (select weekday(new.visitDate)))),'00:15:00')))
 
+
+
+
+
 	) then
+
+
+
+
 
 			signal sqlstate '45000'
 
+
+
+
+
 			set message_text = 'Your dietician is not available at the specified time!';
 
+
+
+
+
 	end if;
+
+
+
+
 
 	end */;;
 DELIMITER ;
@@ -389,4 +475,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-03-14 17:58:44
+-- Dump completed on 2017-03-17 17:14:33
