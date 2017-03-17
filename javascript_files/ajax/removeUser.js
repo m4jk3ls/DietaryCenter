@@ -4,7 +4,7 @@ jQuery(document).ready(function ()
 	{
 		$.ajax(
 			{
-				url: "phpForAjax/removePatient.php",
+				url: "phpForAjax/removeUser.php",
 				type: "POST",
 				data: "login=" + $(this).val(),
 				success: function (msg)

@@ -65,6 +65,12 @@ $token = getToken();
 			border: solid 1px #000;
 			padding: 5px;
 		}
+
+		input[type=submit]
+		{
+			display: block;
+			margin: 20px auto 0 auto;
+		}
 	</style>
 </head>
 
@@ -172,7 +178,7 @@ $token = getToken();
 				   onclick="this.disabled=true; this.value='Zapisuję...'; this.form.submit();"/>
 
 			<!--Input przechowujacy token, ktory zapobiega multiclick'owi-->
-		<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+			<input type="hidden" name="token" value="<?php echo $token; ?>"/>
 		</form>
 	</div>
 	<div id="footer">NaturHouse - Twój osobisty dietetyk. Strona w sieci od 2017 r. &copy;

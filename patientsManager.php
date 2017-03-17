@@ -77,7 +77,7 @@ function showAllPatients()
 	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext"
 		  rel="stylesheet">
 	<script src="javascript_files/jquery-3.1.1.min.js"></script>
-	<script src="javascript_files/ajax/removePatient.js"></script>
+	<script src="javascript_files/ajax/removeUser.js"></script>
 	<script type="text/javascript" src="javascript_files/stickyMenu.js"></script>
 	<link rel="stylesheet" type="text/css"
 		  href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css"/>
