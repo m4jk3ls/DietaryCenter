@@ -10,7 +10,7 @@ if(!isset($_COOKIE['adminLogged']))
 function showYears()
 {
 	$year = date("Y") - 18;
-	for($i = 0; $i < 100; $i++)
+	for ($i = 0; $i < 100; $i++)
 		echo '<option>' . $year-- . '</option>';
 }
 
@@ -61,8 +61,35 @@ function dateOfTheBirth()
 {
 }
 
+function CheckPESEL($str)
+{
+	if(!preg_match('/^[0-9]{11}$/', $str)) //sprawdzamy czy ciąg ma 11 cyfr
+		return false;
+
+	$arrSteps = array(1, 3, 7, 9, 1, 3, 7, 9, 1, 3); // tablica z odpowiednimi wagami
+	$intSum = 0;
+
+	for ($i = 0; $i < 10; $i++)
+		$intSum += $arrSteps[$i] * $str[$i]; //mnożymy każdy ze znaków przez wagć i sumujemy wszystko
+
+	$int = 10 - $intSum % 10; //obliczamy sumć kontrolną
+	$intControlNr = ($int == 10) ? 0 : $int;
+
+	if($intControlNr == $str[10]) //sprawdzamy czy taka sama suma kontrolna jest w ciągu
+		return true;
+	return false;
+}
+
 function pesel()
 {
+	$GLOBALS['pesel'] = $_POST['pesel'];
+	if(!CheckPESEL($GLOBALS['pesel']))
+	{
+		$GLOBALS['everythingOK'] = false;
+		$_SESSION['peselError'] = "Numer PESEL jest niepoprawny!";
+	}
+	// Zapisuje wartosc, aby przy niepoprawnej walidacji nie wpisywac jej od nowa
+	$_SESSION['peselSaved'] = $GLOBALS['pesel'];
 }
 
 //Walidacja loginu
@@ -177,6 +204,7 @@ $token = getToken();
 	<script src="javascript_files/jquery-3.1.1.min.js"></script>
 	<script src="javascript_files/ajax/firstName.js"></script>
 	<script src="javascript_files/ajax/lastName.js"></script>
+	<script src="javascript_files/ajax/pesel.js"></script>
 	<script src="javascript_files/ajax/signIn_login.js"></script>
 	<script src="javascript_files/ajax/email.js"></script>
 	<script src="javascript_files/ajax/signIn_passwords.js"></script>
@@ -283,13 +311,21 @@ $token = getToken();
 				</div>
 
 				<!--Numer PESEL-->
-				<input type="text" name="pesel" placeholder="pesel" value="<?php
+				<input type="text" id="peselID" name="pesel" placeholder="pesel" value="<?php
 				if(isset($_SESSION['peselSaved']))
 				{
 					echo $_SESSION['peselSaved'];
 					unset($_SESSION['peselSaved']);
 				}
 				?>"/>
+				<div class="errorFromAjax" id="peselError"></div>
+				<?php
+				if(isset($_SESSION['peselError']))
+				{
+					echo '<div class="errorAfterSubmit" id="pesel_errorAfterSubmit">' . $_SESSION['peselError'] . '</div>';
+					unset($_SESSION['peselError']);
+				}
+				?>
 
 				<!--Login-->
 				<input type="text" id="loginID" name="login" placeholder="login" value="<?php
@@ -356,7 +392,7 @@ $token = getToken();
 					   onclick="this.disabled=true; this.value='Wczytuję...'; this.form.submit();"/>
 
 				<!--Input przechowujacy token, ktory zapobiega multiclick'owi-->
-				<input type="hidden" name="token" value="<?php echo $token;?>"/>
+				<input type="hidden" name="token" value="<?php echo $token; ?>"/>
 			</form>
 		</div>
 	</div>
