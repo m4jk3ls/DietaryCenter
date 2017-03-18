@@ -4,11 +4,11 @@ session_start();
 require_once "connect.php";
 mysqli_report(MYSQLI_REPORT_STRICT);
 
-if(isset($_SESSION['login']))
+if(isset($_SESSION['newUserLogin']))
 {
 	// Pomocniczy zapis loginu, ktory pomoze w znalezieniu odpowiedniego wiersza w bazie danych
-	$helper_login = $_SESSION['login'];
-	unset($_SESSION['login']);
+	$helper_login = $_SESSION['newUserLogin'];
+	unset($_SESSION['newUserLogin']);
 	try
 	{
 		$connection = new mysqli($host, $db_user, $db_password, $db_name);
@@ -17,20 +17,9 @@ if(isset($_SESSION['login']))
 			throw new Exception($connection->connect_error);
 		else
 		{
-			// Szukamy identyfikatora uzytkownika o loginie $helper_login
-			if(!($result = $connection->query("select userID from user where login like '$helper_login'")))
+			// Kasujemy zapisanego za pomoca pierwszego click'u pacjenta
+			if(!$connection->query("delete from user where login like '$helper_login'"))
 				throw new Exception($connection->connect_error);
-			else
-			{
-				$row = $result->fetch_assoc();
-				$helper_userID = $row['userID'];
-
-				// Kasujemy zapisanego za pomoca pierwszego click'u pacjenta
-				if(!$connection->query("delete from user where userID like '$helper_userID'"))
-					throw new Exception($connection->connect_error);
-
-				$result->free_result();
-			}
 			$connection->close();
 		}
 	}

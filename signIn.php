@@ -237,7 +237,7 @@ if(!empty($postedToken))
 	{
 		$helper_login = $_POST['login'];
 		if(strlen($helper_login) >= 3 && strlen($helper_login) <= 20 && ctype_alnum($helper_login))
-			$_SESSION['login'] = $helper_login;
+			$_SESSION['newUserLogin'] = $helper_login;
 		header("Location: multiclickError_signIn.php");
 		exit();
 	}

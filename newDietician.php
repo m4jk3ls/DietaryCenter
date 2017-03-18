@@ -31,6 +31,134 @@ function showMonths()
 	<option>Grudzień</option>';
 }
 
+// Walidacja imienia
+function firstName()
+{
+	$GLOBALS['firstName'] = $_POST['firstName'];
+	if(strlen($GLOBALS['firstName']) < 1)
+	{
+		$GLOBALS['everythingOK'] = false;
+		$_SESSION['firstNameError'] = "Nie podałeś imienia!";
+	}
+	// Zapisuje wartosc, aby przy niepoprawnej walidacji nie wpisywac jej od nowa
+	$_SESSION['firstNameSaved'] = $GLOBALS['firstName'];
+}
+
+// Walidacja nazwiska
+function lastName()
+{
+	$GLOBALS['lastName'] = $_POST['lastName'];
+	if(strlen($GLOBALS['lastName']) < 1)
+	{
+		$GLOBALS['everythingOK'] = false;
+		$_SESSION['lastNameError'] = "Nie podałeś nazwiska!";
+	}
+	// Zapisuje wartosc, aby przy niepoprawnej walidacji nie wpisywac jej od nowa
+	$_SESSION['lastNameSaved'] = $GLOBALS['lastName'];
+}
+
+function dateOfTheBirth()
+{
+}
+
+function pesel()
+{
+}
+
+//Walidacja loginu
+function login()
+{
+	$GLOBALS['login'] = $_POST['login'];
+	if((strlen($GLOBALS['login']) < 3) || (strlen($GLOBALS['login']) > 20))
+	{
+		$GLOBALS['everythingOK'] = false;
+		$_SESSION['loginError'] = "Login musi posiadać od 3 do 20 znaków!";
+	}
+	if(!ctype_alnum($GLOBALS['login']))
+	{
+		$GLOBALS['everythingOK'] = false;
+		$_SESSION['loginError'] = "Login może składać się tylko z liter i cyfr (bez polskich znaków)";
+	}
+	// Zapisuje wartosc, aby przy niepoprawnej walidacji nie wpisywac jej od nowa
+	$_SESSION['loginSaved'] = $GLOBALS['login'];
+}
+
+//Walidacja i sanityzacja email'a
+function email()
+{
+	$GLOBALS['email'] = $_POST['email'];
+	$emailB = filter_var($GLOBALS['email'], FILTER_SANITIZE_EMAIL);
+	if(!filter_var($emailB, FILTER_VALIDATE_EMAIL) || ($emailB != $GLOBALS['email']))
+	{
+		$GLOBALS['everythingOK'] = false;
+		$_SESSION['emailError'] = "Podaj poprawny adres email!";
+	}
+	// Zapisuje wartosc, aby przy niepoprawnej walidacji nie wpisywac jej od nowa
+	$_SESSION['emailSaved'] = $GLOBALS['email'];
+}
+
+//Walidacja hasel
+function passwds()
+{
+	$GLOBALS['passwd1'] = $_POST['passwd1'];
+	$passwd2 = $_POST['passwd2'];
+	if(strlen($GLOBALS['passwd1']) < 8 || strlen($GLOBALS['passwd1']) > 20)
+	{
+		$GLOBALS['everythingOK'] = false;
+		$_SESSION['passwdError'] = "Hasło musi posiadać od 8 do 20 znaków!";
+	}
+	if($GLOBALS['passwd1'] != $passwd2)
+	{
+		$GLOBALS['everythingOK'] = false;
+		$_SESSION['passwdError'] = "Podane hasła nie są identyczne!";
+	}
+	// Zapisuje wartosci, aby przy niepoprawnej walidacji nie wpisywac ich od nowa
+	$_SESSION['passwd1Saved'] = $GLOBALS['passwd1'];
+	$_SESSION['passwd2Saved'] = $passwd2;
+}
+
+function dbConnection()
+{
+}
+
+// Glowna funkcja walidacyjna (uruchamia walidacje wszystkich pol)
+function validation()
+{
+	firstName();
+	lastName();
+	dateOfTheBirth();
+	pesel();
+	login();
+	email();
+	passwds();
+	dbConnection();
+}
+
+/**************************ZABEZPIECZENIE PRZED MULTI CLICK'IEM**************************/
+
+require_once('multiClickPrevent.php');
+
+// Sprawdzenie, czy formularz zostal wyslany
+$postedToken = filter_input(INPUT_POST, 'token');
+if(!empty($postedToken))
+{
+	if(isTokenValid($postedToken))
+	{
+		// Wszystko w porzadku, mozna przystapic do walidacji
+		$GLOBALS['everythingOK'] = true;
+		validation();
+	}
+	else
+	{
+		$helper_login = $_POST['login'];
+		if(strlen($helper_login) >= 3 && strlen($helper_login) <= 20 && ctype_alnum($helper_login))
+			$_SESSION['login'] = $helper_login;
+		header("Location: multiclickError_signIn.php");
+		exit();
+	}
+}
+
+$token = getToken();
 ?>
 
 <!DOCTYPE HTML>
@@ -47,6 +175,11 @@ function showMonths()
 	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext"
 		  rel="stylesheet">
 	<script src="javascript_files/jquery-3.1.1.min.js"></script>
+	<script src="javascript_files/ajax/firstName.js"></script>
+	<script src="javascript_files/ajax/lastName.js"></script>
+	<script src="javascript_files/ajax/signIn_login.js"></script>
+	<script src="javascript_files/ajax/email.js"></script>
+	<script src="javascript_files/ajax/signIn_passwords.js"></script>
 	<script type="text/javascript" src="javascript_files/ajax/dayOfTheBirth.js"></script>
 	<script type="text/javascript" src="javascript_files/stickyMenu.js"></script>
 	<link rel="stylesheet" type="text/css"
@@ -100,22 +233,38 @@ function showMonths()
 		<div id="signInForm">
 			<form method="post">
 				<!--Imie-->
-				<input type="text" id="firstName" placeholder="imię" value="<?php
+				<input type="text" id="firstNameID" name="firstName" placeholder="imię" value="<?php
 				if(isset($_SESSION['firstNameSaved']))
 				{
 					echo $_SESSION['firstNameSaved'];
 					unset($_SESSION['firstNameSaved']);
 				}
 				?>"/>
+				<div class="errorFromAjax" id="firstNameError"></div>
+				<?php
+				if(isset($_SESSION['firstNameError']))
+				{
+					echo '<div class="errorAfterSubmit" id="firstName_errorAfterSubmit">' . $_SESSION['firstNameError'] . '</div>';
+					unset($_SESSION['firstNameError']);
+				}
+				?>
 
 				<!--Nazwisko-->
-				<input type="text" id="lastName" placeholder="nazwisko" value="<?php
+				<input type="text" id="lastNameID" name="lastName" placeholder="nazwisko" value="<?php
 				if(isset($_SESSION['lastNameSaved']))
 				{
 					echo $_SESSION['lastNameSaved'];
 					unset($_SESSION['lastNameSaved']);
 				}
 				?>"/>
+				<div class="errorFromAjax" id="lastNameError"></div>
+				<?php
+				if(isset($_SESSION['lastNameError']))
+				{
+					echo '<div class="errorAfterSubmit" id="lastName_errorAfterSubmit">' . $_SESSION['lastNameError'] . '</div>';
+					unset($_SESSION['lastNameError']);
+				}
+				?>
 
 				<!--Data urodzenia-->
 				<div id="dateOfTheBirth">
@@ -134,7 +283,7 @@ function showMonths()
 				</div>
 
 				<!--Numer PESEL-->
-				<input type="text" id="pesel" placeholder="pesel" value="<?php
+				<input type="text" name="pesel" placeholder="pesel" value="<?php
 				if(isset($_SESSION['peselSaved']))
 				{
 					echo $_SESSION['peselSaved'];
@@ -143,25 +292,41 @@ function showMonths()
 				?>"/>
 
 				<!--Login-->
-				<input type="text" id="login" placeholder="login" value="<?php
+				<input type="text" id="loginID" name="login" placeholder="login" value="<?php
 				if(isset($_SESSION['loginSaved']))
 				{
 					echo $_SESSION['loginSaved'];
 					unset($_SESSION['loginSaved']);
 				}
 				?>"/>
+				<div class="errorFromAjax" id="loginError"></div>
+				<?php
+				if(isset($_SESSION['loginError']))
+				{
+					echo '<div class="errorAfterSubmit" id="login_errorAfterSubmit">' . $_SESSION['loginError'] . '</div>';
+					unset($_SESSION['loginError']);
+				}
+				?>
 
 				<!--Email-->
-				<input type="text" id="email" placeholder="e-mail" value="<?php
+				<input type="text" id="emailID" name="email" placeholder="e-mail" value="<?php
 				if(isset($_SESSION['emailSaved']))
 				{
 					echo $_SESSION['emailSaved'];
 					unset($_SESSION['emailSaved']);
 				}
 				?>"/>
+				<div class="errorFromAjax" id="emailError"></div>
+				<?php
+				if(isset($_SESSION['emailError']))
+				{
+					echo '<div class="errorAfterSubmit" id="email_errorAfterSubmit">' . $_SESSION['emailError'] . '</div>';
+					unset($_SESSION['emailError']);
+				}
+				?>
 
 				<!--Haslo-->
-				<input type="password" id="passwd1" placeholder="hasło" value="<?php
+				<input type="password" id="passwd1ID" name="passwd1" placeholder="hasło" value="<?php
 				if(isset($_SESSION['passwd1Saved']))
 				{
 					echo $_SESSION['passwd1Saved'];
@@ -170,17 +335,28 @@ function showMonths()
 				?>"/>
 
 				<!--Powtorzone haslo-->
-				<input type="password" id="passwd2" placeholder="powtórz hasło" value="<?php
+				<input type="password" id="passwd2ID" name="passwd2" placeholder="powtórz hasło" value="<?php
 				if(isset($_SESSION['passwd2Saved']))
 				{
 					echo $_SESSION['passwd2Saved'];
 					unset($_SESSION['passwd2Saved']);
 				}
 				?>"/>
+				<div class="errorFromAjax" id="passwdError"></div>
+				<?php
+				if(isset($_SESSION['passwdError']))
+				{
+					echo '<div class="errorAfterSubmit" id="passwd_errorAfterSubmit">' . $_SESSION['passwdError'] . '</div>';
+					unset($_SESSION['passwdError']);
+				}
+				?>
 
 				<!--Submit zatwierdzajacy-->
 				<input type="submit" value="Rejestruj"
 					   onclick="this.disabled=true; this.value='Wczytuję...'; this.form.submit();"/>
+
+				<!--Input przechowujacy token, ktory zapobiega multiclick'owi-->
+				<input type="hidden" name="token" value="<?php echo $token;?>"/>
 			</form>
 		</div>
 	</div>

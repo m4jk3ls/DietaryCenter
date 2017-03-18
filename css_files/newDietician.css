@@ -23,6 +23,22 @@ select
 	font-size: 18px;
 }
 
+
+.errorFromAjax
+{
+	color: #ff6600;
+	font-size: 12px;
+	text-align: center;
+}
+
+.errorAfterSubmit
+{
+	color: #ff6600;
+	font-size: 13px;
+	text-align: center;
+	margin-top: 5px;
+}
+
 input[type=text],
 input[type=password],
 #dateOfTheBirth
