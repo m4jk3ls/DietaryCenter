@@ -85,6 +85,7 @@ function showAllDieticians()
 		  rel="stylesheet">
 	<script src="javascript_files/jquery-3.1.1.min.js"></script>
 	<script type="text/javascript" src="javascript_files/stickyMenu.js"></script>
+	<script src="javascript_files/ajax/removeUser.js"></script>
 	<link rel="stylesheet" type="text/css"
 		  href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css"/>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>

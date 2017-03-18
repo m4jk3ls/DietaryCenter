@@ -10,6 +10,7 @@ else
 
 if(isset($_SESSION['firstNameSaved'])) unset($_SESSION['firstNameSaved']);
 if(isset($_SESSION['lastNameSaved'])) unset($_SESSION['lastNameSaved']);
+if(isset($_SESSION['peselSaved'])) unset($_SESSION['peselSaved']);
 if(isset($_SESSION['loginSaved'])) unset($_SESSION['loginSaved']);
 if(isset($_SESSION['emailSaved'])) unset($_SESSION['emailSaved']);
 if(isset($_SESSION['passwd1Saved'])) unset($_SESSION['passwd1Saved']);
@@ -17,6 +18,7 @@ if(isset($_SESSION['passwd2Saved'])) unset($_SESSION['passwd2Saved']);
 
 if(isset($_SESSION['firstNameError'])) unset($_SESSION['firstNameError']);
 if(isset($_SESSION['lastNameError'])) unset($_SESSION['lastNameError']);
+if(isset($_SESSION['peselError'])) unset($_SESSION['peselError']);
 if(isset($_SESSION['loginError'])) unset($_SESSION['loginError']);
 if(isset($_SESSION['emailError'])) unset($_SESSION['emailError']);
 if(isset($_SESSION['passwdError'])) unset($_SESSION['passwdError']);

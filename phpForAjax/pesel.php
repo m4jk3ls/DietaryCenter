@@ -22,3 +22,41 @@ if(!isset($_POST['pesel']))
 	echo "Nie przesłano numeru PESEL!";
 else if(!CheckPESEL($_POST['pesel']))
 	echo "Numer PESEL jest niepoprawny!";
+else
+{
+	require_once "../connect.php";
+	mysqli_report(MYSQLI_REPORT_STRICT);
+	try
+	{
+		// Proba polaczenia sie z baza
+		$connection = new mysqli($host, $db_user, $db_password, $db_name);
+		$connection->set_charset('utf8');
+
+		// Jesli powyzsza proba zawiedzie, to rzuc wyjatkiem
+		if($connection->connect_errno != 0)
+			throw new Exception($connection->connect_error);
+		else
+		{
+			$pesel = $_POST['pesel'];
+			if($result = $connection->query("select personalIdentityNumber from dietician where personalIdentityNumber like '$pesel'"))
+			{
+				$howManyUsers = $result->num_rows;
+				if($howManyUsers > 0)
+				{
+					echo 'To nie jest Twój numer PESEL!';
+					$result->free_result();
+				}
+				else
+					$result->free_result();
+			}
+			else
+				throw new Exception($connection->error);
+			$connection->close();
+		}
+	}
+	catch (Exception $e)
+	{
+		header("Location: ../html_files/serverError_goToLogout.html");
+		//echo '<br/>Informacja developerska: '.$e;
+	}
+}

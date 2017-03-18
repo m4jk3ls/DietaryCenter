@@ -31,6 +31,17 @@ function showMonths()
 	<option>Grudzień</option>';
 }
 
+// Funkcja do generowania soli
+function generateSalt()
+{
+	$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	$charactersLength = strlen($characters);
+	$randomString = '';
+	for ($i = 0; $i < 10; $i++)
+		$randomString .= $characters[rand(0, $charactersLength - 1)];
+	return $randomString;
+}
+
 // Walidacja imienia
 function firstName()
 {
@@ -61,7 +72,8 @@ function dateOfTheBirth()
 {
 	if(!isset($_POST['year']) || $_POST['year'] == "---rok---" ||
 		!isset($_POST['month']) || $_POST['month'] == "---miesiąc---" ||
-		!isset($_POST['day']) || $_POST['day'] == "---dzień---")
+		!isset($_POST['day']) || $_POST['day'] == "---dzień---"
+	)
 	{
 		$GLOBALS['everythingOK'] = false;
 		$_SESSION['dateError'] = "Podaj prawidłową datę urodzenia!";
@@ -151,8 +163,155 @@ function passwds()
 	$_SESSION['passwd2Saved'] = $passwd2;
 }
 
+// Sprawdzanie liczby tozsamych adresow email z podanym w formularzu
+function howManyEmails($result)
+{
+	$howMany = $result->num_rows;
+	if($howMany > 0)
+	{
+		$GLOBALS['everythingOK'] = false;
+		$_SESSION['emailError'] = "Istnieje już użytkownik o takim adresie email!";
+	}
+}
+
+// Sprawdzanie liczby tozsamych loginow z podanym w formularzu
+function howManyLogins($result)
+{
+	$howMany = $result->num_rows;
+	if($howMany > 0)
+	{
+		$GLOBALS['everythingOK'] = false;
+		$_SESSION['loginError'] = "Istnieje już użytkownik o takim loginie! Wybierz inny.";
+	}
+}
+
+function isTherePesel($result)
+{
+	$howMany = $result->num_rows;
+	if($howMany > 0)
+	{
+		$GLOBALS['everythingOK'] = false;
+		$_SESSION['peselError'] = "To nie jest Twój numer PESEL!";
+	}
+}
+
+function convertMonthToNumber($month)
+{
+	switch ($month)
+	{
+		case "Styczeń":
+			return "01";
+		case "Luty":
+			return "02";
+		case "Marzec":
+			return "03";
+		case "Kwiecień":
+			return "04";
+		case "Maj":
+			return "05";
+		case "Czerwiec":
+			return "06";
+		case "Lipiec":
+			return "07";
+		case "Sierpień":
+			return "08";
+		case "Wrzesień":
+			return "09";
+		case "Październik":
+			return "10";
+		case "Listopad":
+			return "11";
+		case "Grudzień":
+			return "12";
+		default:
+			return null;
+	}
+}
+
+// Transakcja, ktora ostatecznie wprowadza dane nowego uzytkownika-pacjenta do bazy
+function saveNewUser($passwdHash, $salt)
+{
+	global $firstName, $lastName, $login, $email, $pesel;
+	$dateOfTheBirth = $_POST['year'] . '-' . convertMonthToNumber($_POST['month']) . '-' . $_POST['day'];
+	$pathToImage = "img/" . $firstName . ' ' . $lastName . '.png';
+
+	$GLOBALS['connection']->query("START TRANSACTION");
+	if($GLOBALS['connection']->query("insert into user values (null, '$firstName', '$lastName', '$email', '$login', '$passwdHash', '$salt')") &&
+		$GLOBALS['connection']->query("insert into dietician values (null, LAST_INSERT_ID(), '$pesel', '$dateOfTheBirth', '$pathToImage')")
+	)
+		return true;
+	else
+		return false;
+}
+
+// Glowna funkcja, obslugujaca polaczenie z baza danych
 function dbConnection()
 {
+	global $login, $pesel, $email, $passwd1, $host, $db_user, $db_password, $db_name;
+
+	if($GLOBALS['everythingOK'])
+	{
+		require_once "connect.php";
+		mysqli_report(MYSQLI_REPORT_STRICT);
+		try
+		{
+			// Proba polaczenia sie z baza
+			$GLOBALS['connection'] = new mysqli($host, $db_user, $db_password, $db_name);
+			$GLOBALS['connection']->set_charset('utf8');
+
+			// Jesli powyzsza proba zawiedzie, to rzuc wyjatkiem
+			if($GLOBALS['connection']->connect_errno != 0)
+				throw new Exception($GLOBALS['connection']->connect_error);
+			else
+			{
+				// Poszukaj, czy w bazie istnieje juz podany adres email
+				$result = $GLOBALS['connection']->query("select email from user where email = '$email'");
+				if(!$result) throw new Exception($GLOBALS['connection']->error);
+				howManyEmails($result);
+
+				// Poszukaj, czy w bazie istnieje juz podany login
+				$result = $GLOBALS['connection']->query("select userID from user where login = '$login'");
+				if(!$result) throw new Exception($GLOBALS['connection']->error);
+				howManyLogins($result);
+
+				// Poszukaj, czy w bazie istnieje juz podany numer PESEL
+				$result = $GLOBALS['connection']->query("select personalIdentityNumber from dietician where personalIdentityNumber = '$pesel'");
+				if(!$result) throw new Exception($GLOBALS['connection']->error);
+				isTherePesel($result);
+
+				//Jesli do tej pory wszystko przebieglo pomyslnie...
+				if($GLOBALS['everythingOK'])
+				{
+					try
+					{
+						// ...to wygeneruj sol, hash'uj haslo i wprowadz dane do bazy za pomoca transakcji
+						$salt = generateSalt();
+						$passwdHash = sha1($passwd1 . $salt);
+						if(saveNewUser($passwdHash, $salt))
+							$GLOBALS['connection']->query("COMMIT");
+						else
+							throw new Exception($GLOBALS['connection']->error);
+
+						// Ustaw prawdziwosc zmiennej 'udana_rejestracja' i prowadz do strony powitalnej
+						$_SESSION['registrationIsOK'] = true;
+						header('Location: dieticiansManager.php');
+					}
+					catch (Exception $e)
+					{
+						$GLOBALS['connection']->query("ROLLBACK");
+						header("Location: html_files/serverError_goToLogout.html");
+						//echo '<br/>Informacja developerska: '.$e;
+					}
+				}
+				$GLOBALS['connection']->close();
+			}
+		}
+		catch (Exception $e)
+		{
+			header("Location: html_files/serverError_goToLogout.html");
+			//echo '<br/>Informacja developerska: '.$e;
+		}
+	}
 }
 
 // Glowna funkcja walidacyjna (uruchamia walidacje wszystkich pol)

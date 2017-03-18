@@ -17,7 +17,7 @@ jQuery(document).ready(function ()
 		};
 	})(jQuery);
 
-	var showDays = function()
+	var showDays = function ()
 	{
 		var selectedMonth = selectWithMonths.val();
 		var selectedYear = selectWithYears.val();
@@ -38,6 +38,8 @@ jQuery(document).ready(function ()
 						selectWithDays.prop("disabled", false);
 						for (var i = 0; i < msg.length; i++)
 						{
+							if(msg[i] < 10)
+								msg[i] = "0" + msg[i];
 							selectWithDays.append($('<option>',
 								{
 									value: msg[i],

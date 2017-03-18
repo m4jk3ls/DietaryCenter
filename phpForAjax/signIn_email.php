@@ -26,7 +26,7 @@ else
 			else
 			{
 				// Poszukaj, czy w bazie istnieje juz podany adres email
-				$result = $connection->query("select p.patientID from patient p join user u on (p.userID = u.userID) where u.email = '$email'");
+				$result = $connection->query("select email from user where email = '$email'");
 				if(!$result) throw new Exception($connection->error);
 				$howMany = $result->num_rows;
 				if($howMany > 0)
@@ -36,7 +36,7 @@ else
 		}
 		catch (Exception $e)
 		{
-			header("Location: ../html_files/serverError_goToIndex.html");
+			header("Location: ../html_files/serverError_goToLogout.html");
 			//echo '<br/>Informacja developerska: '.$e;
 		}
 	}
