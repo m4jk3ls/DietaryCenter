@@ -139,7 +139,7 @@ function showAllDieticians()
 	<div id="content">
 		<h1>Aktualni pracownicy</h1>
 		<?php showAllDieticians(); ?>
-		<button type="button" id="addDieticianButton">Dodaj</button>
+		<button type="button" id="addDieticianButton" onclick="location.href='newDietician.php';">Dodaj</button>
 	</div>
 	<div id="footer">NaturHouse - Twój osobisty dietetyk. Strona w sieci od 2017 r. &copy;
 					 Wszelkie prawa zastrzeżone</div>

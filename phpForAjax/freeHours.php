@@ -2,7 +2,7 @@
 session_start();
 
 if(!isset($_POST['date']))
-	echo 'Nie wybrano daty!';
+	echo json_encode('Nie wybrano daty!');
 else
 {
 	$date = $_POST['date'];
