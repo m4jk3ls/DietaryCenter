@@ -59,6 +59,13 @@ function lastName()
 
 function dateOfTheBirth()
 {
+	if(!isset($_POST['year']) || $_POST['year'] == "---rok---" ||
+		!isset($_POST['month']) || $_POST['month'] == "---miesiąc---" ||
+		!isset($_POST['day']) || $_POST['day'] == "---dzień---")
+	{
+		$GLOBALS['everythingOK'] = false;
+		$_SESSION['dateError'] = "Podaj prawidłową datę urodzenia!";
+	}
 }
 
 function CheckPESEL($str)
@@ -309,6 +316,13 @@ $token = getToken();
 						<option>---dzień---</option>
 					</select>
 				</div>
+				<?php
+				if(isset($_SESSION['dateError']))
+				{
+					echo '<div class="errorAfterSubmit">' . $_SESSION['dateError'] . '</div>';
+					unset($_SESSION['dateError']);
+				}
+				?>
 
 				<!--Numer PESEL-->
 				<input type="text" id="peselID" name="pesel" placeholder="pesel" value="<?php
