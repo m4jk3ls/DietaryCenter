@@ -14,7 +14,10 @@ jQuery(document).ready(function ()
 				data: "userID=" + userID + "&" + "year=" + year + "&" + "month=" + month + "&" + "day=" + day,
 				success: function (msg)
 				{
-					$("#content").html(msg);
+					if(msg == "Podaj poprawną datę!")
+						$("#error").text(msg).css("margin-top", "5px");
+					else
+						$("#content").html(msg);
 				}
 			});
 	});

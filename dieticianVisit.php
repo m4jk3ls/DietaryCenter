@@ -93,6 +93,7 @@ function showMonths()
 			</select>
 		</div>
 
+		<div id="error"></div>
 		<button type="button" id="haveALook" value="<?php echo $_SESSION['userID']; ?>">Looknij</button>
 	</div>
 	<div id="footer">NaturHouse - Twój osobisty dietetyk. Strona w sieci od 2017 r. &copy;

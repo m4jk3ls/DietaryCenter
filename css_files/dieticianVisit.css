@@ -17,6 +17,13 @@ select
 	font-size: 14px;
 }
 
+#error
+{
+	color: #ff6600;
+	font-size: 15px;
+	text-align: center;
+}
+
 button
 {
 	width: 200px;
