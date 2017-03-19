@@ -232,12 +232,7 @@ require_once('multiClickPrevent.php');
 $postedToken = filter_input(INPUT_POST, 'token');
 if(!empty($postedToken))
 {
-	if(!isTokenValid($postedToken))
-	{
-		header("Location: html_files/multiclickError_dieticianChoice.html");
-		exit();
-	}
-	else if(!isset($_POST['radioButton']))
+	if(!isset($_POST['radioButton']))
 	{
 		header("Location: html_files/dieticianDidntSelected.html");
 		exit();

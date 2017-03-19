@@ -7,30 +7,26 @@ if(!isset($_COOKIE["dieticianLogged"]))
 	exit();
 }
 
-function showYears()
-{
-	$year = date("Y") - 1;
-	for ($i = 0; $i < 3; $i++)
-		echo '<option>' . $year++ . '</option>';
-}
+/**************************ZABEZPIECZENIE PRZED MULTI CLICK'IEM**************************/
 
-function showMonths()
-{
-	echo
-	'<option>Styczeń</option>
-	<option>Luty</option>
-	<option>Marzec</option>
-	<option>Kwiecień</option>
-	<option>Maj</option>
-	<option>Czerwiec</option>
-	<option>Lipiec</option>
-	<option>Sierpień</option>
-	<option>Wrzesień</option>
-	<option>Październik</option>
-	<option>Listopad</option>
-	<option>Grudzień</option>';
-}
+require_once('multiClickPrevent.php');
 
+// Sprawdzenie, czy formularz zostal wyslany
+$postedToken = filter_input(INPUT_POST, 'token');
+if(!empty($postedToken))
+{
+	if(!isset($_POST['radioButton']))
+	{
+		header("Location: html_files/patientDidntSelected.html");
+		exit();
+	}
+}
+else
+{
+	header("Location: measurement.php");
+	exit();
+}
+$token = getToken();
 ?>
 
 <!DOCTYPE HTML>
@@ -42,18 +38,25 @@ function showMonths()
 	<link rel="stylesheet" href="css_files/basic.css" type="text/css"/>
 	<link href="css_files/card.css" rel="stylesheet" type="text/css"/>
 	<link href="css_files/contentCenter.css" rel="stylesheet" type="text/css"/>
-	<link href="css_files/dieticianVisit.css" rel="stylesheet" type="text/css"/>
+	<link href="css_files/measurement.css" rel="stylesheet" type="text/css"/>
+	<link href="css_files/addMeasurement.css" rel="stylesheet" type="text/css"/>
+	<link href="css_files/submitButton.css" rel="stylesheet" type="text/css"/>
 	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext"
 		  rel="stylesheet">
 	<script src="javascript_files/jquery-3.1.1.min.js"></script>
 	<script type="text/javascript" src="javascript_files/stickyMenu.js"></script>
-	<script type="text/javascript" src="javascript_files/ajax/dayInSelectTag.js"></script>
-	<script type="text/javascript" src="javascript_files/ajax/showDieticianVisits.js"></script>
 	<link rel="stylesheet" type="text/css"
 		  href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css"/>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
 	<script src="javascript_files/cookiesBanner.js"></script>
 	<noscript><div id="infoAboutNoScript">Twoja przeglądarka nie obsługuje skryptów JavaScript!</div></noscript>
+	<style>
+		input[type=submit]
+		{
+			display: block;
+			margin: 30px auto 0 auto;
+		}
+	</style>
 </head>
 
 <body>
@@ -76,25 +79,15 @@ function showMonths()
 		</div>
 	</div>
 	<div id="content">
-		<h1>Wybierz dowolny dzień ...</h1>
-		<h3>... i zobacz swoje wizyty</h3>
+		<h1>Wprowadź pomiary</h1>
+		<input type="text" name="bodyMass" id="bodyMassID" placeholder="Masa ciała"/>
+		<input type="text" name="fat" id="fatID" placeholder="Ilość tłuszczu [%]"/>
+		<input type="text" name="water" id="waterID" placeholder="Ilość wody [%]"/>
+		<input type="submit" id="saveMeasurement" value="Zapisz"
+			   onclick="this.disabled=true; this.value='Wczytuję...'; this.form.submit();"/>
 
-		<div id="date">
-			<select title="year_title" name="year">
-				<option>---rok---</option>
-				<?php showYears(); ?>
-			</select>
-			<select title="month_title" name="month">
-				<option>---miesiąc---</option>
-				<?php showMonths(); ?>
-			</select>
-			<select title="day_title" name="day">
-				<option>---dzień---</option>
-			</select>
-		</div>
-
-		<div id="error"></div>
-		<button type="button" id="haveALook" value="<?php echo $_SESSION['userID']; ?>">Looknij</button>
+		<!--Input przechowujacy token, ktory zapobiega multiclick'owi-->
+		<input type="hidden" name="token" value="<?php echo $token; ?>"/>
 	</div>
 	<div id="footer">NaturHouse - Twój osobisty dietetyk. Strona w sieci od 2017 r. &copy;
 					 Wszelkie prawa zastrzeżone</div>

@@ -1,0 +1,65 @@
+input[type=text]
+{
+	width: 140px;
+	background-color: #efefef;
+	color: #666;
+	border: 2px solid #ddd;
+	border-radius: 5px;
+	font-size: 14px;
+	padding: 10px;
+	box-sizing: border-box;
+	outline: none;
+}
+
+input[type=text]:focus
+{
+	-webkit-box-shadow: 0 0 10px 2px rgba(204, 204, 204, 0.9);
+	-moz-box-shadow: 0 0 10px 2px rgba(204, 204, 204, 0.9);
+	box-shadow: 0 0 10px 2px rgba(204, 204, 204, 0.9);
+	border: 2px solid #a5cda5;
+	background-color: #e9f3e9;
+	color: #428c42;
+}
+
+input::-webkit-input-placeholder
+{
+	color: #999;
+}
+
+input:focus::-webkit-input-placeholder
+{
+	color: #428C42;
+}
+
+/* Firefox < 19 */
+input:-moz-placeholder
+{
+	color: #999;
+}
+
+input:focus:-moz-placeholder
+{
+	color: #428C42;
+}
+
+/* Firefox > 19 */
+input::-moz-placeholder
+{
+	color: #999;
+}
+
+input:focus::-moz-placeholder
+{
+	color: #428C42;
+}
+
+/* Internet Explorer 10 */
+input:-ms-input-placeholder
+{
+	color: #999;
+}
+
+input:focus:-ms-input-placeholder
+{
+	color: #428C42;
+}

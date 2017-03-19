@@ -7,30 +7,63 @@ if(!isset($_COOKIE["dieticianLogged"]))
 	exit();
 }
 
-function showYears()
+require_once "connect.php";
+
+function showAllPatients()
 {
-	$year = date("Y") - 1;
-	for ($i = 0; $i < 3; $i++)
-		echo '<option>' . $year++ . '</option>';
+	global $host, $db_user, $db_password, $db_name;
+	mysqli_report(MYSQLI_REPORT_STRICT);
+	try
+	{
+		$connection = new mysqli($host, $db_user, $db_password, $db_name);
+		$connection->set_charset('utf8');
+
+		if($connection->connect_errno != 0)
+			throw new Exception($connection->connect_error);
+		else
+		{
+			if(!($result = $connection->query("select concat(u.lastName, ' ', u.firstName) as ourPatient, p.patientID, u.email
+				from patient p join user u on(p.userID = u.userID) order by ourPatient asc"))
+			)
+				throw new Exception($connection->error);
+
+			echo
+			'<table>
+				<tr class="firstRow">
+					<td>Nazwisko i imię</td>
+					<td>Adres e-mail</td>
+					<td>Który pacjent?</td>
+				</tr>';
+
+			while ($row = $result->fetch_assoc())
+			{
+				echo
+					'<tr class="anotherRow">
+						<td>' . $row['ourPatient'] . '</td>
+						<td>' . $row['email'] . '</td>
+						<td>
+							<label><input type="radio" name="radioButton" value="' . $row['patientID'] . '"/>Wybieram</label>
+						</td>
+					</tr>';
+			}
+
+			echo
+			'</table>';
+
+			$result->free_result();
+			$connection->close();
+		}
+	}
+	catch (Exception $e)
+	{
+		header("Location: html_files/serverError_goToLogout.html");
+		//echo '<br/>Informacja developerska: '.$e;
+		exit();
+	}
 }
 
-function showMonths()
-{
-	echo
-	'<option>Styczeń</option>
-	<option>Luty</option>
-	<option>Marzec</option>
-	<option>Kwiecień</option>
-	<option>Maj</option>
-	<option>Czerwiec</option>
-	<option>Lipiec</option>
-	<option>Sierpień</option>
-	<option>Wrzesień</option>
-	<option>Październik</option>
-	<option>Listopad</option>
-	<option>Grudzień</option>';
-}
-
+require_once('multiClickPrevent.php');
+$token = getToken();
 ?>
 
 <!DOCTYPE HTML>
@@ -42,18 +75,24 @@ function showMonths()
 	<link rel="stylesheet" href="css_files/basic.css" type="text/css"/>
 	<link href="css_files/card.css" rel="stylesheet" type="text/css"/>
 	<link href="css_files/contentCenter.css" rel="stylesheet" type="text/css"/>
-	<link href="css_files/dieticianVisit.css" rel="stylesheet" type="text/css"/>
+	<link href="css_files/measurement.css" rel="stylesheet" type="text/css"/>
+	<link href="css_files/submitButton.css" rel="stylesheet" type="text/css"/>
 	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext"
 		  rel="stylesheet">
 	<script src="javascript_files/jquery-3.1.1.min.js"></script>
 	<script type="text/javascript" src="javascript_files/stickyMenu.js"></script>
-	<script type="text/javascript" src="javascript_files/ajax/dayInSelectTag.js"></script>
-	<script type="text/javascript" src="javascript_files/ajax/showDieticianVisits.js"></script>
 	<link rel="stylesheet" type="text/css"
 		  href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css"/>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
 	<script src="javascript_files/cookiesBanner.js"></script>
 	<noscript><div id="infoAboutNoScript">Twoja przeglądarka nie obsługuje skryptów JavaScript!</div></noscript>
+	<style>
+		input[type=submit]
+		{
+			display: block;
+			margin: 30px auto 0 auto;
+		}
+	</style>
 </head>
 
 <body>
@@ -76,25 +115,16 @@ function showMonths()
 		</div>
 	</div>
 	<div id="content">
-		<h1>Wybierz dowolny dzień ...</h1>
-		<h3>... i zobacz swoje wizyty</h3>
+		<h1>Pacjenci NaturHouse</h1>
+		<form action="addMeasurement.php" method="post">
+			<?php showAllPatients(); ?>
 
-		<div id="date">
-			<select title="year_title" name="year">
-				<option>---rok---</option>
-				<?php showYears(); ?>
-			</select>
-			<select title="month_title" name="month">
-				<option>---miesiąc---</option>
-				<?php showMonths(); ?>
-			</select>
-			<select title="day_title" name="day">
-				<option>---dzień---</option>
-			</select>
-		</div>
+			<input type="submit" id="goToMeasurement" value="Dodaj nowe badanie"
+				   onclick="this.disabled=true; this.value='Wczytuję...'; this.form.submit();"/>
 
-		<div id="error"></div>
-		<button type="button" id="haveALook" value="<?php echo $_SESSION['userID']; ?>">Looknij</button>
+			<!--Input przechowujacy token, ktory zapobiega multiclick'owi-->
+			<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+		</form>
 	</div>
 	<div id="footer">NaturHouse - Twój osobisty dietetyk. Strona w sieci od 2017 r. &copy;
 					 Wszelkie prawa zastrzeżone</div>

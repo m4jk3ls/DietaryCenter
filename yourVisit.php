@@ -159,9 +159,9 @@ $token = getToken();
 									<div class="nameHeadline">' . $row['firstName'] . ' ' . $row['lastName'] . '</div>
 									<img src="' . $row['pathToImage'] . '" class="dieticianImage"/>
 										<div class="divWithRadio">
-										<label><input type="radio" name="radioButton" value="' . $row['dieticianID'] . '"/>Wybieram</label>
-									</div>
-								</div>';
+											<label><input type="radio" name="radioButton" value="' . $row['dieticianID'] . '"/>Wybieram</label>
+										</div>
+									</div>';
 					}
 					$result->free_result();
 				}
