@@ -23,7 +23,7 @@ jQuery(document).ready(function ()
 		var selectedYear = selectWithYears.val();
 		$.ajax(
 			{
-				url: "phpForAjax/dayOfTheBirth.php",
+				url: "phpForAjax/dayInSelectTag.php",
 				type: "POST",
 				data: "year=" + selectedYear + "&" + "month=" + selectedMonth,
 				dataType: 'json',

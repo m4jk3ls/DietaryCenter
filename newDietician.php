@@ -374,7 +374,7 @@ $token = getToken();
 	<script src="javascript_files/ajax/signIn_login.js"></script>
 	<script src="javascript_files/ajax/email.js"></script>
 	<script src="javascript_files/ajax/signIn_passwords.js"></script>
-	<script type="text/javascript" src="javascript_files/ajax/dayOfTheBirth.js"></script>
+	<script type="text/javascript" src="javascript_files/ajax/dayInSelectTag.js"></script>
 	<script type="text/javascript" src="javascript_files/stickyMenu.js"></script>
 	<link rel="stylesheet" type="text/css"
 		  href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css"/>
