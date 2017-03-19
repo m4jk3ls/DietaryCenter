@@ -30,6 +30,7 @@ function showMonths()
 	<option>Listopad</option>
 	<option>Grudzień</option>';
 }
+
 ?>
 
 <!DOCTYPE HTML>
@@ -47,6 +48,7 @@ function showMonths()
 	<script src="javascript_files/jquery-3.1.1.min.js"></script>
 	<script type="text/javascript" src="javascript_files/stickyMenu.js"></script>
 	<script type="text/javascript" src="javascript_files/ajax/dayInSelectTag.js"></script>
+	<script type="text/javascript" src="javascript_files/ajax/showDieticianVisits.js"></script>
 	<link rel="stylesheet" type="text/css"
 		  href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css"/>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
@@ -90,6 +92,8 @@ function showMonths()
 				<option>---dzień---</option>
 			</select>
 		</div>
+
+		<button type="button" id="haveALook" value="<?php echo $_SESSION['userID']; ?>">Looknij</button>
 	</div>
 	<div id="footer">NaturHouse - Twój osobisty dietetyk. Strona w sieci od 2017 r. &copy;
 					 Wszelkie prawa zastrzeżone</div>
