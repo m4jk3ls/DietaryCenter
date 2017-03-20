@@ -39,7 +39,6 @@ CREATE TABLE `active_sessions` (
 
 LOCK TABLES `active_sessions` WRITE;
 /*!40000 ALTER TABLE `active_sessions` DISABLE KEYS */;
-INSERT INTO `active_sessions` VALUES (11,'::1','Chrome','2017-03-20 21:57:55','8LgtxIgOvtLrLmeryfCqytqt1RBbEMCEF4rsN4yIfBU0K3ZrweKAgvEydHGW4ajP5KvOWMIZS8WXC7COmBJ8QUK1gUE4nUSomNqx');
 /*!40000 ALTER TABLE `active_sessions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -444,4 +443,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-03-20 22:03:17
+-- Dump completed on 2017-03-20 22:06:33
