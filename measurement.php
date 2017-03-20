@@ -102,7 +102,7 @@ $token = getToken();
 		<li><a href="dieticianCard.php">Strona główna</a></li>
 		<li><a href="workSchedule.php">Ustal grafik</a></li>
 		<li><a href="dieticianVisit.php">Wizyta</a></li>
-		<li><a href="measurement.php">Badania</a></li>
+		<li><a href="measurement.php" style="background-color: #CCBD87;">Badania</a></li>
 		<li><a href="logOut.php">Wyloguj</a></li>
 	</ol>
 	<div id="topbarPackage">

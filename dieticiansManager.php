@@ -124,7 +124,7 @@ function showAllDieticians()
 	<div id="logo"><img id="logo-img" src="img/logo.jpg"/></div>
 	<ol class="menu">
 		<li><a href="adminPanel.php">Strona główna</a></li>
-		<li><a href="dieticiansManager.php">Dietetycy</a></li>
+		<li><a href="dieticiansManager.php" style="background-color: #CCBD87;">Dietetycy</a></li>
 		<li><a href="patientsManager.php">Pacjenci</a></li>
 		<li><a href="logOut.php">Wyloguj</a></li>
 	</ol>

@@ -202,33 +202,33 @@ function showOfficehours()
 					</tr>
 					<tr>
 						<td class="tableLeftColumn">Poniedziałek</td>
-						<td class="tableHours">' . $mon['starts_at'] . '</td>
-						<td class="tableHours">' . $mon['ends_at'] . '</td>
+						<td class="tableHours">' . substr($mon['starts_at'], 0, -3) . '</td>
+						<td class="tableHours">' . substr($mon['ends_at'], 0, -3) . '</td>
 					</tr>
 					<tr>
 						<td class="tableLeftColumn">Wtorek</td>
-						<td class="tableHours">' . $tue['starts_at'] . '</td>
-						<td class="tableHours">' . $tue['ends_at'] . '</td>
+						<td class="tableHours">' . substr($tue['starts_at'], 0, -3) . '</td>
+						<td class="tableHours">' . substr($tue['ends_at'], 0, -3) . '</td>
 					</tr>
 					<tr>
 						<td class="tableLeftColumn">Środa</td>
-						<td class="tableHours">' . $wed['starts_at'] . '</td>
-						<td class="tableHours">' . $wed['ends_at'] . '</td>
+						<td class="tableHours">' . substr($wed['starts_at'], 0, -3) . '</td>
+						<td class="tableHours">' . substr($wed['ends_at'], 0, -3) . '</td>
 					</tr>
 					<tr>
 						<td class="tableLeftColumn">Czwartek</td>
-						<td class="tableHours">' . $thu['starts_at'] . '</td>
-						<td class="tableHours">' . $thu['ends_at'] . '</td>
+						<td class="tableHours">' . substr($thu['starts_at'], 0, -3) . '</td>
+						<td class="tableHours">' . substr($thu['ends_at'], 0, -3) . '</td>
 					</tr>
 					<tr>
 						<td class="tableLeftColumn">Piątek</td>
-						<td class="tableHours">' . $fri['starts_at'] . '</td>
-						<td class="tableHours">' . $fri['ends_at'] . '</td>
+						<td class="tableHours">' . substr($fri['starts_at'], 0, -3) . '</td>
+						<td class="tableHours">' . substr($fri['ends_at'], 0, -3) . '</td>
 					</tr>
 					<tr>
 						<td class="tableLeftColumn">Sobota</td>
-						<td class="tableHours">' . $sat['starts_at'] . '</td>
-						<td class="tableHours">' . $sat['ends_at'] . '</td>
+						<td class="tableHours">' . substr($sat['starts_at'], 0, -3) . '</td>
+						<td class="tableHours">' . substr($sat['ends_at'], 0, -3) . '</td>
 					</tr>
 				</table>';
 				$monResult->free_result();
@@ -288,6 +288,12 @@ $token = getToken();
 	<script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
 	<script src="javascript_files/cookiesBanner.js"></script>
 	<noscript><div id="infoAboutNoScript">Twoja przeglądarka nie obsługuje skryptów JavaScript!</div></noscript>
+	<style>
+		input[type=submit]
+		{
+			margin: 40px auto 0 auto;
+		}
+	</style>
 </head>
 
 <body>
@@ -295,7 +301,7 @@ $token = getToken();
 	<div id="logo"><img id="logo-img" src="img/logo.jpg"/></div>
 	<ol class="menu">
 		<li><a href="dieticianCard.php">Strona główna</a></li>
-		<li><a href="workSchedule.php">Ustal grafik</a></li>
+		<li><a href="workSchedule.php" style="background-color: #CCBD87;">Ustal grafik</a></li>
 		<li><a href="dieticianVisit.php">Wizyta</a></li>
 		<li><a href="measurement.php">Badania</a></li>
 		<li><a href="logOut.php">Wyloguj</a></li>

@@ -6,44 +6,33 @@ if(!isset($_COOKIE["patientLogged"]))
 	header('Location: index.php');
 	exit();
 }
-else
+
+function drawTable()
 {
-	require_once "connect.php";
-	mysqli_report(MYSQLI_REPORT_STRICT);
-	try
-	{
-		$connection = new mysqli($host, $db_user, $db_password, $db_name);
-		$connection->set_charset('utf8');
+	echo
+	'<table>
+		<tr class="firstRow">
+			<td>Data</td>
+			<td>Masa ciała</td>
+			<td>Zawartość tłuszczu</td>
+			<td>Zawartość wody</td>
+			<td>Wskaźnik BMI</td>
+		</tr>';
 
-		if($connection->connect_errno != 0)
-			throw new Exception($connection->connect_error);
-		else
-		{
-			$helper_userID = $_SESSION['userID'];
-			$helper_token = $_COOKIE['token'];
-
-			if(!($result = $connection->query("select count(token) from active_sessions where userID like '$helper_userID' and token like '$helper_token'")))
-				throw new Exception($connection->error);
-			// Jesli w bazie nie ma pasujacego do ciastka token'a (zostal zwrocony wiersz z wartoscia count(token)=0)
-			if(!$result->fetch_assoc()['count(token)'])
-			{
-				if(!$connection->query("delete from active_sessions where userID like '$helper_userID'"))
-					throw new Exception($connection->error);
-				$connection->close();
-				$result->free_result();
-				header('Location: logOut.php');
-				exit();
-			}
-			$result->free_result();
-			$connection->close();
-		}
-	}
-	catch (Exception $e)
+	while ($row = $GLOBALS['result']->fetch_assoc())
 	{
-		header("Location: html_files/serverError_goToLogout.html");
-		//echo '<br/>Informacja developerska: '.$e;
-		exit();
+		echo
+			'<tr class="anotherRow">
+				<td>' . $row['Date'] . '</td>
+				<td>' . $row['bodyMass'] . ' kg</td>
+				<td>' . $row['fat'] . ' %</td>
+				<td>' . $row['water'] . ' %</td>
+				<td>' . $row['BMI'] . '</td>
+			</tr>';
 	}
+
+	echo '</table>';
+	$GLOBALS['result']->free_result();
 }
 ?>
 
@@ -56,8 +45,7 @@ else
 	<link rel="stylesheet" href="css_files/basic.css" type="text/css"/>
 	<link href="css_files/card.css" rel="stylesheet" type="text/css"/>
 	<link href="css_files/contentCenter.css" rel="stylesheet" type="text/css"/>
-	<link href="css_files/contentCenter.css" rel="stylesheet" type="text/css"/>
-	<link href="css_files/startPage.css" rel="stylesheet" type="text/css"/>
+	<link href="css_files/yourResults.css" rel="stylesheet" type="text/css"/>
 	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext"
 		  rel="stylesheet">
 	<script src="javascript_files/jquery-3.1.1.min.js"></script>
@@ -73,9 +61,9 @@ else
 <div id="container">
 	<div id="logo"><img id="logo-img" src="img/logo.jpg"/></div>
 	<ol class="menu">
-		<li><a href="yourCard.php" style="background-color: #CCBD87;">Strona główna</a></li>
+		<li><a href="yourCard.php">Strona główna</a></li>
 		<li><a href="yourVisit.php">Twoja wizyta</a></li>
-		<li><a href="yourResults.php">Twoje rezultaty</a></li>
+		<li><a href="yourResults.php" style="background-color: #CCBD87;">Twoje rezultaty</a></li>
 		<li><a href="contact.php">Kontakt</a></li>
 		<li><a href="logOut.php">Wyloguj</a></li>
 	</ol>
@@ -89,8 +77,37 @@ else
 		</div>
 	</div>
 	<div id="content">
-		<h1>Witaj! Miło znów Cię widzieć!</h1>
-		<h3>Zobacz co się zmieniło od Twojej ostatniej nieobecności ;)</h3>
+		<?php
+		require_once "connect.php";
+		mysqli_report(MYSQLI_REPORT_STRICT);
+		try
+		{
+			// Proba polaczenia sie z baza
+			$connection = new mysqli($host, $db_user, $db_password, $db_name);
+			$connection->set_charset('utf8');
+
+			// Jesli powyzsza proba zawiedzie, to rzuc wyjatkiem
+			if($connection->connect_errno != 0)
+				throw new Exception($connection->connect_error);
+			else
+			{
+				$helper_userID = $_SESSION['userID'];
+				if(!$GLOBALS['result'] = $connection->query("select measurementDate as Date, bodyMass, thePercentageOfFat as fat,
+															 thePercentageOfWater as water, BMI from measurement where patientID =
+												  			 (select patientID from patient where userID like '$helper_userID')
+												  			 order by Date desc")
+				)
+					throw new Exception($connection->error);
+				drawTable();
+				$connection->close();
+			}
+		}
+		catch (Exception $e)
+		{
+			header("Location: ../html_files/serverError_goToLogout.html");
+			//echo '<br/>Informacja developerska: '.$e;
+		}
+		?>
 	</div>
 	<div id="footer">NaturHouse - Twój osobisty dietetyk. Strona w sieci od 2017 r. &copy;
 					 Wszelkie prawa zastrzeżone</div>

@@ -124,7 +124,7 @@ function showAllPatients()
 	<ol class="menu">
 		<li><a href="adminPanel.php">Strona główna</a></li>
 		<li><a href="dieticiansManager.php">Dietetycy</a></li>
-		<li><a href="patientsManager.php">Pacjenci</a></li>
+		<li><a href="patientsManager.php" style="background-color: #CCBD87;">Pacjenci</a></li>
 		<li><a href="logOut.php">Wyloguj</a></li>
 	</ol>
 	<div id="topbarPackage">
