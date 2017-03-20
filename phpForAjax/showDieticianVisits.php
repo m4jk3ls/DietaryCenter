@@ -59,10 +59,8 @@ else
 			throw new Exception($connection->connect_error);
 		else
 		{
-			if(!$result = $connection->query("select concat(u.lastName, ' ', u.firstName) as Patient, v.visitDate as Date, v.visitHour as Hour
-											  from visit v join patient p on(v.patientID = p.patientID) join user u on(p.userID = u.userID)
-											  where v.dieticianID = (select dieticianID from dietician where userID like '$userID') and v.visitDate like '$date'
-											  order by v.visitDate asc, v.visitHour asc")
+			if(!($result = $connection->query("select Name, visitDate, visitHour from visits where dieticianID =
+											  (select dieticianID from dieticians where userID like '$userID') and visitDate like '$date'"))
 			)
 				throw new Exception($connection->error);
 			else
@@ -71,9 +69,9 @@ else
 				$i = 0;
 				while ($row = $result->fetch_assoc())
 				{
-					$visits[$i][] = $row['Patient'];
-					$visits[$i][] = $row['Date'];
-					$visits[$i][] = substr($row['Hour'], -8, 5);
+					$visits[$i][] = $row['Name'];
+					$visits[$i][] = $row['visitDate'];
+					$visits[$i][] = substr($row['visitHour'], -8, 5);
 					$i++;
 				}
 			}

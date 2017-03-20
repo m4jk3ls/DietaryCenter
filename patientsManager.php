@@ -21,11 +21,8 @@ function showAllPatients()
 			throw new Exception($connection->connect_error);
 		else
 		{
-			if(!($result = $connection->query("select concat(u.lastName, ' ', u.firstName) as ourPatient, u.login, u.email
-				from patient p join user u on(p.userID = u.userID) order by ourPatient asc"))
-			)
+			if(!($result = $connection->query("select Name, login, email from patients")))
 				throw new Exception($connection->error);
-
 			echo
 			'<table>
 				<tr class="firstRow">
@@ -39,7 +36,7 @@ function showAllPatients()
 			{
 				echo
 					'<tr class="anotherRow">
-						<td>' . $row['ourPatient'] . '</td>
+						<td>' . $row['Name'] . '</td>
 						<td>' . $row['login'] . '</td>
 						<td>' . $row['email'] . '</td>
 						<td>

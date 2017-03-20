@@ -155,7 +155,7 @@ $token = getToken();
 
 				if($connection->connect_errno != 0)
 					throw new Exception($connection->connect_error);
-				else if(!($result = $connection->query("call showDieticians()")))
+				else if(!($result = $connection->query("call bookVisit()")))
 					throw new Exception($connection->connect_error);
 				else
 				{

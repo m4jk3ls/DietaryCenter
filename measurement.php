@@ -22,11 +22,8 @@ function showAllPatients()
 			throw new Exception($connection->connect_error);
 		else
 		{
-			if(!($result = $connection->query("select concat(u.lastName, ' ', u.firstName) as ourPatient, p.patientID, u.email
-				from patient p join user u on(p.userID = u.userID) order by ourPatient asc"))
-			)
+			if(!($result = $connection->query("select Name, patientID, email from patients")))
 				throw new Exception($connection->error);
-
 			echo
 			'<table>
 				<tr class="firstRow">
@@ -39,7 +36,7 @@ function showAllPatients()
 			{
 				echo
 					'<tr class="anotherRow">
-						<td>' . $row['ourPatient'] . '</td>
+						<td>' . $row['Name'] . '</td>
 						<td>' . $row['email'] . '</td>
 						<td>
 							<label><input type="radio" name="radioButton" value="' . $row['patientID'] . '"/>Wybieram</label>

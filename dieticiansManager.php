@@ -21,12 +21,8 @@ function showAllDieticians()
 			throw new Exception($connection->connect_error);
 		else
 		{
-			if(!($result = $connection->query("select concat(u.lastName, ' ', u.firstName) as ourDietician, u.login,
-				u.email, d.dateOfBirth, d.personalIdentityNumber from dietician d join user u on(d.userID = u.userID)
-				order by ourDietician asc"))
-			)
+			if(!($result = $connection->query("select Name, login, email, dateOfBirth, PESEL from dieticians")))
 				throw new Exception($connection->error);
-
 			echo
 			'<table>
 				<tr class="firstRow">
@@ -42,11 +38,11 @@ function showAllDieticians()
 			{
 				echo
 					'<tr class="anotherRow">
-						<td>' . $row['ourDietician'] . '</td>
+						<td>' . $row['Name'] . '</td>
 						<td>' . $row['login'] . '</td>
 						<td>' . $row['email'] . '</td>
 						<td>' . $row['dateOfBirth'] . '</td>
-						<td>' . $row['personalIdentityNumber'] . '</td>
+						<td>' . $row['PESEL'] . '</td>
 						<td>
 							<button type="button" value="' . $row['login'] . '" class="removingButton"/>Usuń</button>
 						</td>
