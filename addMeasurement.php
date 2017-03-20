@@ -7,6 +7,31 @@ if(!isset($_COOKIE["dieticianLogged"]))
 	exit();
 }
 
+function showkgs()
+{
+	for ($i = 1; $i <= 150; $i++)
+		echo '<option>' . $i . ' kg</option>';
+}
+
+function showpercents()
+{
+	for ($i = 1; $i <= 100; $i++)
+		echo '<option>' . $i . '%</option>';
+}
+
+function showHeights()
+{
+	echo '<optgroup label="1 metr">';
+	for ($i = 1.00; $i <= 1.99; $i += 0.01)
+		echo '<option>' . $i . ' m</option>';
+	echo '</optgroup>';
+
+	echo '<optgroup label="2 metry">';
+	for ($i = 2.00; $i <= 2.50; $i += 0.01)
+		echo '<option>' . $i . ' m</option>';
+	echo '</optgroup>';
+}
+
 /**************************ZABEZPIECZENIE PRZED MULTI CLICK'IEM**************************/
 
 require_once('multiClickPrevent.php');
@@ -26,7 +51,6 @@ else
 	header("Location: measurement.php");
 	exit();
 }
-$token = getToken();
 ?>
 
 <!DOCTYPE HTML>
@@ -38,25 +62,18 @@ $token = getToken();
 	<link rel="stylesheet" href="css_files/basic.css" type="text/css"/>
 	<link href="css_files/card.css" rel="stylesheet" type="text/css"/>
 	<link href="css_files/contentCenter.css" rel="stylesheet" type="text/css"/>
-	<link href="css_files/measurement.css" rel="stylesheet" type="text/css"/>
 	<link href="css_files/addMeasurement.css" rel="stylesheet" type="text/css"/>
 	<link href="css_files/submitButton.css" rel="stylesheet" type="text/css"/>
 	<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Playfair+Display:400,700&amp;subset=latin-ext"
 		  rel="stylesheet">
 	<script src="javascript_files/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="javascript_files/ajax/addMeasurement.js"></script>
 	<script type="text/javascript" src="javascript_files/stickyMenu.js"></script>
 	<link rel="stylesheet" type="text/css"
 		  href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css"/>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
 	<script src="javascript_files/cookiesBanner.js"></script>
 	<noscript><div id="infoAboutNoScript">Twoja przeglądarka nie obsługuje skryptów JavaScript!</div></noscript>
-	<style>
-		input[type=submit]
-		{
-			display: block;
-			margin: 30px auto 0 auto;
-		}
-	</style>
 </head>
 
 <body>
@@ -80,14 +97,27 @@ $token = getToken();
 	</div>
 	<div id="content">
 		<h1>Wprowadź pomiary</h1>
-		<input type="text" name="bodyMass" id="bodyMassID" placeholder="Masa ciała"/>
-		<input type="text" name="fat" id="fatID" placeholder="Ilość tłuszczu [%]"/>
-		<input type="text" name="water" id="waterID" placeholder="Ilość wody [%]"/>
-		<input type="submit" id="saveMeasurement" value="Zapisz"
-			   onclick="this.disabled=true; this.value='Wczytuję...'; this.form.submit();"/>
 
-		<!--Input przechowujacy token, ktory zapobiega multiclick'owi-->
-		<input type="hidden" name="token" value="<?php echo $token; ?>"/>
+		<select title="bodyMass_title" name="bodyMass">
+			<option>Masa ciała</option>
+			<?php showkgs(); ?>
+		</select>
+		<select title="fat_title" name="fat">
+			<option>Ilość tłuszczu</option>
+			<?php showpercents(); ?>
+		</select>
+		<select title="water_title" name="water">
+			<option>Ilość wody</option>
+			<?php showpercents(); ?>
+		</select>
+		<select title="height_title" name="height">
+			<option>Wzrost</option>
+			<?php showHeights(); ?>
+		</select>
+		<div id="error"></div>
+
+		<button type="button" id="saveMeasurement" value="<?php echo (int)$_POST['radioButton']; ?>">Zapisz</button>
+
 	</div>
 	<div id="footer">NaturHouse - Twój osobisty dietetyk. Strona w sieci od 2017 r. &copy;
 					 Wszelkie prawa zastrzeżone</div>

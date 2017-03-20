@@ -1,65 +1,44 @@
-input[type=text]
+h1
 {
-	width: 140px;
-	background-color: #efefef;
-	color: #666;
-	border: 2px solid #ddd;
-	border-radius: 5px;
+	margin: 0 0 20px 0;
+}
+
+select
+{
+	width: 130px;
+	height: 25px;
 	font-size: 14px;
-	padding: 10px;
-	box-sizing: border-box;
+}
+
+#error
+{
+	color: #ff6600;
+	font-size: 15px;
+	text-align: center;
+}
+
+button
+{
+	width: 200px;
+	background-color: #36b03c;
+	font-size: 20px;
+	color: white;
+	padding: 10px 15px;
+	margin-top: 30px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
 	outline: none;
 }
 
-input[type=text]:focus
+button:focus
 {
-	-webkit-box-shadow: 0 0 10px 2px rgba(204, 204, 204, 0.9);
-	-moz-box-shadow: 0 0 10px 2px rgba(204, 204, 204, 0.9);
-	box-shadow: 0 0 10px 2px rgba(204, 204, 204, 0.9);
-	border: 2px solid #a5cda5;
-	background-color: #e9f3e9;
-	color: #428c42;
+	-webkit-box-shadow: 0 0 15px 5px rgba(204, 204, 204, 0.9);
+	-moz-box-shadow: 0 0 15px 5px rgba(204, 204, 204, 0.9);
+	box-shadow: 0 0 15px 5px rgba(204, 204, 204, 0.9);
 }
 
-input::-webkit-input-placeholder
+button:hover
 {
-	color: #999;
-}
-
-input:focus::-webkit-input-placeholder
-{
-	color: #428C42;
-}
-
-/* Firefox < 19 */
-input:-moz-placeholder
-{
-	color: #999;
-}
-
-input:focus:-moz-placeholder
-{
-	color: #428C42;
-}
-
-/* Firefox > 19 */
-input::-moz-placeholder
-{
-	color: #999;
-}
-
-input:focus::-moz-placeholder
-{
-	color: #428C42;
-}
-
-/* Internet Explorer 10 */
-input:-ms-input-placeholder
-{
-	color: #999;
-}
-
-input:focus:-ms-input-placeholder
-{
-	color: #428C42;
+	background-color: #37b93d;
 }

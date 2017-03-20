@@ -79,21 +79,19 @@ function showMonths()
 		<h1>Wybierz dowolny dzień ...</h1>
 		<h3>... i zobacz swoje wizyty</h3>
 
-		<div id="date">
-			<select title="year_title" name="year">
-				<option>---rok---</option>
-				<?php showYears(); ?>
-			</select>
-			<select title="month_title" name="month">
-				<option>---miesiąc---</option>
-				<?php showMonths(); ?>
-			</select>
-			<select title="day_title" name="day">
-				<option>---dzień---</option>
-			</select>
-		</div>
-
+		<select title="year_title" name="year">
+			<option>---rok---</option>
+			<?php showYears(); ?>
+		</select>
+		<select title="month_title" name="month">
+			<option>---miesiąc---</option>
+			<?php showMonths(); ?>
+		</select>
+		<select title="day_title" name="day">
+			<option>---dzień---</option>
+		</select>
 		<div id="error"></div>
+
 		<button type="button" id="haveALook" value="<?php echo $_SESSION['userID']; ?>">Looknij</button>
 	</div>
 	<div id="footer">NaturHouse - Twój osobisty dietetyk. Strona w sieci od 2017 r. &copy;
