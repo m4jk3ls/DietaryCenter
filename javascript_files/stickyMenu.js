@@ -9,10 +9,24 @@ $(document).ready(function ()
 		else
 			$('.menu').removeClass('sticky');
 	};
-	stickyNav();
+	try
+	{
+		stickyNav();
+	}
+	catch(e)
+	{
+		alert(e.message);
+	}
 
 	$(window).scroll(function ()
 	{
-		stickyNav();
+		try
+		{
+			stickyNav();
+		}
+		catch(e)
+		{
+			alert(e.message);
+		}
 	});
 });

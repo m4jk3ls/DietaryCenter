@@ -36,7 +36,7 @@ function convertMonthToNumber($month)
 
 if(!isset($_POST['userID']) || !isset($_POST['year']) || !isset($_POST['month']) || !isset($_POST['day']))
 	echo 'Nie przesłano wszystkich potrzebnych danych!';
-else if($_POST['year'] == "---rok---" || $_POST['month'] == "---month---" || $_POST['day'] == "---day---")
+else if($_POST['year'] == "---rok---" || $_POST['month'] == "---miesiąc---" || $_POST['day'] == "---dzień---" || $_POST['day'] == null)
 	echo "Podaj poprawną datę!";
 else
 {

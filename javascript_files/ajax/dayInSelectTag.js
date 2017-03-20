@@ -32,7 +32,16 @@ jQuery(document).ready(function ()
 					selectWithDays.empty();
 
 					if(msg == "Nie wybrano daty")
-						selectWithDays.disableDays();
+					{
+						try
+						{
+							selectWithDays.disableDays();
+						}
+						catch(e)
+						{
+							alert(e.message);
+						}
+					}
 					else if(typeof msg != "string")
 					{
 						selectWithDays.prop("disabled", false);
@@ -53,7 +62,14 @@ jQuery(document).ready(function ()
 	};
 
 	selectWithDays.empty();
-	selectWithDays.disableDays();
+	try
+	{
+		selectWithDays.disableDays();
+	}
+	catch(e)
+	{
+		alert(e.message);
+	}
 
 	selectWithMonths.on('change', showDays);
 	selectWithYears.on('change', showDays);

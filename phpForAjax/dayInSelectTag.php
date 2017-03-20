@@ -10,7 +10,7 @@ $allDays = array();
 
 if(!isset($_POST['year']) || !isset($_POST['month']))
 {
-	echo json_encode("Nie przesłano roku lub miesiąca urodzenia!");
+	echo json_encode("Nie przesłano roku lub miesiąca!");
 	exit();
 }
 else if($_POST['month'] != "---miesiąc---" && $_POST['month'] != "Luty")

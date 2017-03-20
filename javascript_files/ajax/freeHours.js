@@ -26,7 +26,14 @@ jQuery(document).ready(function ()
 	})(jQuery);
 
 	selectWithHours.empty();
-	selectWithHours.chooseDay();
+	try
+	{
+		selectWithHours.chooseDay();
+	}
+	catch(e)
+	{
+		alert(e.message);
+	}
 
 	$("select[name=daysToChoose]").on('change', function ()
 	{
@@ -42,7 +49,16 @@ jQuery(document).ready(function ()
 					selectWithHours.empty();
 
 					if(msg == "Termin")
-						selectWithHours.chooseDay();
+					{
+						try
+						{
+							selectWithHours.chooseDay();
+						}
+						catch(e)
+						{
+							alert(e.message);
+						}
+					}
 					else if(typeof msg != "string")
 					{
 						selectWithHours.prop("disabled", false);
@@ -56,7 +72,16 @@ jQuery(document).ready(function ()
 						}
 					}
 					else
-						selectWithHours.ThereIsNoHours(msg);
+					{
+						try
+						{
+							selectWithHours.ThereIsNoHours();
+						}
+						catch(e)
+						{
+							alert(e.message);
+						}
+					}
 				}
 			});
 	});
