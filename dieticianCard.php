@@ -111,7 +111,7 @@ else
 			}
 			catch (Exception $e)
 			{
-				header("Location: ../html_files/serverError_goToLogout.html");
+				header("Location: html_files/serverError_goToLogout.html");
 				//echo '<br/>Informacja developerska: '.$e;
 			}
 			?>! Miło znów Cię widzieć!</h1>
