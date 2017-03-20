@@ -89,7 +89,33 @@ else
 		</div>
 	</div>
 	<div id="content">
-		<h1>Witaj! Miło znów Cię widzieć!</h1>
+		<h1>Witaj <?php
+			require_once "connect.php";
+			mysqli_report(MYSQLI_REPORT_STRICT);
+			try
+			{
+				// Proba polaczenia sie z baza
+				$connection = new mysqli($host, $db_user, $db_password, $db_name);
+				$connection->set_charset('utf8');
+
+				// Jesli powyzsza proba zawiedzie, to rzuc wyjatkiem
+				if($connection->connect_errno != 0)
+					throw new Exception($connection->connect_error);
+				else
+				{
+					$userID = $_SESSION['userID'];
+					if(!($result = $connection->query("select userName('$userID') as name")))
+						throw new Exception($connection->error);
+					echo $result->fetch_assoc()['name'];
+					$connection->close();
+				}
+			}
+			catch (Exception $e)
+			{
+				header("Location: ../html_files/serverError_goToLogout.html");
+				//echo '<br/>Informacja developerska: '.$e;
+			}
+			?>! Miło znów Cię widzieć!</h1>
 		<h3>Zobacz co się zmieniło od Twojej ostatniej nieobecności ;)</h3>
 	</div>
 	<div id="footer">NaturHouse - Twój osobisty dietetyk. Strona w sieci od 2017 r. &copy;

@@ -92,10 +92,7 @@ function drawTable()
 			else
 			{
 				$helper_userID = $_SESSION['userID'];
-				if(!$GLOBALS['result'] = $connection->query("select measurementDate as Date, bodyMass, thePercentageOfFat as fat,
-															 thePercentageOfWater as water, BMI from measurement where patientID =
-												  			 (select patientID from patient where userID like '$helper_userID')
-												  			 order by Date desc")
+				if(!$GLOBALS['result'] = $connection->query("call yourResults('$helper_userID')")
 				)
 					throw new Exception($connection->error);
 				drawTable();

@@ -107,8 +107,7 @@ $token = getToken();
 			else
 			{
 				$helper_userID = $_SESSION['userID'];
-				if(!($result = $connection->query("select visitDate, visitHour from visit where patientID in
-					(select patientID from patient where userID like '$helper_userID') order by visitDate asc"))
+				if(!($result = $connection->query("call incomingVisits('$helper_userID')"))
 				)
 					throw new Exception($connection->connect_error);
 				else
@@ -132,6 +131,7 @@ $token = getToken();
 					echo '</table>';
 					$result->free_result();
 				}
+				$connection->close();
 			}
 		}
 		catch (Exception $e)
@@ -146,9 +146,16 @@ $token = getToken();
 		<h1>Rezerwuj wizytę</h1>
 		<form action="selectDate.php" method="post">
 			<?php
+			require_once("connect.php");
+			mysqli_report(MYSQLI_REPORT_STRICT);
 			try
 			{
-				if(!($result = $connection->query("select * from dietician d join user u on (d.userID = u.userID)")))
+				$connection = new mysqli($host, $db_user, $db_password, $db_name);
+				$connection->set_charset('utf8');
+
+				if($connection->connect_errno != 0)
+					throw new Exception($connection->connect_error);
+				else if(!($result = $connection->query("call showDieticians()")))
 					throw new Exception($connection->connect_error);
 				else
 				{
